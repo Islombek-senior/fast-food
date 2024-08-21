@@ -12,7 +12,6 @@ function App() {
   return (
     <>
       <Layouts />
-      {/* salom islom ko't */}
     </>
   );
 }

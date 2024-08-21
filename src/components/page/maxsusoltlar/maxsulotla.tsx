@@ -1,6 +1,8 @@
 import React from "react";
-import { Space, Table, Tag } from "antd";
+import { Button, Space, Table, Tag } from "antd";
 import type { TableProps } from "antd";
+import { FaPen } from "react-icons/fa";
+import { FiTrash2 } from "react-icons/fi";
 
 interface DataType {
   key: string;
@@ -41,7 +43,16 @@ const columns: TableProps<DataType>["columns"] = [
   {
     title: "Action",
     key: "action",
-    render: (_, render) => <Space></Space>,
+    render: (_, render) => (
+      <Space>
+        <Button style={{ borderRadius: "50%" }}>
+          <FaPen />
+        </Button>
+        <Button>
+          <FiTrash2 />
+        </Button>
+      </Space>
+    ),
   },
 ];
 
