@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   UploadOutlined,
   UserOutlined,
@@ -6,12 +6,11 @@ import {
 } from "@ant-design/icons";
 import { Layout, Menu, theme } from "antd";
 import { BrowserRouter as Router, Link, Route, Routes } from "react-router-dom";
-import Filiallar from "../filiallar";
-import Maxsulotla from "../maxsulotla";
-import Buyurtmalar from "../buyurtmalar";
-import Kategoriyalar from "../kategoriyalar";
+import Filiallar from "../page/filiallar";
+import Maxsulotla from "../page/maxsulotla";
+import Buyurtmalar from "../page/buyurtmalar";
+import Kategoriyalar from "../page/kategoriyalar";
 import img_1 from "../../Bitmap.png";
-import "./cssLay.css";
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -47,6 +46,12 @@ const items = [
 ];
 
 const App: React.FC = () => {
+  const [selectedKey, setSelectedKey] = useState("1");
+
+  const handleMenuClick = (e: { key: string }) => {
+    setSelectedKey(e.key);
+  };
+
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
@@ -98,9 +103,9 @@ const App: React.FC = () => {
           </div>
           <Menu
             mode="inline"
-            defaultSelectedKeys={["1"]}
+            selectedKeys={[selectedKey]}
+            onClick={handleMenuClick}
             items={items}
-            className="hovers"
           />
         </Sider>
         <Layout>
