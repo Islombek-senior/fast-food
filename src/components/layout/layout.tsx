@@ -109,7 +109,6 @@ const App: React.FC = () => {
                 style={{
                   fontSize: "10px",
                   fontWeight: "light",
-                  marginTop: "-13px",
                 }}
               >
                 Online maxsulot sotuvi

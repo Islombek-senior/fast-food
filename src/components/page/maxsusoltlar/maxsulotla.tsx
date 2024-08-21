@@ -31,31 +31,17 @@ const columns: TableProps<DataType>["columns"] = [
     title: "Tags",
     key: "tags",
     dataIndex: "tags",
-    render: (_, { tags }) => (
-      <>
-        {tags.map((tag) => {
-          let color = tag.length > 5 ? "geekblue" : "green";
-          if (tag === "loser") {
-            color = "volcano";
-          }
-          return (
-            <Tag color={color} key={tag}>
-              {tag.toUpperCase()}
-            </Tag>
-          );
-        })}
-      </>
-    ),
-  },
-  {
-    title: "Action",
-    key: "action",
     render: (_, record) => (
       <Space size="middle">
         <a>Invite {record.name}</a>
         <a>Delete</a>
       </Space>
     ),
+  },
+  {
+    title: "Action",
+    key: "action",
+    render: (_, render) => <Space></Space>,
   },
 ];
 
