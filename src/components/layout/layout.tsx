@@ -1,16 +1,22 @@
 import React, { useState } from "react";
-import {
-  UploadOutlined,
-  UserOutlined,
-  VideoCameraOutlined,
-} from "@ant-design/icons";
 import { Layout, Menu, theme } from "antd";
-import { BrowserRouter as Router, Link, Route, Routes } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  NavLink,
+} from "react-router-dom";
 import Filiallar from "../page/filiallar";
-import Maxsulotla from "../page/maxsulotla";
+import Maxsulotla from "../page/maxsusoltlar/maxsulotla";
 import Buyurtmalar from "../page/buyurtmalar";
 import Kategoriyalar from "../page/kategoriyalar";
-import img_1 from "../../Bitmap.png";
+import img_1 from "../../components/imgs/Bitmap.png";
+import { IoMdCheckmarkCircleOutline } from "react-icons/io";
+import { FaBoxArchive } from "react-icons/fa6";
+import { LuMapPin } from "react-icons/lu";
+import { LuUsers } from "react-icons/lu";
+import { LuLayers } from "react-icons/lu";
+import "./cssLay.css";
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -25,23 +31,32 @@ const sider: React.CSSProperties = {
 const items = [
   {
     key: "1",
-    icon: <UserOutlined />,
-    label: <Link to="/filiallar">Filiallar</Link>,
+    icon: <IoMdCheckmarkCircleOutline />,
+    label: <NavLink to="/buyurtmalar">Buyurtmalar</NavLink>,
   },
   {
     key: "2",
-    icon: <VideoCameraOutlined />,
-    label: <Link to="/buyurtmalar">Buyurtmalar</Link>,
+    icon: <FaBoxArchive />,
+    label: <NavLink to="/maxsulotlar">Maxsulotlar</NavLink>,
   },
   {
     key: "3",
-    icon: <UploadOutlined />,
-    label: <Link to="/maxsulotlar">Maxsulotlar</Link>,
+    icon: <LuLayers />,
+    label: <NavLink to="/kategoriyalar">Kategoriyalar</NavLink>,
   },
   {
     key: "4",
-    icon: <UserOutlined />,
-    label: <Link to="/kategoriyalar">Kategoriyalar</Link>,
+    icon: <LuMapPin />,
+    label: (
+      <NavLink
+        to="/filiallar"
+        className={({ isActive, isPending }) =>
+          isPending ? "pending" : isActive ? "active" : ""
+        }
+      >
+        Filiallar
+      </NavLink>
+    ),
   },
 ];
 
@@ -114,14 +129,14 @@ const App: React.FC = () => {
             <div
               style={{
                 padding: 24,
-                minHeight: 360,
+                minHeight: 560,
                 background: colorBgContainer,
                 borderRadius: borderRadiusLG,
               }}
             >
               <Routes>
-                <Route path="/filiallar" element={<Filiallar />} />
                 <Route path="/buyurtmalar" element={<Buyurtmalar />} />
+                <Route path="/filiallar" element={<Filiallar />} />
                 <Route path="/maxsulotlar" element={<Maxsulotla />} />
                 <Route path="/kategoriyalar" element={<Kategoriyalar />} />
               </Routes>

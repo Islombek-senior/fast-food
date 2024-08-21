@@ -4,7 +4,7 @@ import "./App.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Filiallar from "./components/page/filiallar";
 import Buyurtmalar from "./components/page/buyurtmalar";
-import Maxsulotla from "./components/page/maxsulotla";
+import Maxsulotla from "./components/page/maxsusoltlar/maxsulotla";
 import Kategoriyalar from "./components/page/kategoriyalar";
 import Layouts from "./components/layout/layout";
 
