@@ -7,12 +7,12 @@ import Buyurtmalar from "./components/page/buyurtmalar";
 import Maxsulotla from "./components/page/maxsusoltlar/maxsulotla";
 import Kategoriyalar from "./components/page/kategoriyalar";
 import Layouts from "./components/layout/layout";
+import Logout from "./components/page/logout";
 
 function App() {
   return (
     <>
-      <Layouts />
-      {/* salom islom ko't */}
+      <Logout />
     </>
   );
 }
