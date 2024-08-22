@@ -1,0 +1,19 @@
+.activ {
+    width: 162px;
+    height: 36px;
+    background: #FFFFFF;
+    box-shadow: 0px 2px 2px 0px #AEB0B550;
+    border-radius: 30px;
+    transition: all 0.3s ease; /* Add transition */
+  }
+  
+  .inActiv {
+    width: 84px;
+    height: 16px;
+    opacity: 0.4;
+    font-family: SFProDisplay;
+    font-size: 14px;
+    line-height: 16px;
+    transition: all 0.3s ease; /* Add transition */
+  }
+  

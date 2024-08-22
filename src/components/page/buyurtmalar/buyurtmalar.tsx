@@ -1,9 +1,15 @@
 import { Button, Input } from "antd";
-import React from "react";
+import React, { useState } from "react";
 import { FiPlus } from "react-icons/fi";
 import { IoSearchOutline } from "react-icons/io5";
+import "../buyurtmalar/css.css"
 
 function Buyurtmalar() {
+  const [activeButton, setActiveButton] = useState('Yangi');
+
+  const handleButtonClick = (buttonName: string) => {
+    setActiveButton(buttonName);
+  };
   return <div>
 
 <div className="bg-white flex items-center">
@@ -39,19 +45,42 @@ function Buyurtmalar() {
           </h2>
         </div>
 
-     <div style={{
-      width: "591px",
-      height: "48px",
-      opacity: "0.3px",
-      background:" #EDEFF3",
-      borderRadius:"30px",
-      padding:"5px",
-      marginLeft:"50px"
-
-      
-     }}>
- <button></button>
-     </div>
+        <div
+      className="flex items-center justify-between"
+      style={{
+        width: "591px",
+        height: "48px",
+        background: "#EDEFF3",
+        borderRadius: "30px",
+        padding: "5px",
+        marginLeft: "50px",
+      }}
+    >
+      <button
+        className={activeButton === 'Yangi' ? 'activ' : 'inActiv'}
+        onClick={() => handleButtonClick('Yangi')}
+      >
+        Yangi
+      </button>
+      <button
+        className={activeButton === 'Qabul qilingan' ? 'activ' : 'inActiv'}
+        onClick={() => handleButtonClick('Qabul qilingan')}
+      >
+        Qabul qilingan
+      </button>
+      <button
+        className={activeButton === 'Jo’natilgan' ? 'activ' : 'inActiv'}
+        onClick={() => handleButtonClick('Jo’natilgan')}
+      >
+        Jo’natilgan
+      </button>
+      <button
+        className={activeButton === 'Yopilgan' ? 'activ' : 'inActiv'}
+        onClick={() => handleButtonClick('Yopilgan')}
+      >
+        Yopilgan
+      </button>
+    </div>
       </div>
   </div>;
 }
