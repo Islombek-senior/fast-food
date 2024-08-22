@@ -35,9 +35,9 @@ const Kategoriyalar = () => {
               fontWeight: "bold",
             }}
           >
-            Yangi filial
-            <br />
-            qo’shish
+         Yangi kategoriya
+         <br />
+         qo’shish
           </h2>
         </div>
 
