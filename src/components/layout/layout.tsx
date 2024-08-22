@@ -1,11 +1,6 @@
 import React, { useState } from "react";
 import { Layout, Menu, theme } from "antd";
-import {
-  BrowserRouter as Router,
-  Route,
-  Routes,
-  NavLink,
-} from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, NavLink } from "react-router-dom";
 import Filiallar from "../page/filiallar";
 import Maxsulotla from "../page/maxsusoltlar/maxsulotla";
 import Buyurtmalar from "../page/buyurtmalar";
@@ -23,6 +18,7 @@ const { Header, Content, Footer, Sider } = Layout;
 
 const layoutStyle: React.CSSProperties = {
   height: "100vh",
+  width: "100%",
 };
 
 const sider: React.CSSProperties = {
@@ -128,15 +124,15 @@ const Lyout: React.FC = () => {
             items={items}
           />
         </Sider>
-        <Layout>
-          <Header style={{ padding: 0, background: colorBgContainer }} />
-          <Content style={{ margin: "24px 16px 0" }}>
+        <Layout style={{ height: "100%" }}>
+          <Content style={{ margin: "24px 16px 0", background: "red", height: "100%" }}>
             <div
               style={{
                 padding: 24,
-                minHeight: 560,
                 background: colorBgContainer,
                 borderRadius: borderRadiusLG,
+                height: "100%",
+                overflow: "auto",
               }}
             >
               <Routes>
