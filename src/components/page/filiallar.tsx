@@ -18,7 +18,9 @@ const Filiallar: React.FC = () => {
      <div style={{
       borderRight: "1px solid grey",
       borderLeft: "1px solid grey",
-      padding: "20px",      width:"200px",
+      padding: "20px",
+      paddingLeft: "50px",
+      width:"270px",
       
      }}  className=" flex items-center gap-5" >
       <button onClick={() => setIsModalOpen(true)}  style={{
