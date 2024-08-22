@@ -125,12 +125,9 @@ const Lyout: React.FC = () => {
           />
         </Sider>
         <Layout style={{ height: "100%" }}>
-          <Content style={{ marginLeft:"30px",  height: "100%" }}>
+          <Content style={{  height: "100%" }}>
             <div
               style={{
-                padding: 24,
-                background: colorBgContainer,
-                borderRadius: borderRadiusLG,
                 height: "100%",
                 overflow: "auto",
               }}
