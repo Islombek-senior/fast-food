@@ -1,77 +1,70 @@
 import React from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
-import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import L from 'leaflet';
 
-// Maxsus marker ikonkalarini o'rnatish
-const redIcon = new L.Icon({
-  iconUrl: 'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|FF0000',
-  iconSize: [35, 45],
-  iconAnchor: [17, 45],
+// Leafletning standart marker ikonkalari bilan ishlash uchun zarur bo'lgan import
+import markerIcon from 'leaflet/dist/images/marker-icon.png';
+import markerShadow from 'leaflet/dist/images/marker-shadow.png';
+
+// Standart marker ikonkasini to'g'ri sozlash
+const defaultIcon = L.icon({
+  iconUrl: markerIcon,
+  shadowUrl: markerShadow,
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
   popupAnchor: [1, -34],
   shadowSize: [41, 41]
 });
 
-const blackIcon = new L.Icon({
-  iconUrl: 'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|000000',
-  iconSize: [35, 45],
-  iconAnchor: [17, 45],
-  popupAnchor: [1, -34],
-  shadowSize: [41, 41]
-});
+// Filiallar ma'lumotlari
+interface Branch {
+  position: [number, number];
+  owner: string;
+  phone: string;
+  name: string;
+}
+
+const branches: Branch[] = [
+  {
+    position: [41.2995, 69.2401],
+    owner: 'Asror Soliyev',
+    phone: '+998991234567',
+    name: 'Maxway Filial 1'
+  },
+  {
+    position: [41.3111, 69.2797],
+    owner: 'Shavkat Karimov',
+    phone: '+998991234568',
+    name: 'Maxway Filial 2'
+  },
+  {
+    position: [41.3134, 69.2826],
+    owner: 'Ali Akbarov',
+    phone: '+998991234569',
+    name: 'Maxway Filial 3'
+  }
+];
 
 const Map = () => {
   return (
-    <div style={{ position: 'relative' }}>
-      <MapContainer center={[41.2995, 69.2401]} zoom={14} style={{ height: "100vh", width: "100%" }}>
-        <TileLayer
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        />
-        
-        {/* Markerlar */}
-        <Marker position={[41.2995, 69.2401]} icon={blackIcon}>
-          <Popup>
-            Navoi Metro Station
-          </Popup>
-        </Marker>
-        <Marker position={[41.3111, 69.2797]} icon={redIcon}>
-          <Popup>
-            Kamolon Mosque
-          </Popup>
-        </Marker>
-        <Marker position={[41.3134, 69.2826]} icon={redIcon}>
-          <Popup>
-            Muqimiy Nomidagi O'zbek Drama Teatri
-          </Popup>
-        </Marker>
+    <MapContainer center={[41.2995, 69.2401]} zoom={14} style={{ height: "100vh", width: "100%" }}>
+      <TileLayer
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      />
 
-        {/* Qolgan markerlar ham shu tarzda qo'shiladi */}
-      </MapContainer>
-
-      {/* Pastki qismda foydalanuvchi ma'lumotlari */}
-      <div style={{
-        position: 'absolute',
-        bottom: 10,
-        right: 10,
-        backgroundColor: '#fff',
-        padding: '10px 20px',
-        borderRadius: '8px',
-        boxShadow: '0px 0px 15px rgba(0, 0, 0, 0.2)',
-        display: 'flex',
-        alignItems: 'center',
-        gap: '10px'
-      }}>
-        <div>
-          <i className="fas fa-user"></i>
-          <span> Asror Soliyev</span>
-        </div>
-        <div>
-          <i className="fas fa-phone"></i>
-          <span> +998991234567</span>
-        </div>
-      </div>
-    </div>
+      {/* Filiallar uchun markerlar */}
+      {branches.map((branch, idx) => (
+        <Marker key={idx} position={branch.position} icon={defaultIcon}>
+          <Popup>
+            <strong>{branch.name}</strong><br />
+            Egasi: {branch.owner}<br />
+            Tel: {branch.phone}
+          </Popup>
+        </Marker>
+      ))}
+    </MapContainer>
   );
 }
 
