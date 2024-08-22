@@ -125,7 +125,7 @@ const Lyout: React.FC = () => {
           />
         </Sider>
         <Layout style={{ height: "100%" }}>
-          <Content style={{ margin: "24px 16px 0", background: "red", height: "100%" }}>
+          <Content style={{ marginLeft:"30px",  height: "100%" }}>
             <div
               style={{
                 padding: 24,
@@ -144,9 +144,6 @@ const Lyout: React.FC = () => {
               </Routes>
             </div>
           </Content>
-          <Footer style={{ textAlign: "center" }}>
-            Ant Design ©{new Date().getFullYear()} Created by Ant UED
-          </Footer>
         </Layout>
       </Layout>
     </Router>
