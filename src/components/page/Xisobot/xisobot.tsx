@@ -1,15 +1,22 @@
 import { Button, Input } from "antd";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { FiPlus } from "react-icons/fi";
+import "../Xisobot/xisobot.css"
+import { HiMenuAlt4 } from "react-icons/hi";
+import { HiOutlineMenuAlt3 } from "react-icons/hi";
+import { MdRestartAlt } from "react-icons/md";
 import { IoSearchOutline } from "react-icons/io5";
 import { CiFilter } from "react-icons/ci";
 
+function Xisobot() {
+  const [activeButton, setActiveButton] = useState('Yangi');
 
-const Kategoriyalar = () => {
+  const handleButtonClick = (buttonName: string) => {
+    setActiveButton(buttonName);
+  };
+  return <div>
 
-  return (
-    <div>
-         <div className="bg-white flex items-center">
+<div className="bg-white flex items-center">
         <div
           style={{
             borderRight: "1px solid #EDEFF3",
@@ -29,16 +36,16 @@ const Kategoriyalar = () => {
               height: "40px",
               paddingLeft: "2px",
             }}
-            icon={<FiPlus style={{ fontSize: "30px" }} />}
+            icon={<MdRestartAlt style={{ fontSize: "30px" }} />}
           />
           <h2
             style={{
               fontWeight: "bold",
             }}
           >
-      Yangi maxsulot
-      <br />
-      qo’shish
+            Ma’lumotlarni
+            <br />
+            yangilash
           </h2>
         </div>
 
@@ -100,24 +107,34 @@ const Kategoriyalar = () => {
         </div>
         
 
+    {/* table,card */}
+
+    <div
+          style={{
+            borderLeft: "1px solid #EDEFF3",
+            width: "100px",
+            marginLeft:"480px"
+          }}
+          className="flex items-center gap-5"
+        >
+          <div className=" flex items-center justify-between" style={{
+            width: "120px",
+            height:"45px",
+            background: "#EDEFF3",
+            paddingRight:"10px",
+            borderRadius: "30px",
+            padding: "7px",
+            marginLeft:"20px"
+        
+          }}>
+            <button className="iconActiv"><HiMenuAlt4  /></button>
+            <button><HiOutlineMenuAlt3 /></button>
+          </div>
+        
+        </div>
+
       </div>
+  </div>;
+}
 
-    
-{/* mahsulotlar content */}
-
-      <div style={{
-        marginLeft:"20px",
-        marginTop:"20px",
-        borderRadius:"10px",
-        width:"1300px",
-        height:"auto",
-        padding:"10px"
-      }} className="tableContainer">
-  {/* tabel shu yerga qoyiladi */}
-  
-      </div>
-    </div>
-  );
-};
-
-export default Kategoriyalar;
+export default Xisobot;

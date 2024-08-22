@@ -3,6 +3,8 @@ import React, { useState } from "react";
 import { FiPlus } from "react-icons/fi";
 import { IoSearchOutline } from "react-icons/io5";
 import "../buyurtmalar/css.css"
+import { HiMenuAlt4 } from "react-icons/hi";
+import { HiOutlineMenuAlt3 } from "react-icons/hi";
 
 function Buyurtmalar() {
   const [activeButton, setActiveButton] = useState('Yangi');
@@ -45,6 +47,8 @@ function Buyurtmalar() {
           </h2>
         </div>
 
+
+{/* activpage */}
         <div
       className="flex items-center justify-between"
       style={{
@@ -81,6 +85,33 @@ function Buyurtmalar() {
         Yopilgan
       </button>
     </div>
+
+    {/* table,card */}
+
+    <div
+          style={{
+            borderLeft: "1px solid #EDEFF3",
+            width: "100px",
+            marginLeft:"290px"
+          }}
+          className="flex items-center gap-5"
+        >
+          <div className=" flex items-center justify-between" style={{
+            width: "120px",
+            height:"45px",
+            background: "#EDEFF3",
+            paddingRight:"10px",
+            borderRadius: "30px",
+            padding: "7px",
+            marginLeft:"20px"
+        
+          }}>
+            <button className="iconActiv"><HiMenuAlt4  /></button>
+            <button><HiOutlineMenuAlt3 /></button>
+          </div>
+        
+        </div>
+
       </div>
   </div>;
 }

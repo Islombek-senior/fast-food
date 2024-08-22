@@ -36,9 +36,9 @@ const Kategoriyalar = () => {
               fontWeight: "bold",
             }}
           >
-      Yangi maxsulot
-      <br />
-      qo’shish
+    Yangi mijoz
+    <br />
+    qo’shish
           </h2>
         </div>
 

@@ -13,6 +13,9 @@ import { FaMapMarkerAlt } from "react-icons/fa";
 import { LuLayers } from "react-icons/lu";
 import "./cssLay.css";
 import Map from "../page/map";
+import { FiUsers } from "react-icons/fi";
+import Mijozlar from "../page/mijozlar";
+import Xisobot from "../page/Xisobot/xisobot";
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -59,6 +62,16 @@ const items = [
     key: "5",
     icon: <FaMapMarkerAlt />,
     label: <NavLink to="/Map">Map</NavLink>,
+  },
+  {
+    key: "6",
+    icon: <FiUsers />,
+    label: <NavLink to="/Mijozlar">Mijozlar</NavLink>,
+  },
+  {
+    key: "7",
+    icon: <FiUsers />,
+    label: <NavLink to="/Xisobot">Xisobot</NavLink>,
   },
 ];
 
@@ -135,6 +148,8 @@ const Lyout: React.FC = () => {
               <Routes>
                 <Route path="/buyurtmalar" element={<Buyurtmalar />} />
                 <Route path="/filiallar" element={<Filiallar />} />
+                <Route path="/Mijozlar" element={<Mijozlar />} />
+                <Route path="/Xisobot" element={<Xisobot />} />
                 <Route path="/maxsulotlar" element={<Maxsulotla />} />
                 <Route path="/kategoriyalar" element={<Kategoriyalar />} />
                 <Route path="/Map" element={<Map />} />
