@@ -69,6 +69,13 @@ const Kategoriyalar = () => {
           />
         </div>
       </div>
+
+      {/* tabel shu yerga qoyiladi */}
+
+
+      <div className="tableContainer">
+
+      </div>
     </div>
   );
 };
