@@ -3,7 +3,7 @@ import { Layout, Menu, theme } from "antd";
 import { BrowserRouter as Router, Route, Routes, NavLink } from "react-router-dom";
 import Filiallar from "../page/filiallar";
 import Maxsulotla from "../page/maxsusoltlar/maxsulotla";
-import Buyurtmalar from "../page/buyurtmalar";
+import Buyurtmalar from "../page/buyurtmalar/buyurtmalar";
 import Kategoriyalar from "../page/kategoriyalar";
 import img_1 from "../../components/imgs/Bitmap.png";
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
