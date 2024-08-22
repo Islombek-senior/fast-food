@@ -60,7 +60,7 @@ const items = [
   },
 ];
 
-const App: React.FC = () => {
+const Lyout: React.FC = () => {
   const [selectedKey, setSelectedKey] = useState("1");
 
   const handleMenuClick = (e: { key: string }) => {
@@ -150,4 +150,4 @@ const App: React.FC = () => {
   );
 };
 
-export default App;
+export default Lyout;
