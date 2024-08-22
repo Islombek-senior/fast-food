@@ -70,11 +70,18 @@ const Kategoriyalar = () => {
         </div>
       </div>
 
-      {/* tabel shu yerga qoyiladi */}
+    
+{/* category content */}
 
-
-      <div className="tableContainer">
-
+      <div style={{
+        marginLeft:"20px",
+        marginTop:"20px",
+        borderRadius:"10px",
+        width:"1300px",
+        height:"auto",
+        padding:"10px"
+      }} className="tableContainer">
+  {/* tabel shu yerga qoyiladi */}
       </div>
     </div>
   );
