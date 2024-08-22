@@ -14,9 +14,10 @@ import img_1 from "../../components/imgs/Bitmap.png";
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 import { FaBoxArchive } from "react-icons/fa6";
 import { LuMapPin } from "react-icons/lu";
-import { LuUsers } from "react-icons/lu";
+import { FaMapMarkerAlt } from "react-icons/fa";
 import { LuLayers } from "react-icons/lu";
 import "./cssLay.css";
+import Map from "../page/map";
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -57,6 +58,11 @@ const items = [
         Filiallar
       </NavLink>
     ),
+  },
+  {
+    key: "5",
+    icon: <FaMapMarkerAlt />,
+    label: <NavLink to="/Map">Map</NavLink>,
   },
 ];
 
@@ -138,6 +144,7 @@ const Lyout: React.FC = () => {
                 <Route path="/filiallar" element={<Filiallar />} />
                 <Route path="/maxsulotlar" element={<Maxsulotla />} />
                 <Route path="/kategoriyalar" element={<Kategoriyalar />} />
+                <Route path="/Map" element={<Map />} />
               </Routes>
             </div>
           </Content>
