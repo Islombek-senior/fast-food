@@ -15,26 +15,25 @@ import { FiPlus, FiTrash2 } from "react-icons/fi";
 import { IoSearchOutline } from "react-icons/io5";
 import { CiFilter } from "react-icons/ci";
 import { LuPen } from "react-icons/lu";
-import "./cssmax.css";
+import "./App.css";
 import { Select } from "antd";
 
 type FieldType = {
-  maxsulot?: string;
-  kategoriya?: string;
-  narxi?: string;
-  qoshimcha: string;
+  misjozIsmi: string;
+  telefonR: string;
+  buyurtma: string;
+  status: boolean;
 };
 
 interface DataType {
   id: number;
-  img: string;
-  maxsulot: string;
-  kategoriya: string;
-  narxi: string;
-  qoshimcha: string;
+  misjozIsmi: string;
+  telefonR: string;
+  buyurtma: string;
+  status: boolean;
 }
 
-const Kategoriyalar = () => {
+const Mijozlar = () => {
   const [maxFood, setFoods] = useState<DataType[]>([]);
   const [visibleItems, setVisibleItems] = useState(7);
   const [isModalOpenEdit, setIsModalOpenEdit] = useState(false);
@@ -53,7 +52,7 @@ const Kategoriyalar = () => {
 
   const onFinishAdd = (values: any) => {
     axios
-      .post(`https://e2ead815ad4a2894.mokky.dev/maxsulotlar`, values)
+      .post(`https://e2ead815ad4a2894.mokky.dev/mijozlar`, values)
       .then((res) => {
         setFoods([...maxFood, res.data]);
         addForm.resetFields();
@@ -82,8 +81,7 @@ const Kategoriyalar = () => {
 
   const onFinishEdit = (values: any) => {
     if (selectedItem) {
-      const url = `https://e2ead815ad4a2894.mokky.dev/maxsulotlar/${selectedItem.id}`;
-
+      const url = `https://e2ead815ad4a2894.mokky.dev/mijozlar/${selectedItem.id}`;
       axios
         .put(url, values)
         .then((res) => {
@@ -108,7 +106,7 @@ const Kategoriyalar = () => {
 
   const handleDelete = (id: number) => {
     axios
-      .delete(`https://e2ead815ad4a2894.mokky.dev/maxsulotlar/${id}`)
+      .delete(`https://e2ead815ad4a2894.mokky.dev/mijozlar/${id}`)
       .then((res) => {
         setFoods(maxFood.filter((item) => item.id !== id));
       })
@@ -118,7 +116,7 @@ const Kategoriyalar = () => {
   };
   useEffect(() => {
     axios
-      .get("https://e2ead815ad4a2894.mokky.dev/maxsulotlar")
+      .get("https://e2ead815ad4a2894.mokky.dev/mijozlar")
       .then((res) => {
         setFoods(res.data);
         console.log(res.data);
@@ -248,19 +246,19 @@ const Kategoriyalar = () => {
           }}
         >
           <div className="flex gap-10 items-center">
-            <p>MAXSULOT</p>
+            <p>MIJOZ ISMI</p>
           </div>
           <div style={{ borderRight: "1px solid grey" }}></div>
           <div className="flex gap-10 items-center">
-            <p>KATEGORIYA</p>
+            <p>TELEFON RAQAM</p>
           </div>
           <div style={{ borderRight: "1px solid grey" }}></div>
           <div className="flex gap-10 items-center">
-            <p>NARXI</p>
+            <p>BUYURTMALAR SONI</p>
           </div>
           <div style={{ borderRight: "1px solid grey" }}></div>
           <div className="flex gap-10 items-center">
-            <p>QO’SHIMCHA</p>
+            <p>STATUS</p>
           </div>
           <div style={{ borderRight: "1px solid grey" }}></div>
           <div className="flex gap-10 items-center">
@@ -270,6 +268,7 @@ const Kategoriyalar = () => {
         {maxFood.map((f) => (
           <Col span={24} style={{ padding: "13px", marginTop: -14 }} key={f.id}>
             <Card
+              className="card-col"
               style={{
                 borderRadius: "8px",
                 boxShadow: "1px 1px 10px rgba(124, 124, 124, 0.3)",
@@ -292,17 +291,16 @@ const Kategoriyalar = () => {
                     width: `calc(100% / 5)`,
                   }}
                 >
-                  <img src={f.img} alt="" className="w-10 h-10 rounded-full" />
-                  <p>{f.maxsulot}</p>
+                  <p>{f.misjozIsmi}</p>
                 </div>
                 <div style={{ width: `calc(100% / 5)` }}>
-                  <p>{f.kategoriya}</p>
+                  <p>{f.telefonR}</p>
                 </div>
                 <div style={{ width: `calc(100% / 5)` }}>
-                  <p>{f.narxi}</p>
+                  <p>{f.buyurtma}</p>
                 </div>
                 <div style={{ width: `calc(100% / 5)` }}>
-                  <p>{f.qoshimcha}</p>
+                  <p>{f.status}</p>
                 </div>
                 <div className="flex space-x-2 mt-2">
                   <Button
@@ -327,7 +325,7 @@ const Kategoriyalar = () => {
                     className="bg-white flex items-center justify-center transition-transform duration-300 hover:scale-110"
                     onClick={() => handleDelete(f.id)}
                   >
-                    <FiTrash2 size={18} />
+                    <FiTrash2 size={18} style={{ color: "black" }} />
                   </Button>
                 </div>
               </div>
@@ -376,16 +374,6 @@ const Kategoriyalar = () => {
           >
             <p style={{ color: "red" }}>*</p> Kategoriya
           </p>
-          <Select
-            onChange={onChange}
-            style={{ width: "100%", marginBottom: "20px" }}
-            defaultValue="Burger"
-          >
-            {maxFood.map((t) => (
-              <Select.Option>{t.kategoriya}</Select.Option>
-            ))}
-          </Select>
-
           <Form.Item
             label="Narxi"
             name="narxi"
@@ -455,4 +443,4 @@ const Kategoriyalar = () => {
   );
 };
 
-export default Kategoriyalar;
+export default Mijozlar;

@@ -19,7 +19,7 @@ import { LuLayers } from "react-icons/lu";
 import "./cssLay.css";
 import Map from "../page/map";
 import { FiUsers } from "react-icons/fi";
-import Mijozlar from "../page/mijozlar";
+import Mijozlar from "../page/mijozlar/mijozlar";
 import Xisobot from "../page/Xisobot/xisobot";
 
 const { Header, Content, Footer, Sider } = Layout;
@@ -57,7 +57,8 @@ const items = [
         to="/filiallar"
         className={({ isActive, isPending }) =>
           isPending ? "pending" : isActive ? "active" : ""
-        }>
+        }
+      >
         Filiallar
       </NavLink>
     ),
@@ -102,7 +103,8 @@ const Lyout: React.FC = () => {
           style={sider}
           onCollapse={(collapsed, type) => {
             console.log(collapsed, type);
-          }}>
+          }}
+        >
           <div className="demo-logo-vertical" />
           <div
             style={{
@@ -112,7 +114,8 @@ const Lyout: React.FC = () => {
               alignItems: "center",
               marginBottom: "30px",
               paddingTop: 15,
-            }}>
+            }}
+          >
             <div>
               <img
                 src={img_1}
@@ -126,7 +129,8 @@ const Lyout: React.FC = () => {
                 style={{
                   fontSize: "10px",
                   fontWeight: "light",
-                }}>
+                }}
+              >
                 Online maxsulot sotuvi
               </p>
             </div>
@@ -144,7 +148,8 @@ const Lyout: React.FC = () => {
               style={{
                 height: "100%",
                 overflow: "auto",
-              }}>
+              }}
+            >
               <Routes>
                 <Route path="/buyurtmalar" element={<Buyurtmalar />} />
                 <Route path="/filiallar" element={<Filiallar />} />
