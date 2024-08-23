@@ -1,15 +1,56 @@
-import { Button, Input } from "antd";
+import { Button, Input, Table } from "antd";
 import React, { useEffect, useState } from "react";
 import { FiPlus } from "react-icons/fi";
 import { IoSearchOutline } from "react-icons/io5";
 import { CiFilter } from "react-icons/ci";
+const columns = [
+  {
+    title: "Name",
+    dataIndex: "name",
+    key: "name",
+  },
+  {
+    title: "Age",
+    dataIndex: "age",
+    key: "age",
+  },
+  {
+    title: "Address",
+    dataIndex: "address",
+    key: "address",
+  },
+];
 
-
+const data = [
+  {
+    key: "1",
+    name: "John Brown",
+    age: 32,
+    address: "New York No. 1 Lake Park",
+  },
+  {
+    key: "1",
+    name: "John Brown",
+    age: 32,
+    address: "New York No. 1 Lake Park",
+  },
+  {
+    key: "1",
+    name: "John Brown",
+    age: 32,
+    address: "New York No. 1 Lake Park",
+  },
+  {
+    key: "1",
+    name: "John Brown",
+    age: 32,
+    address: "New York No. 1 Lake Park",
+  },
+];
 const Kategoriyalar = () => {
-
   return (
     <div>
-         <div className="bg-white flex items-center">
+      <div className="bg-white flex items-center">
         <div
           style={{
             borderRight: "1px solid #EDEFF3",
@@ -36,9 +77,9 @@ const Kategoriyalar = () => {
               fontWeight: "bold",
             }}
           >
-    Yangi mijoz
-    <br />
-    qo’shish
+            Yangi mijoz
+            <br />
+            qo’shish
           </h2>
         </div>
 
@@ -72,50 +113,66 @@ const Kategoriyalar = () => {
 
         {/* filter */}
 
-        <div style={{
-          marginLeft: "30px",
-          width: "44px",
-          height: "44px",
-          background:"#EDEFF3",
-          borderRadius:"50%",
-          cursor:"pointer",
-          display:"flex",
-          justifyContent:"center",
-          alignItems:"center"
-        }}>
-           <button className=" bg-white" style={{
-            width: "32px",
-            height: "32px",
-            boxShadow: "0px 2px 2px 0px #AEB0B550",
-            borderRadius:"50%",
-            cursor:"pointer",
-            display:"flex",
-            justifyContent:"center",
-            alignItems:"center"
-           }}>
-           <CiFilter style={{
-            color:" #8D9BA8"
-           }} />
-           </button>
+        <div
+          style={{
+            marginLeft: "30px",
+            width: "44px",
+            height: "44px",
+            background: "#EDEFF3",
+            borderRadius: "50%",
+            cursor: "pointer",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <button
+            className=" bg-white"
+            style={{
+              width: "32px",
+              height: "32px",
+              boxShadow: "0px 2px 2px 0px #AEB0B550",
+              borderRadius: "50%",
+              cursor: "pointer",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <CiFilter
+              style={{
+                color: " #8D9BA8",
+              }}
+            />
+          </button>
         </div>
-        
-
       </div>
 
-    
-{/* mahsulotlar content */}
+      {/* mahsulotlar content */}
 
-      <div style={{
-        marginLeft:"20px",
-        marginTop:"20px",
-        borderRadius:"10px",
-        width:"1300px",
-        height:"auto",
-        padding:"10px"
-      }} className="tableContainer">
-  {/* tabel shu yerga qoyiladi */}
-  
+      <div
+        style={{
+          marginLeft: "20px",
+          marginTop: "20px",
+          borderRadius: "10px",
+          width: "1300px",
+          height: "auto",
+          padding: "10px",
+        }}
+        className="tableContainer"
+      >
+        {/* tabel shu yerga qoyiladi */}
       </div>
+      <Table
+        columns={columns}
+        dataSource={data}
+        style={{
+          backgroundColor: "#ebebeb",
+          borderRadius: "28px",
+          padding: "20px",
+          paddingTop: "20px",
+        }}
+      />
     </div>
   );
 };
