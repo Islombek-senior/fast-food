@@ -15,7 +15,7 @@ import { FiPlus, FiTrash2 } from "react-icons/fi";
 import { IoSearchOutline } from "react-icons/io5";
 import { CiFilter } from "react-icons/ci";
 import { LuPen } from "react-icons/lu";
-import "./App.css";
+import "../../../App.css";
 import { Select } from "antd";
 
 type FieldType = {
