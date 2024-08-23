@@ -14,9 +14,10 @@ import {
 import { FiPlus, FiTrash2 } from "react-icons/fi";
 import { IoSearchOutline } from "react-icons/io5";
 import { CiFilter } from "react-icons/ci";
-import { LuPen } from "react-icons/lu";
+import { LuPen, LuPencil } from "react-icons/lu";
 import "./cssmax.css";
 import { Select } from "antd";
+import "../../../App.css";
 
 type FieldType = {
   maxsulot?: string;
@@ -270,6 +271,7 @@ const Kategoriyalar = () => {
         {maxFood.map((f) => (
           <Col span={24} style={{ padding: "13px", marginTop: -14 }} key={f.id}>
             <Card
+              className="card-col" // Apply hover effect class
               style={{
                 borderRadius: "8px",
                 boxShadow: "1px 1px 10px rgba(124, 124, 124, 0.3)",
@@ -312,10 +314,10 @@ const Kategoriyalar = () => {
                       height: "30px",
                       boxShadow: "0px 2px 2px 0px #AEB0B550",
                     }}
-                    className="bg-white flex items-center justify-center transition-transform duration-300 hover:scale-110"
+                    className=" flex items-center justify-center transition-transform duration-300 hover:scale-110"
                     onClick={() => showModalEdit(f)}
                   >
-                    <LuPen size={18} />
+                    <LuPencil size={18} />
                   </Button>
                   <Button
                     style={{

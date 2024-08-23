@@ -4,6 +4,6 @@
 }
 
 .card-col:hover {
-  transform: translateY(-10px); /* Moves the element up by 10px */
+  transform: translateY(-8px); /* Moves the element up by 10px */
   box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2); /* Adds a shadow */
 }
