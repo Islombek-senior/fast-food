@@ -7,11 +7,10 @@ import {
   Form,
   message,
   Space,
-  Table,
-  Modal,
   Card,
-  Row,
   Col,
+  Row,
+  Modal,
 } from "antd";
 import axios from "axios";
 import { FiPlus, FiTrash2 } from "react-icons/fi";
@@ -25,7 +24,7 @@ interface DataType {
   id: number;
   nameUz: string;
   nameRu: string;
-  boshKategoriya: string;
+  category: string;
 }
 
 const Kategoriyalar = () => {
@@ -36,7 +35,7 @@ const Kategoriyalar = () => {
 
   const showDrawer = (r?: DataType) => {
     setEditingCategory(r || null);
-    form.setFieldsValue(r || { nameUz: "", nameRu: "", boshKategoriya: "" });
+    form.setFieldsValue(r || { nameUz: "", nameRu: "", category: "" });
     setDrawer(true);
   };
 
@@ -94,7 +93,6 @@ const Kategoriyalar = () => {
   };
 
   const handleDelete = (id: number) => {
-    console.log(`Attempting to delete category with ID: ${id}`);
     confirm({
       title: "Rostdan ham o'chirmoqchimisiz?",
       okText: "Ha",
@@ -104,11 +102,7 @@ const Kategoriyalar = () => {
         axios
           .delete(`https://392e0f5b09d05ee3.mokky.dev/fas-food/${id}`)
           .then(() => {
-            console.log("Delete successful");
-            setData((prevData) => {
-              const updatedData = prevData.filter((item) => item.id !== id);
-              return updatedData;
-            });
+            setData((prevData) => prevData.filter((item) => item.id !== id));
             message.success("Muvaffaqiyatli o'chirildi");
           })
           .catch((error) => {
@@ -128,7 +122,7 @@ const Kategoriyalar = () => {
       .then((res) => {
         const fetchedData = res.data.map((item: any) => ({
           ...item,
-          id: item._id, // Ensure this matches with the `id` field in the DataType
+          id: item._id,
         }));
         setData(fetchedData);
       })
@@ -137,53 +131,6 @@ const Kategoriyalar = () => {
         message.error("Failed to fetch categories");
       });
   }, []);
-
-  const columns = [
-    {
-      title: "KATEGORIYA(UZ)",
-      dataIndex: "nameUz",
-      key: "nameUz",
-    },
-    {
-      title: "KATEGORIYA(RU)",
-      dataIndex: "nameRu",
-      key: "nameRu",
-    },
-    {
-      title: "BOSH KATEGORIYA",
-      dataIndex: "boshKategoriya",
-      key: "boshKategoriya",
-    },
-    {
-      title: "Action",
-      key: "action",
-      render: (_: any, record: DataType) => (
-        <Space style={{ fontSize: 23 }}>
-          <Button
-            style={{
-              borderRadius: "50%",
-              border: "3px solid gray",
-              width: "40px",
-              height: "40px",
-            }}
-            icon={<LuPen style={{ fontSize: "20px" }} />}
-            onClick={() => showDrawer(record)}
-          />
-          <Button
-            style={{
-              borderRadius: "50%",
-              border: "3px solid gray",
-              color: "red",
-              width: "40px",
-              height: "40px",
-            }}
-            icon={<FiTrash2 style={{ fontSize: "20px" }} />}
-            onClick={() => handleDelete(record.id)}
-          />
-        </Space>
-      ),
-    },
-  ];
 
   return (
     <div>
@@ -204,9 +151,9 @@ const Kategoriyalar = () => {
               color: "white",
               width: "40px",
               height: "40px",
-              paddingLeft: "2px",
+              padding: "0",
             }}
-            icon={<FiPlus style={{ fontSize: "30px" }} />}
+            icon={<FiPlus style={{ fontSize: "24px" }} />}
             onClick={() => showDrawer()}
           />
           <h2
@@ -248,23 +195,110 @@ const Kategoriyalar = () => {
         </div>
       </div>
 
-      <div
-        style={{
-          marginLeft: "20px",
-          marginTop: "20px",
-          borderRadius: "10px",
-          width: "1300px",
-          height: "auto",
-          padding: "10px",
-        }}
-        className="tableContainer">
-        <Table<DataType>
-          columns={columns}
-          dataSource={data}
-          rowKey="id"
-          pagination={{ pageSize: 10 }}
-        />
-      </div>
+      <Row>
+        <div
+          style={{
+            marginTop: "40px",
+            marginBottom: "40px",
+            width: "100%",
+            height: "auto",
+            padding: "23px",
+            background: "white",
+            display: "flex",
+            justifyContent: "center",
+            textAlign: "end",
+            gap: "90px",
+            alignContent: "center",
+            fontWeight: "bolder",
+            boxShadow: "5px 5px 5px rgba(124, 124, 124, 0.3)",
+          }}>
+          <div className="flex gap-10 items-center">
+            <p>Kategoriya (UZ)</p>
+          </div>
+          <div style={{ borderRight: "1px solid grey" }}></div>
+          <div className="flex gap-10 items-center">
+            <p>Kategoriya (Ru)</p>
+          </div>
+          <div style={{ borderRight: "1px solid grey" }}></div>
+          <div className="flex gap-10 items-center">
+            <p>Bosh kategoriya</p>
+          </div>
+          <div style={{ borderRight: "1px solid grey" }}></div>
+          <div className="flex gap-10 items-center">
+            <p>ACTION</p>
+          </div>
+        </div>
+        {data.map((item) => (
+          <Col
+            span={24}
+            style={{ padding: "13px", marginTop: -14 }}
+            key={item.id}>
+            <Card
+              className="card-col" // Apply hover effect class
+              style={{
+                borderRadius: "8px",
+                boxShadow: "1px 1px 10px rgba(124, 124, 124, 0.3)",
+                height: "80px",
+              }}>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-around",
+                  alignItems: "center",
+                  textAlign: "start",
+                }}>
+                <div
+                  style={{
+                    display: "flex",
+                    gap: "30px",
+                    alignItems: "center",
+                    width: `calc(100% / 5)`,
+                  }}>
+                  <p>{item.nameUz}</p>
+                </div>
+                <div style={{ width: `calc(100% / 5)` }}>
+                  <p>{item.nameRu}</p>
+                </div>
+                <div style={{ width: `calc(100% / 5)` }}>
+                  <p>{item.category}</p>
+                </div>
+                <div
+                  className="flex space-x-2 mt-2"
+                  style={{ width: `calc(100% / 5)` }}>
+                  <Button
+                    style={{
+                      borderRadius: "50%",
+                      width: "30px",
+                      height: "30px",
+                      boxShadow: "0px 2px 2px 0px #AEB0B550",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                    className="bg-white transition-transform duration-300 hover:scale-110"
+                    onClick={() => showDrawer(item)}>
+                    <LuPen size={18} />
+                  </Button>
+                  <Button
+                    style={{
+                      borderRadius: "50%",
+                      width: "30px",
+                      height: "30px",
+                      boxShadow: "0px 2px 2px 0px #AEB0B550",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                    className="bg-white transition-transform duration-300 hover:scale-110"
+                    onClick={() => handleDelete(item.id)}>
+                    <FiTrash2 size={18} />
+                  </Button>
+                </div>
+              </div>
+            </Card>
+          </Col>
+        ))}
+      </Row>
 
       <Drawer
         title={
@@ -303,7 +337,7 @@ const Kategoriyalar = () => {
             Bosh Kategoriya
           </Title>
           <Form.Item
-            name="boshKategoriya"
+            name="category"
             rules={[{ required: true, message: "Bosh Kategoriyani kiriting" }]}>
             <Input />
           </Form.Item>
