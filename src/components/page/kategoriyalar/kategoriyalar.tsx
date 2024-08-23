@@ -16,6 +16,7 @@ import axios from "axios";
 import { FiPlus, FiTrash2 } from "react-icons/fi";
 import { IoSearchOutline } from "react-icons/io5";
 import { LuPen } from "react-icons/lu";
+import { FaRegTrashCan } from "react-icons/fa6";
 
 const { Title } = Typography;
 const { confirm } = Modal;
@@ -268,31 +269,25 @@ const Kategoriyalar = () => {
                   <Button
                     style={{
                       borderRadius: "50%",
-                      width: "30px",
-                      height: "30px",
-                      boxShadow: "0px 2px 2px 0px #AEB0B550",
+                      width: "40px",
+                      height: "40px",
                       display: "flex",
-                      alignItems: "center",
                       justifyContent: "center",
+                      alignItems: "center",
                     }}
-                    className="bg-white transition-transform duration-300 hover:scale-110"
-                    onClick={() => showDrawer(item)}>
-                    <LuPen size={18} />
-                  </Button>
+                    icon={<LuPen />}
+                  />
                   <Button
                     style={{
                       borderRadius: "50%",
-                      width: "30px",
-                      height: "30px",
-                      boxShadow: "0px 2px 2px 0px #AEB0B550",
+                      width: "40px",
+                      height: "40px",
                       display: "flex",
-                      alignItems: "center",
                       justifyContent: "center",
+                      alignItems: "center",
                     }}
-                    className="bg-white transition-transform duration-300 hover:scale-110"
-                    onClick={() => handleDelete(item.id)}>
-                    <FiTrash2 size={18} />
-                  </Button>
+                    icon={<FaRegTrashCan />}
+                  />
                 </div>
               </div>
             </Card>
