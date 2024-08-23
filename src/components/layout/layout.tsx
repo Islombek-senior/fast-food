@@ -1,10 +1,15 @@
 import React, { useState } from "react";
 import { Layout, Menu, theme } from "antd";
-import { BrowserRouter as Router, Route, Routes, NavLink } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  NavLink,
+} from "react-router-dom";
 import Filiallar from "../page/filiallar/filiallar";
 import Maxsulotla from "../page/maxsusoltlar/maxsulotla";
 import Buyurtmalar from "../page/buyurtmalar/buyurtmalar";
-import Kategoriyalar from "../page/kategoriyalar";
+import Kategoriyalar from "../page/kategoriyalar/kategoriyalar";
 import img_1 from "../../components/imgs/Bitmap.png";
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 import { FaBoxArchive } from "react-icons/fa6";
@@ -14,7 +19,7 @@ import { LuLayers } from "react-icons/lu";
 import "./cssLay.css";
 import Map from "../page/map";
 import { FiUsers } from "react-icons/fi";
-import Mijozlar from "../page/mijozlar";
+import Mijozlar from "../page/mijozlar/mijozlar";
 import Xisobot from "../page/Xisobot/xisobot";
 
 const { Header, Content, Footer, Sider } = Layout;
@@ -138,7 +143,7 @@ const Lyout: React.FC = () => {
           />
         </Sider>
         <Layout style={{ height: "100%" }}>
-          <Content style={{  height: "100%" }}>
+          <Content style={{ height: "100%" }}>
             <div
               style={{
                 height: "100%",

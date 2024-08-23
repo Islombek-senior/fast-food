@@ -2,19 +2,19 @@ import { Button, Input } from "antd";
 import React, { useState } from "react";
 import { FiPlus } from "react-icons/fi";
 import { IoSearchOutline } from "react-icons/io5";
-import "../buyurtmalar/css.css"
+import "../buyurtmalar/css.css";
 import { HiMenuAlt4 } from "react-icons/hi";
 import { HiOutlineMenuAlt3 } from "react-icons/hi";
 
 function Buyurtmalar() {
-  const [activeButton, setActiveButton] = useState('Yangi');
+  const [activeButton, setActiveButton] = useState("Yangi");
 
   const handleButtonClick = (buttonName: string) => {
     setActiveButton(buttonName);
   };
-  return <div>
-
-<div className="bg-white flex items-center">
+  return (
+    <div>
+      <div className="bg-white flex items-center">
         <div
           style={{
             borderRight: "1px solid #EDEFF3",
@@ -23,8 +23,7 @@ function Buyurtmalar() {
             paddingLeft: "50px",
             width: "270px",
           }}
-          className="flex items-center gap-5"
-        >
+          className="flex items-center gap-5">
           <Button
             style={{
               borderRadius: "50%",
@@ -39,81 +38,77 @@ function Buyurtmalar() {
           <h2
             style={{
               fontWeight: "bold",
-            }}
-          >
+            }}>
             Yangi filial
             <br />
             qo’shish
           </h2>
         </div>
 
-
-{/* activpage */}
+        {/* activpage */}
         <div
-      className="flex items-center justify-between"
-      style={{
-        width: "591px",
-        height: "48px",
-        background: "#EDEFF3",
-        borderRadius: "30px",
-        padding: "5px",
-        marginLeft: "50px",
-      }}
-    >
-      <button
-        className={activeButton === 'Yangi' ? 'activ' : 'inActiv'}
-        onClick={() => handleButtonClick('Yangi')}
-      >
-        Yangi
-      </button>
-      <button
-        className={activeButton === 'Qabul qilingan' ? 'activ' : 'inActiv'}
-        onClick={() => handleButtonClick('Qabul qilingan')}
-      >
-        Qabul qilingan
-      </button>
-      <button
-        className={activeButton === 'Jo’natilgan' ? 'activ' : 'inActiv'}
-        onClick={() => handleButtonClick('Jo’natilgan')}
-      >
-        Jo’natilgan
-      </button>
-      <button
-        className={activeButton === 'Yopilgan' ? 'activ' : 'inActiv'}
-        onClick={() => handleButtonClick('Yopilgan')}
-      >
-        Yopilgan
-      </button>
-    </div>
+          className="flex items-center justify-between"
+          style={{
+            width: "591px",
+            height: "48px",
+            background: "#EDEFF3",
+            borderRadius: "30px",
+            padding: "5px",
+            marginLeft: "50px",
+          }}>
+          <button
+            className={activeButton === "Yangi" ? "activ" : "inActiv"}
+            onClick={() => handleButtonClick("Yangi")}>
+            Yangi
+          </button>
+          <button
+            className={activeButton === "Qabul qilingan" ? "activ" : "inActiv"}
+            onClick={() => handleButtonClick("Qabul qilingan")}>
+            Qabul qilingan
+          </button>
+          <button
+            className={activeButton === "Jo’natilgan" ? "activ" : "inActiv"}
+            onClick={() => handleButtonClick("Jo’natilgan")}>
+            Jo’natilgan
+          </button>
+          <button
+            className={activeButton === "Yopilgan" ? "activ" : "inActiv"}
+            onClick={() => handleButtonClick("Yopilgan")}>
+            Yopilgan
+          </button>
+        </div>
 
-    {/* table,card */}
+        {/* table,card */}
 
-    <div
+        <div
           style={{
             borderLeft: "1px solid #EDEFF3",
             width: "100px",
-            marginLeft:"290px"
+            marginLeft: "290px",
           }}
-          className="flex items-center gap-5"
-        >
-          <div className=" flex items-center justify-between" style={{
-            width: "120px",
-            height:"45px",
-            background: "#EDEFF3",
-            paddingRight:"10px",
-            borderRadius: "30px",
-            padding: "7px",
-            marginLeft:"20px"
-        
-          }}>
-            <button className="iconActiv"><HiMenuAlt4  /></button>
-            <button><HiOutlineMenuAlt3 /></button>
+          className="flex items-center gap-5">
+          <div
+            className=" flex items-center justify-between"
+            style={{
+              width: "120px",
+              height: "45px",
+              background: "#EDEFF3",
+              paddingRight: "10px",
+              borderRadius: "30px",
+              padding: "7px",
+              marginLeft: "20px",
+            }}>
+            <Button className="iconActiv">
+              <HiMenuAlt4 />
+            </Button>
+            <Button>
+              <HiOutlineMenuAlt3 />
+            </Button>
           </div>
-        
         </div>
-
       </div>
-  </div>;
+    </div>
+  );
 }
 
 export default Buyurtmalar;
