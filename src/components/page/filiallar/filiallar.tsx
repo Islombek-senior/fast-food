@@ -254,23 +254,25 @@ const Filiallar: React.FC = () => {
                   <Button
                     style={{
                       borderRadius: "50%",
-                      width: "30px",
-                      height: "30px",
-                      boxShadow: "0px 2px 2px 0px #AEB0B550",
+                      width: "40px",
+                      height: "40px",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
                     }}
-                    className="bg-white flex items-center justify-center transition-transform duration-300 hover:scale-110">
-                    <LuPen />
-                  </Button>
+                    icon={<LuPen />}
+                  />
                   <Button
                     style={{
                       borderRadius: "50%",
-                      width: "30px",
-                      height: "30px",
-                      boxShadow: "0px 2px 2px 0px #AEB0B550",
+                      width: "40px",
+                      height: "40px",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
                     }}
-                    className="bg-white flex items-center justify-center transition-transform duration-300 hover:scale-110">
-                    <FiTrash2 />
-                  </Button>
+                    icon={<FaRegTrashCan />}
+                  />
                 </div>
               </div>
             </Card>

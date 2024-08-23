@@ -17,6 +17,7 @@ import { CiFilter } from "react-icons/ci";
 import { LuPen } from "react-icons/lu";
 import "../../../App.css";
 import { Select } from "antd";
+import { FaRegTrashCan } from "react-icons/fa6";
 
 type FieldType = {
   misjozIsmi: string;
@@ -139,8 +140,7 @@ const Mijozlar = () => {
             paddingLeft: "50px",
             width: "270px",
           }}
-          className="flex items-center gap-5"
-        >
+          className="flex items-center gap-5">
           <Button
             onClick={showDrawer}
             style={{
@@ -156,8 +156,7 @@ const Mijozlar = () => {
           <h2
             style={{
               fontWeight: "bold",
-            }}
-          >
+            }}>
             Yangi maxsulot
             <br />
             qo’shish
@@ -203,8 +202,7 @@ const Mijozlar = () => {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-          }}
-        >
+          }}>
           <Button
             className="bg-white"
             style={{
@@ -216,8 +214,7 @@ const Mijozlar = () => {
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
-            }}
-          >
+            }}>
             <CiFilter
               style={{
                 color: "#8D9BA8",
@@ -243,8 +240,7 @@ const Mijozlar = () => {
             alignContent: "center",
             fontWeight: "bolder",
             boxShadow: "5px 5px 5px rgba(124, 124, 124, 0.3)",
-          }}
-        >
+          }}>
           <div className="flex gap-10 items-center">
             <p>MIJOZ ISMI</p>
           </div>
@@ -273,24 +269,21 @@ const Mijozlar = () => {
                 borderRadius: "8px",
                 boxShadow: "1px 1px 10px rgba(124, 124, 124, 0.3)",
                 height: "80px",
-              }}
-            >
+              }}>
               <div
                 style={{
                   display: "flex",
                   justifyContent: "space-around",
                   alignItems: "center",
                   textAlign: "start",
-                }}
-              >
+                }}>
                 <div
                   style={{
                     display: "flex",
                     gap: "30px",
                     alignItems: "center",
                     width: `calc(100% / 5)`,
-                  }}
-                >
+                  }}>
                   <p>{f.misjozIsmi}</p>
                 </div>
                 <div style={{ width: `calc(100% / 5)` }}>
@@ -306,27 +299,25 @@ const Mijozlar = () => {
                   <Button
                     style={{
                       borderRadius: "50%",
-                      width: "30px",
-                      height: "30px",
-                      boxShadow: "0px 2px 2px 0px #AEB0B550",
+                      width: "40px",
+                      height: "40px",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
                     }}
-                    className="bg-white flex items-center justify-center transition-transform duration-300 hover:scale-110"
-                    onClick={() => showModalEdit(f)}
-                  >
-                    <LuPen size={18} />
-                  </Button>
+                    icon={<LuPen />}
+                  />
                   <Button
                     style={{
                       borderRadius: "50%",
-                      width: "30px",
-                      height: "30px",
-                      boxShadow: "0px 2px 2px 0px #AEB0B550",
+                      width: "40px",
+                      height: "40px",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
                     }}
-                    className="bg-white flex items-center justify-center transition-transform duration-300 hover:scale-110"
-                    onClick={() => handleDelete(f.id)}
-                  >
-                    <FiTrash2 size={18} style={{ color: "black" }} />
-                  </Button>
+                    icon={<FaRegTrashCan />}
+                  />
                 </div>
               </div>
             </Card>
@@ -339,29 +330,25 @@ const Mijozlar = () => {
         placement="right"
         onClose={onClose}
         open={open}
-        width={380}
-      >
+        width={380}>
         <Form
           form={addForm}
           name="addProduct"
           onFinish={onFinishAdd}
           onFinishFailed={onFinishFailedAdd}
           autoComplete="off"
-          layout="vertical"
-        >
+          layout="vertical">
           <Form.Item
             label="Rasm"
             name="rasm"
-            rules={[{ required: true, message: "Maxsulot nomini kiriting!" }]}
-          >
+            rules={[{ required: true, message: "Maxsulot nomini kiriting!" }]}>
             <Input />
           </Form.Item>
 
           <Form.Item
             label="Maxsulot nomi"
             name="maxsulot"
-            rules={[{ required: true, message: "Maxsulot nomini kiriting!" }]}
-          >
+            rules={[{ required: true, message: "Maxsulot nomini kiriting!" }]}>
             <Input />
           </Form.Item>
           <p
@@ -370,15 +357,13 @@ const Mijozlar = () => {
               justifyContent: "flex-start",
               marginBottom: "10px",
               gap: "5px",
-            }}
-          >
+            }}>
             <p style={{ color: "red" }}>*</p> Kategoriya
           </p>
           <Form.Item
             label="Narxi"
             name="narxi"
-            rules={[{ required: true, message: "Narxni kiriting!" }]}
-          >
+            rules={[{ required: true, message: "Narxni kiriting!" }]}>
             <Input />
           </Form.Item>
 
@@ -401,36 +386,31 @@ const Mijozlar = () => {
         title="Maxsulotni tahrirlash"
         open={isModalOpenEdit}
         onOk={editForm.submit}
-        onCancel={handleCancelEdit}
-      >
+        onCancel={handleCancelEdit}>
         <Form
           form={editForm}
           name="editProduct"
           onFinish={onFinishEdit}
           autoComplete="off"
-          layout="vertical"
-        >
+          layout="vertical">
           <Form.Item
             label="Maxsulot nomi"
             name="maxsulot"
-            rules={[{ required: true, message: "Maxsulot nomini kiriting!" }]}
-          >
+            rules={[{ required: true, message: "Maxsulot nomini kiriting!" }]}>
             <Input />
           </Form.Item>
 
           <Form.Item
             label="Kategoriya"
             name="kategoriya"
-            rules={[{ required: true, message: "Kategoriya kiriting!" }]}
-          >
+            rules={[{ required: true, message: "Kategoriya kiriting!" }]}>
             <Input />
           </Form.Item>
 
           <Form.Item
             label="Narxi"
             name="narxi"
-            rules={[{ required: true, message: "Narxni kiriting!" }]}
-          >
+            rules={[{ required: true, message: "Narxni kiriting!" }]}>
             <Input />
           </Form.Item>
 
