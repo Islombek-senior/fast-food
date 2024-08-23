@@ -141,8 +141,7 @@ const Kategoriyalar = () => {
             paddingLeft: "50px",
             width: "270px",
           }}
-          className="flex items-center gap-5"
-        >
+          className="flex items-center gap-5">
           <Button
             onClick={showDrawer}
             style={{
@@ -158,8 +157,7 @@ const Kategoriyalar = () => {
           <h2
             style={{
               fontWeight: "bold",
-            }}
-          >
+            }}>
             Yangi maxsulot
             <br />
             qo’shish
@@ -205,9 +203,8 @@ const Kategoriyalar = () => {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-          }}
-        >
-          <button
+          }}>
+          <Button
             className="bg-white"
             style={{
               width: "32px",
@@ -218,14 +215,13 @@ const Kategoriyalar = () => {
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
-            }}
-          >
+            }}>
             <CiFilter
               style={{
                 color: "#8D9BA8",
               }}
             />
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -245,8 +241,7 @@ const Kategoriyalar = () => {
             alignContent: "center",
             fontWeight: "bolder",
             boxShadow: "5px 5px 5px rgba(124, 124, 124, 0.3)",
-          }}
-        >
+          }}>
           <div className="flex gap-10 items-center">
             <p>MAXSULOT</p>
           </div>
@@ -274,24 +269,21 @@ const Kategoriyalar = () => {
                 borderRadius: "8px",
                 boxShadow: "1px 1px 10px rgba(124, 124, 124, 0.3)",
                 height: "80px",
-              }}
-            >
+              }}>
               <div
                 style={{
                   display: "flex",
                   justifyContent: "space-around",
                   alignItems: "center",
                   textAlign: "start",
-                }}
-              >
+                }}>
                 <div
                   style={{
                     display: "flex",
                     gap: "30px",
                     alignItems: "center",
                     width: `calc(100% / 5)`,
-                  }}
-                >
+                  }}>
                   <img src={f.img} alt="" className="w-10 h-10 rounded-full" />
                   <p>{f.maxsulot}</p>
                 </div>
@@ -357,7 +349,7 @@ const Kategoriyalar = () => {
                 </table> */}
 
                 <div className="flex space-x-2 mt-2">
-                  <button
+                  <Button
                     style={{
                       borderRadius: "50%",
                       width: "30px",
@@ -365,11 +357,10 @@ const Kategoriyalar = () => {
                       boxShadow: "0px 2px 2px 0px #AEB0B550",
                     }}
                     className="bg-white flex items-center justify-center transition-transform duration-300 hover:scale-110"
-                    onClick={() => showModalEdit(f)}
-                  >
+                    onClick={() => showModalEdit(f)}>
                     <LuPen size={18} />
-                  </button>
-                  <button
+                  </Button>
+                  <Button
                     style={{
                       borderRadius: "50%",
                       width: "30px",
@@ -377,10 +368,9 @@ const Kategoriyalar = () => {
                       boxShadow: "0px 2px 2px 0px #AEB0B550",
                     }}
                     className="bg-white flex items-center justify-center transition-transform duration-300 hover:scale-110"
-                    onClick={() => handleDelete(f.id)}
-                  >
+                    onClick={() => handleDelete(f.id)}>
                     <FiTrash2 size={18} />
-                  </button>
+                  </Button>
                 </div>
               </div>
             </Card>
@@ -393,29 +383,25 @@ const Kategoriyalar = () => {
         placement="right"
         onClose={onClose}
         open={open}
-        width={380}
-      >
+        width={380}>
         <Form
           form={addForm}
           name="addProduct"
           onFinish={onFinishAdd}
           onFinishFailed={onFinishFailedAdd}
           autoComplete="off"
-          layout="vertical"
-        >
+          layout="vertical">
           <Form.Item
             label="Rasm"
             name="rasm"
-            rules={[{ required: true, message: "Maxsulot nomini kiriting!" }]}
-          >
+            rules={[{ required: true, message: "Maxsulot nomini kiriting!" }]}>
             <Input />
           </Form.Item>
 
           <Form.Item
             label="Maxsulot nomi"
             name="maxsulot"
-            rules={[{ required: true, message: "Maxsulot nomini kiriting!" }]}
-          >
+            rules={[{ required: true, message: "Maxsulot nomini kiriting!" }]}>
             <Input />
           </Form.Item>
           <p
@@ -424,15 +410,13 @@ const Kategoriyalar = () => {
               justifyContent: "flex-start",
               marginBottom: "10px",
               gap: "5px",
-            }}
-          >
+            }}>
             <p style={{ color: "red" }}>*</p> Kategoriya
           </p>
           <Select
             onChange={onChange}
             style={{ width: "100%", marginBottom: "20px" }}
-            defaultValue="Burger"
-          >
+            defaultValue="Burger">
             {maxFood.map((t) => (
               <Select.Option>{t.kategoriya}</Select.Option>
             ))}
@@ -441,8 +425,7 @@ const Kategoriyalar = () => {
           <Form.Item
             label="Narxi"
             name="narxi"
-            rules={[{ required: true, message: "Narxni kiriting!" }]}
-          >
+            rules={[{ required: true, message: "Narxni kiriting!" }]}>
             <Input />
           </Form.Item>
 
@@ -465,36 +448,31 @@ const Kategoriyalar = () => {
         title="Maxsulotni tahrirlash"
         open={isModalOpenEdit}
         onOk={editForm.submit}
-        onCancel={handleCancelEdit}
-      >
+        onCancel={handleCancelEdit}>
         <Form
           form={editForm}
           name="editProduct"
           onFinish={onFinishEdit}
           autoComplete="off"
-          layout="vertical"
-        >
+          layout="vertical">
           <Form.Item
             label="Maxsulot nomi"
             name="maxsulot"
-            rules={[{ required: true, message: "Maxsulot nomini kiriting!" }]}
-          >
+            rules={[{ required: true, message: "Maxsulot nomini kiriting!" }]}>
             <Input />
           </Form.Item>
 
           <Form.Item
             label="Kategoriya"
             name="kategoriya"
-            rules={[{ required: true, message: "Kategoriya kiriting!" }]}
-          >
+            rules={[{ required: true, message: "Kategoriya kiriting!" }]}>
             <Input />
           </Form.Item>
 
           <Form.Item
             label="Narxi"
             name="narxi"
-            rules={[{ required: true, message: "Narxni kiriting!" }]}
-          >
+            rules={[{ required: true, message: "Narxni kiriting!" }]}>
             <Input />
           </Form.Item>
 

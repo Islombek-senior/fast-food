@@ -1,7 +1,7 @@
 import { Button, Input } from "antd";
 import React, { useState } from "react";
 import { FiPlus } from "react-icons/fi";
-import "../Xisobot/xisobot.css"
+import "../Xisobot/xisobot.css";
 import { HiMenuAlt4 } from "react-icons/hi";
 import { HiOutlineMenuAlt3 } from "react-icons/hi";
 import { MdRestartAlt } from "react-icons/md";
@@ -9,14 +9,14 @@ import { IoSearchOutline } from "react-icons/io5";
 import { CiFilter } from "react-icons/ci";
 
 function Xisobot() {
-  const [activeButton, setActiveButton] = useState('Yangi');
+  const [activeButton, setActiveButton] = useState("Yangi");
 
   const handleButtonClick = (buttonName: string) => {
     setActiveButton(buttonName);
   };
-  return <div>
-
-<div className="bg-white flex items-center">
+  return (
+    <div>
+      <div className="bg-white flex items-center">
         <div
           style={{
             borderRight: "1px solid #EDEFF3",
@@ -25,8 +25,7 @@ function Xisobot() {
             paddingLeft: "50px",
             width: "270px",
           }}
-          className="flex items-center gap-5"
-        >
+          className="flex items-center gap-5">
           <Button
             style={{
               borderRadius: "50%",
@@ -41,8 +40,7 @@ function Xisobot() {
           <h2
             style={{
               fontWeight: "bold",
-            }}
-          >
+            }}>
             Ma’lumotlarni
             <br />
             yangilash
@@ -79,62 +77,69 @@ function Xisobot() {
 
         {/* filter */}
 
-        <div style={{
-          marginLeft: "30px",
-          width: "44px",
-          height: "44px",
-          background:"#EDEFF3",
-          borderRadius:"50%",
-          cursor:"pointer",
-          display:"flex",
-          justifyContent:"center",
-          alignItems:"center"
-        }}>
-           <button className=" bg-white" style={{
-            width: "32px",
-            height: "32px",
-            boxShadow: "0px 2px 2px 0px #AEB0B550",
-            borderRadius:"50%",
-            cursor:"pointer",
-            display:"flex",
-            justifyContent:"center",
-            alignItems:"center"
-           }}>
-           <CiFilter style={{
-            color:" #8D9BA8"
-           }} />
-           </button>
+        <div
+          style={{
+            marginLeft: "30px",
+            width: "44px",
+            height: "44px",
+            background: "#EDEFF3",
+            borderRadius: "50%",
+            cursor: "pointer",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}>
+          <Button
+            className=" bg-white"
+            style={{
+              width: "32px",
+              height: "32px",
+              boxShadow: "0px 2px 2px 0px #AEB0B550",
+              borderRadius: "50%",
+              cursor: "pointer",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}>
+            <CiFilter
+              style={{
+                color: " #8D9BA8",
+              }}
+            />
+          </Button>
         </div>
-        
 
-    {/* table,card */}
+        {/* table,card */}
 
-    <div
+        <div
           style={{
             borderLeft: "1px solid #EDEFF3",
             width: "100px",
-            marginLeft:"480px"
+            marginLeft: "480px",
           }}
-          className="flex items-center gap-5"
-        >
-          <div className=" flex items-center justify-between" style={{
-            width: "120px",
-            height:"45px",
-            background: "#EDEFF3",
-            paddingRight:"10px",
-            borderRadius: "30px",
-            padding: "7px",
-            marginLeft:"20px"
-        
-          }}>
-            <button className="iconActiv"><HiMenuAlt4  /></button>
-            <button><HiOutlineMenuAlt3 /></button>
+          className="flex items-center gap-5">
+          <div
+            className=" flex items-center justify-between"
+            style={{
+              width: "120px",
+              height: "45px",
+              background: "#EDEFF3",
+              paddingRight: "10px",
+              borderRadius: "30px",
+              padding: "7px",
+              marginLeft: "20px",
+            }}>
+            <Button className="iconActiv">
+              <HiMenuAlt4 />
+            </Button>
+            <Button>
+              <HiOutlineMenuAlt3 />
+            </Button>
           </div>
-        
         </div>
-
       </div>
-  </div>;
+    </div>
+  );
 }
 
 export default Xisobot;

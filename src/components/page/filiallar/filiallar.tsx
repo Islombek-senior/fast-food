@@ -1,4 +1,14 @@
-import { Button, Card, Col, Drawer, DrawerProps, Form, Input, Row, Space } from "antd";
+import {
+  Button,
+  Card,
+  Col,
+  Drawer,
+  DrawerProps,
+  Form,
+  Input,
+  Row,
+  Space,
+} from "antd";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { FiEdit, FiEdit2, FiPlus, FiTrash2 } from "react-icons/fi";
@@ -9,7 +19,7 @@ import { LuPen } from "react-icons/lu";
 import { MapContainer, Marker, TileLayer, useMapEvents } from "react-leaflet";
 import "leaflet/dist/leaflet.css"; // Leaflet CSS
 import TextArea from "antd/es/input/TextArea";
-import L from 'leaflet'; // Leaflet import for custom icons
+import L from "leaflet"; // Leaflet import for custom icons
 import { FaRegTrashCan } from "react-icons/fa6";
 
 interface Product {
@@ -23,19 +33,21 @@ interface Product {
 const Filiallar: React.FC = () => {
   const [data, setData] = useState<Product[]>([]);
   const [open, setOpen] = useState(false);
-  const [size, setSize] = useState<DrawerProps['size']>();
-  const [location, setLocation] = useState('');
-  const [mapPosition, setMapPosition] = useState<[number, number]>([51.505, -0.09]); // Default position [Lat, Lng]
+  const [size, setSize] = useState<DrawerProps["size"]>();
+  const [location, setLocation] = useState("");
+  const [mapPosition, setMapPosition] = useState<[number, number]>([
+    51.505, -0.09,
+  ]); // Default position [Lat, Lng]
 
   const [form] = Form.useForm(); // Ant Design Form instance
 
   const showDefaultDrawer = () => {
-    setSize('default');
+    setSize("default");
     setOpen(true);
   };
 
   const showLargeDrawer = () => {
-    setSize('large');
+    setSize("large");
     setOpen(true);
   };
 
@@ -61,14 +73,17 @@ const Filiallar: React.FC = () => {
         setMapPosition([lat, lng]);
 
         // Convert latitude and longitude to an address using reverse geocoding
-        axios.get(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`)
+        axios
+          .get(
+            `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`
+          )
           .then((res) => {
             const address = res.data.display_name;
             setLocation(address);
             form.setFieldsValue({ location: address });
           })
           .catch((err) => {
-            console.error('Geocoding error:', err);
+            console.error("Geocoding error:", err);
           });
       },
     });
@@ -76,7 +91,8 @@ const Filiallar: React.FC = () => {
   };
 
   const handleSave = () => {
-    form.validateFields()
+    form
+      .validateFields()
       .then((values) => {
         const newData = {
           nameuz: values.nameuz,
@@ -85,18 +101,19 @@ const Filiallar: React.FC = () => {
           hour: values.hour,
         };
 
-        axios.post("https://4a39859802af3eec.mokky.dev/filiallar", newData)
+        axios
+          .post("https://4a39859802af3eec.mokky.dev/filiallar", newData)
           .then((res) => {
-            console.log('Data saved successfully:', res.data);
+            console.log("Data saved successfully:", res.data);
             setData([...data, res.data]); // Add the new entry to the existing data
             onClose(); // Close the drawer
           })
           .catch((err) => {
-            console.error('Error saving data:', err);
+            console.error("Error saving data:", err);
           });
       })
       .catch((info) => {
-        console.log('Validate Failed:', info);
+        console.log("Validate Failed:", info);
       });
   };
 
@@ -111,8 +128,7 @@ const Filiallar: React.FC = () => {
             paddingLeft: "50px",
             width: "270px",
           }}
-          className="flex items-center gap-5"
-        >
+          className="flex items-center gap-5">
           <Button
             onClick={showDefaultDrawer}
             style={{
@@ -128,8 +144,7 @@ const Filiallar: React.FC = () => {
           <h2
             style={{
               fontWeight: "bold",
-            }}
-          >
+            }}>
             Yangi filial <br />
             qo’shish
           </h2>
@@ -164,7 +179,9 @@ const Filiallar: React.FC = () => {
         </div>
       </div>
 
-      <div className="table-container" style={{ height: '90vh', overflowY: 'auto' }}>
+      <div
+        className="table-container"
+        style={{ height: "90vh", overflowY: "auto" }}>
         <table className="w-full px-5 border-separate border-spacing-y-2">
           <thead className="h-20 bg-white sticky top-0">
             <tr>
@@ -186,18 +203,28 @@ const Filiallar: React.FC = () => {
           <tbody>
             {data?.map((item) => {
               return (
-                <tr key={item.id} className="h-20 bg-white text-center rounded-md">
-                  <td className="border-l border-t border-b border-gray-200 rounded-l-md text-center align-middle w-1/4">{item.nameuz}</td>
-                  <td className="border-t border-b border-gray-200 w-1/5">{item.nameru}</td>
-                  <td className="border-t border-b border-gray-200 w-1/5 font-medium">{item.locate}</td>
-                  <td className="border-t border-b border-gray-200 w-1/5 font-medium">{item.hour}</td>
+                <tr
+                  key={item.id}
+                  className="h-20 bg-white text-center rounded-md">
+                  <td className="border-l border-t border-b border-gray-200 rounded-l-md text-center align-middle w-1/4">
+                    {item.nameuz}
+                  </td>
+                  <td className="border-t border-b border-gray-200 w-1/5">
+                    {item.nameru}
+                  </td>
+                  <td className="border-t border-b border-gray-200 w-1/5 font-medium">
+                    {item.locate}
+                  </td>
+                  <td className="border-t border-b border-gray-200 w-1/5 font-medium">
+                    {item.hour}
+                  </td>
                   <td className="border-t border-b border-r border-gray-200 rounded-r-md w-1/6">
-                    <button className="p-2 border-4 rounded-full border-gray-200 me-4">
+                    <Button className="p-2 border-4 rounded-full border-gray-200 me-4">
                       <FiEdit2 />
-                    </button>
-                    <button className="p-2 border-4 rounded-full border-gray-200">
+                    </Button>
+                    <Button className="p-2 border-4 rounded-full border-gray-200">
                       <FaRegTrashCan />
-                    </button>
+                    </Button>
                   </td>
                 </tr>
               );
@@ -211,44 +238,38 @@ const Filiallar: React.FC = () => {
         placement="right"
         onClose={onClose}
         open={open}
-        size={size}
-      >
+        size={size}>
         <Form
           form={form}
           layout="vertical"
           name="form_in_modal"
           initialValues={{}}
-          style={{ maxWidth: 600 }}
-        >
+          style={{ maxWidth: 600 }}>
           <Form.Item
             name="nameuz"
             label="Filial nomi (Uzbek)"
-            rules={[{ required: true, message: 'Filial nomini kiriting' }]}
-          >
+            rules={[{ required: true, message: "Filial nomini kiriting" }]}>
             <Input />
           </Form.Item>
 
           <Form.Item
             name="nameru"
             label="Filial nomi (Rus)"
-            rules={[{ required: true, message: 'Filial nomini kiriting' }]}
-          >
+            rules={[{ required: true, message: "Filial nomini kiriting" }]}>
             <Input />
           </Form.Item>
 
           <Form.Item
             name="hour"
             label="Ish soatlari"
-            rules={[{ required: true, message: 'Ish soatlarini kiriting' }]}
-          >
+            rules={[{ required: true, message: "Ish soatlarini kiriting" }]}>
             <Input />
           </Form.Item>
 
           <Form.Item
             name="location"
             label="Manzil"
-            rules={[{ required: true, message: 'Manzilni kiriting' }]}
-          >
+            rules={[{ required: true, message: "Manzilni kiriting" }]}>
             <TextArea rows={4} />
           </Form.Item>
 

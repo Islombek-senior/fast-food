@@ -1,10 +1,15 @@
 import React, { useState } from "react";
 import { Layout, Menu, theme } from "antd";
-import { BrowserRouter as Router, Route, Routes, NavLink } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  NavLink,
+} from "react-router-dom";
 import Filiallar from "../page/filiallar/filiallar";
 import Maxsulotla from "../page/maxsusoltlar/maxsulotla";
 import Buyurtmalar from "../page/buyurtmalar/buyurtmalar";
-import Kategoriyalar from "../page/kategoriyalar";
+import Kategoriyalar from "../page/kategoriyalar/kategoriyalar";
 import img_1 from "../../components/imgs/Bitmap.png";
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 import { FaBoxArchive } from "react-icons/fa6";
@@ -52,8 +57,7 @@ const items = [
         to="/filiallar"
         className={({ isActive, isPending }) =>
           isPending ? "pending" : isActive ? "active" : ""
-        }
-      >
+        }>
         Filiallar
       </NavLink>
     ),
@@ -98,8 +102,7 @@ const Lyout: React.FC = () => {
           style={sider}
           onCollapse={(collapsed, type) => {
             console.log(collapsed, type);
-          }}
-        >
+          }}>
           <div className="demo-logo-vertical" />
           <div
             style={{
@@ -109,8 +112,7 @@ const Lyout: React.FC = () => {
               alignItems: "center",
               marginBottom: "30px",
               paddingTop: 15,
-            }}
-          >
+            }}>
             <div>
               <img
                 src={img_1}
@@ -124,8 +126,7 @@ const Lyout: React.FC = () => {
                 style={{
                   fontSize: "10px",
                   fontWeight: "light",
-                }}
-              >
+                }}>
                 Online maxsulot sotuvi
               </p>
             </div>
@@ -138,13 +139,12 @@ const Lyout: React.FC = () => {
           />
         </Sider>
         <Layout style={{ height: "100%" }}>
-          <Content style={{  height: "100%" }}>
+          <Content style={{ height: "100%" }}>
             <div
               style={{
                 height: "100%",
                 overflow: "auto",
-              }}
-            >
+              }}>
               <Routes>
                 <Route path="/buyurtmalar" element={<Buyurtmalar />} />
                 <Route path="/filiallar" element={<Filiallar />} />
