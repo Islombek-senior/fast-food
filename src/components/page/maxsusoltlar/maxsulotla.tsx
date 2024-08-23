@@ -1,21 +1,22 @@
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import {
   Button,
+  Drawer,
   Form,
-  FormProps,
   Input,
-  Modal,
   Space,
-  Table,
-  TableProps,
+  Row,
+  Col,
+  Card,
+  Modal,
 } from "antd";
-import React, { useEffect, useState } from "react";
 import { FiPlus, FiTrash2 } from "react-icons/fi";
 import { IoSearchOutline } from "react-icons/io5";
-import { CiFilter, CiPen } from "react-icons/ci";
+import { CiFilter } from "react-icons/ci";
 import { LuPen } from "react-icons/lu";
-import axios from "axios";
 import "./cssmax.css";
-import { Card, Col, Row } from "antd";
+import { Select } from "antd";
 
 type FieldType = {
   maxsulot?: string;
@@ -37,20 +38,31 @@ const Kategoriyalar = () => {
   const [maxFood, setFoods] = useState<DataType[]>([]);
   const [visibleItems, setVisibleItems] = useState(7);
   const [isModalOpenEdit, setIsModalOpenEdit] = useState(false);
-  const [isModalOpenAdd, setIsModalOpenAdd] = useState(false);
   const [editForm] = Form.useForm();
   const [selectedItem, setSelectedItem] = useState<DataType | null>(null);
   const [addForm] = Form.useForm();
-  const showModalAdd = () => {
-    setIsModalOpenAdd(true);
+  const [open, setOpen] = useState(false);
+
+  const onClose = () => {
+    setOpen(false);
   };
 
-  const handleOkAdd = () => {
-    setIsModalOpenAdd(false);
+  const showDrawer = () => {
+    setOpen(true);
   };
 
-  const handleCancelAdd = () => {
-    setIsModalOpenAdd(false);
+  const onFinishAdd = (values: any) => {
+    axios
+      .post(`https://e2ead815ad4a2894.mokky.dev/maxsulotlar`, values)
+      .then((res) => {
+        setFoods([...maxFood, res.data]);
+        addForm.resetFields();
+        onClose();
+      });
+  };
+
+  const onFinishFailedAdd = (errorInfo: any) => {
+    console.log("Failed:", errorInfo);
   };
 
   const showModalEdit = (item: DataType) => {
@@ -68,16 +80,13 @@ const Kategoriyalar = () => {
     setSelectedItem(null);
   };
 
-  const onFinishEdit: FormProps<FieldType>["onFinish"] = (values: any) => {
+  const onFinishEdit = (values: any) => {
     if (selectedItem) {
       const url = `https://e2ead815ad4a2894.mokky.dev/maxsulotlar/${selectedItem.id}`;
-      console.log("PUT so'rov manzili:", url);
-      console.log("Tahrir qilinayotgan ma'lumotlar:", values);
 
       axios
         .put(url, values)
         .then((res) => {
-          console.log("PUT so'rovi muvaffaqiyatli bo'ldi:", res.data);
           setFoods((prevFoods) =>
             prevFoods.map((item) =>
               item.id === selectedItem.id ? { ...item, ...values } : item
@@ -88,7 +97,6 @@ const Kategoriyalar = () => {
         })
         .catch((error) => {
           console.error("Xatolik yuz berdi:", error.response || error);
-          // Xatolik xabarini foydalanuvchiga ko'rsatish
           Modal.error({
             title: "Xatolik yuz berdi",
             content:
@@ -98,82 +106,16 @@ const Kategoriyalar = () => {
     }
   };
 
-  const onFinishFailedEdit: FormProps<FieldType>["onFinishFailed"] = (
-    errorInfo: any
-  ) => {
-    console.log("Failed:", errorInfo);
-  };
-
-  const onFinishAdd: FormProps<FieldType>["onFinish"] = (values: any) => {
-    axios
-      .post(`https://e2ead815ad4a2894.mokky.dev/maxsulotlar`, values)
-      .then((res) => {
-        setFoods([...maxFood, res.data]);
-        addForm.resetFields();
-        handleOkAdd();
-      });
-  };
-
-  const onFinishFailedAdd: FormProps<FieldType>["onFinishFailed"] = (
-    errorInfo: any
-  ) => {
-    console.log("Failed:", errorInfo);
-  };
-
-  const columns: TableProps<DataType>["columns"] = [
-    {
-      title: "Maxsulot",
-      dataIndex: "maxsulot",
-      key: "maxsulot",
-    },
-    {
-      title: "Kategoriya",
-      dataIndex: "kategoriya",
-      key: "kategoriya",
-    },
-    {
-      title: "Narxi",
-      dataIndex: "narxi",
-      key: "narxi",
-    },
-    {
-      title: "Qo’shimcha",
-      key: "qoshimcha",
-      dataIndex: "qoshimcha",
-    },
-    {
-      title: "Action",
-      key: "action",
-      render: (_: any, record: DataType) => (
-        <Space>
-          <Button
-            onClick={() => showModalEdit(record)}
-            style={{ borderRadius: "50%", height: "45px" }}
-          >
-            <LuPen />
-          </Button>
-          <Button
-            onClick={() => deletes(record.id)}
-            style={{ borderRadius: "50%", height: "45px" }}
-          >
-            <FiTrash2 />
-          </Button>
-        </Space>
-      ),
-    },
-  ];
-
-  const deletes = (id: number) => {
+  const handleDelete = (id: number) => {
     axios
       .delete(`https://e2ead815ad4a2894.mokky.dev/maxsulotlar/${id}`)
       .then((res) => {
-        setFoods(maxFood.filter((f) => f.id !== id));
+        setFoods(maxFood.filter((item) => item.id !== id));
       })
       .catch((err) => {
         console.error(err);
       });
   };
-
   useEffect(() => {
     axios
       .get("https://e2ead815ad4a2894.mokky.dev/maxsulotlar")
@@ -185,11 +127,9 @@ const Kategoriyalar = () => {
         console.error(err);
       });
   }, []);
-
-  const loadMore = () => {
-    setVisibleItems((prev) => prev + 5);
+  const onChange = (value: string) => {
+    console.log(`selected ${value}`);
   };
-
   return (
     <div>
       <div className="bg-white flex items-center">
@@ -204,7 +144,7 @@ const Kategoriyalar = () => {
           className="flex items-center gap-5"
         >
           <Button
-            onClick={showModalAdd}
+            onClick={showDrawer}
             style={{
               borderRadius: "50%",
               backgroundColor: "#20D472",
@@ -254,8 +194,6 @@ const Kategoriyalar = () => {
           />
         </div>
 
-        {/* filter */}
-
         <div
           style={{
             marginLeft: "30px",
@@ -270,7 +208,7 @@ const Kategoriyalar = () => {
           }}
         >
           <button
-            className=" bg-white"
+            className="bg-white"
             style={{
               width: "32px",
               height: "32px",
@@ -284,14 +222,12 @@ const Kategoriyalar = () => {
           >
             <CiFilter
               style={{
-                color: " #8D9BA8",
+                color: "#8D9BA8",
               }}
             />
           </button>
         </div>
       </div>
-
-      {/* mahsulotlar content */}
 
       <Row>
         <div
@@ -312,9 +248,13 @@ const Kategoriyalar = () => {
           }}
         >
           <p>MAXSULOT</p>
+          <div style={{ borderRight: "1px solid grey" }}></div>
           <p>KATEGORIYA</p>
+          <div style={{ borderRight: "1px solid grey" }}></div>
           <p>NARXI</p>
+          <div style={{ borderRight: "1px solid grey" }}></div>
           <p>QO’SHIMCHA</p>
+          <div style={{ borderRight: "1px solid grey" }}></div>
           <p>ACTION</p>
         </div>
         {maxFood.map((f) => (
@@ -331,175 +271,192 @@ const Kategoriyalar = () => {
                   display: "flex",
                   justifyContent: "space-around",
                   alignItems: "center",
+                  textAlign: "start",
                 }}
               >
-                <img src={f.img} alt="" className="w-10 h-10 rounded-full" />
-                <p>{f.maxsulot}</p>
-                <p>{f.kategoriya}</p>
-                <p>{f.narxi}</p>
-                <p>{f.qoshimcha}</p>
-                <Space>
-                  <div
-                    style={{
-                      marginLeft: "30px",
-                      width: "54px",
-                      height: "54px",
-                      background: "#EDEFF3",
-                      borderRadius: "50%",
-                      cursor: "pointer",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    <button
-                      onClick={() => showModalEdit(f)}
-                      className=" bg-white"
-                      style={{
-                        width: "42px",
-                        height: "42px",
-                        boxShadow: "0px 2px 2px 0px #AEB0B550",
-                        borderRadius: "50%",
-                        cursor: "pointer",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                      }}
-                    >
-                      <LuPen
+                <div>
+                  <img src={f.img} alt="" className="w-10 h-10 rounded-full" />
+                  <p>{f.maxsulot}</p>
+                </div>
+                <div className="flex justify-between text-start">
+                  <p>{f.kategoriya}</p>
+                  <p>{f.narxi}</p>
+                  <p>{f.qoshimcha}</p>
+                </div>
+
+                {/* <table style={{ width: "100%", borderCollapse: "collapse" }}>
+                  <tbody>
+                    <tr>
+                      <td style={{ padding: "8px", verticalAlign: "middle" }}>
+                        <img
+                          src={f.img}
+                          alt=""
+                          className="w-10 h-10 rounded-full"
+                          style={{ display: "block", margin: "0 auto" }}
+                        />
+                      </td>
+                      <td
                         style={{
-                          fontSize: "18px",
+                          padding: "8px",
+                          verticalAlign: "middle",
+                          textAlign: "center",
                         }}
-                      />
-                    </button>
-                  </div>
-                  <div
-                    style={{
-                      marginLeft: "30px",
-                      width: "54px",
-                      height: "54px",
-                      background: "#EDEFF3",
-                      borderRadius: "50%",
-                      cursor: "pointer",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    <button
-                      onClick={() => deletes(f.id)}
-                      className=" bg-white"
-                      style={{
-                        width: "42px",
-                        height: "42px",
-                        boxShadow: "0px 2px 2px 0px #AEB0B550",
-                        borderRadius: "50%",
-                        cursor: "pointer",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                      }}
-                    >
-                      <FiTrash2
+                      >
+                        <p>{f.maxsulot}</p>
+                      </td>
+                      <td
                         style={{
-                          fontSize: "18px",
+                          padding: "8px",
+                          verticalAlign: "middle",
+                          textAlign: "center",
                         }}
-                      />
-                    </button>
-                  </div>
-                </Space>
+                      >
+                        <p>{f.kategoriya}</p>
+                      </td>
+                      <td
+                        style={{
+                          padding: "8px",
+                          verticalAlign: "middle",
+                          textAlign: "center",
+                        }}
+                      >
+                        <p>{f.narxi}</p>
+                      </td>
+                      <td
+                        style={{
+                          padding: "8px",
+                          verticalAlign: "middle",
+                          textAlign: "center",
+                        }}
+                      >
+                        <p>{f.qoshimcha}</p>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table> */}
+
+                <div className="flex space-x-2 mt-2">
+                  <button
+                    style={{
+                      borderRadius: "50%",
+                      width: "30px",
+                      height: "30px",
+                      boxShadow: "0px 2px 2px 0px #AEB0B550",
+                    }}
+                    className="bg-white flex items-center justify-center transition-transform duration-300 hover:scale-110"
+                    onClick={() => showModalEdit(f)}
+                  >
+                    <LuPen size={18} />
+                  </button>
+                  <button
+                    style={{
+                      borderRadius: "50%",
+                      width: "30px",
+                      height: "30px",
+                      boxShadow: "0px 2px 2px 0px #AEB0B550",
+                    }}
+                    className="bg-white flex items-center justify-center transition-transform duration-300 hover:scale-110"
+                    onClick={() => handleDelete(f.id)}
+                  >
+                    <FiTrash2 size={18} />
+                  </button>
+                </div>
               </div>
             </Card>
           </Col>
         ))}
       </Row>
 
-      {/* Add Modal */}
-      <Modal
-        title="Yangi maxsulot qo’shish"
-        open={isModalOpenAdd}
-        onOk={handleOkAdd}
-        onCancel={handleCancelAdd}
-        footer={[
-          <Button form="addForm" key="submit" htmlType="submit" type="primary">
-            Saqlash
-          </Button>,
-        ]}
+      <Drawer
+        title="Yangi mahsulot qo'shish"
+        placement="right"
+        onClose={onClose}
+        open={open}
+        width={380}
       >
         <Form
-          name="addForm"
           form={addForm}
+          name="addProduct"
           onFinish={onFinishAdd}
           onFinishFailed={onFinishFailedAdd}
-          // onReset={}
+          autoComplete="off"
+          layout="vertical"
         >
           <Form.Item
             label="Rasm"
             name="rasm"
-            rules={[{ required: true, message: "Iltimos, maxsulot kiriting!" }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            label="Maxsulot"
-            name="maxsulot"
-            rules={[{ required: true, message: "Iltimos, maxsulot kiriting!" }]}
+            rules={[{ required: true, message: "Maxsulot nomini kiriting!" }]}
           >
             <Input />
           </Form.Item>
 
           <Form.Item
-            label="Kategoriya"
-            name="kategoriya"
-            rules={[
-              { required: true, message: "Iltimos, kategoriya kiriting!" },
-            ]}
+            label="Maxsulot nomi"
+            name="maxsulot"
+            rules={[{ required: true, message: "Maxsulot nomini kiriting!" }]}
           >
             <Input />
           </Form.Item>
+          <p
+            style={{
+              display: "flex",
+              justifyContent: "flex-start",
+              marginBottom: "10px",
+              gap: "5px",
+            }}
+          >
+            <p style={{ color: "red" }}>*</p> Kategoriya
+          </p>
+          <Select
+            onChange={onChange}
+            style={{ width: "100%", marginBottom: "20px" }}
+            defaultValue="Burger"
+          >
+            {maxFood.map((t) => (
+              <Select.Option>{t.kategoriya}</Select.Option>
+            ))}
+          </Select>
 
           <Form.Item
             label="Narxi"
             name="narxi"
-            rules={[{ required: true, message: "Iltimos, narxi kiriting!" }]}
+            rules={[{ required: true, message: "Narxni kiriting!" }]}
           >
             <Input />
           </Form.Item>
 
-          <Form.Item
-            label="Qo’shimcha"
-            name="qoshimcha"
-            rules={[
-              { required: true, message: "Iltimos, qo'shimcha kiriting!" },
-            ]}
-          >
+          <Form.Item label="Qo'shimcha" name="qoshimcha">
             <Input />
+          </Form.Item>
+
+          <Form.Item>
+            <Space>
+              <Button type="primary" htmlType="submit">
+                Qo'shish
+              </Button>
+              <Button onClick={onClose}>Bekor qilish</Button>
+            </Space>
           </Form.Item>
         </Form>
-      </Modal>
+      </Drawer>
 
-      {/* Edit Modal */}
       <Modal
         title="Maxsulotni tahrirlash"
         open={isModalOpenEdit}
-        onOk={handleOkEdit}
+        onOk={editForm.submit}
         onCancel={handleCancelEdit}
-        footer={[
-          <Button form="editForm" key="submit" htmlType="submit" type="primary">
-            Saqlash
-          </Button>,
-        ]}
       >
         <Form
-          name="editForm"
           form={editForm}
+          name="editProduct"
           onFinish={onFinishEdit}
-          onFinishFailed={onFinishFailedEdit}
+          autoComplete="off"
+          layout="vertical"
         >
           <Form.Item
-            label="Maxsulot"
+            label="Maxsulot nomi"
             name="maxsulot"
-            rules={[{ required: true, message: "Iltimos, maxsulot kiriting!" }]}
+            rules={[{ required: true, message: "Maxsulot nomini kiriting!" }]}
           >
             <Input />
           </Form.Item>
@@ -507,9 +464,7 @@ const Kategoriyalar = () => {
           <Form.Item
             label="Kategoriya"
             name="kategoriya"
-            rules={[
-              { required: true, message: "Iltimos, kategoriya kiriting!" },
-            ]}
+            rules={[{ required: true, message: "Kategoriya kiriting!" }]}
           >
             <Input />
           </Form.Item>
@@ -517,18 +472,12 @@ const Kategoriyalar = () => {
           <Form.Item
             label="Narxi"
             name="narxi"
-            rules={[{ required: true, message: "Iltimos, narxi kiriting!" }]}
+            rules={[{ required: true, message: "Narxni kiriting!" }]}
           >
             <Input />
           </Form.Item>
 
-          <Form.Item
-            label="Qo’shimcha"
-            name="qoshimcha"
-            rules={[
-              { required: true, message: "Iltimos, qo'shimcha kiriting!" },
-            ]}
-          >
+          <Form.Item label="Qo'shimcha" name="qoshimcha">
             <Input />
           </Form.Item>
         </Form>
