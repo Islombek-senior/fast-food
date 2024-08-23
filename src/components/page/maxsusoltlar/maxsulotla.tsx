@@ -239,23 +239,33 @@ const Kategoriyalar = () => {
             padding: "23px",
             background: "white",
             display: "flex",
-            justifyContent: "space-around",
-            textAlign: "left",
-            gap: 30,
+            justifyContent: "center",
+            textAlign: "end",
+            gap: "90px",
             alignContent: "center",
             fontWeight: "bolder",
             boxShadow: "5px 5px 5px rgba(124, 124, 124, 0.3)",
           }}
         >
-          <p>MAXSULOT</p>
+          <div className="flex gap-10 items-center">
+            <p>MAXSULOT</p>
+          </div>
           <div style={{ borderRight: "1px solid grey" }}></div>
-          <p>KATEGORIYA</p>
+          <div className="flex gap-10 items-center">
+            <p>KATEGORIYA</p>
+          </div>
           <div style={{ borderRight: "1px solid grey" }}></div>
-          <p>NARXI</p>
+          <div className="flex gap-10 items-center">
+            <p>NARXI</p>
+          </div>
           <div style={{ borderRight: "1px solid grey" }}></div>
-          <p>QO’SHIMCHA</p>
+          <div className="flex gap-10 items-center">
+            <p>QO’SHIMCHA</p>
+          </div>
           <div style={{ borderRight: "1px solid grey" }}></div>
-          <p>ACTION</p>
+          <div className="flex gap-10 items-center">
+            <p>ACTION</p>
+          </div>
         </div>
         {maxFood.map((f) => (
           <Col span={24} style={{ padding: "13px", marginTop: -14 }} key={f.id}>
@@ -274,13 +284,24 @@ const Kategoriyalar = () => {
                   textAlign: "start",
                 }}
               >
-                <div>
+                <div
+                  style={{
+                    display: "flex",
+                    gap: "30px",
+                    alignItems: "center",
+                    width: `calc(100% / 5)`,
+                  }}
+                >
                   <img src={f.img} alt="" className="w-10 h-10 rounded-full" />
                   <p>{f.maxsulot}</p>
                 </div>
-                <div className="flex justify-between text-start">
+                <div style={{ width: `calc(100% / 5)` }}>
                   <p>{f.kategoriya}</p>
+                </div>
+                <div style={{ width: `calc(100% / 5)` }}>
                   <p>{f.narxi}</p>
+                </div>
+                <div style={{ width: `calc(100% / 5)` }}>
                   <p>{f.qoshimcha}</p>
                 </div>
 
