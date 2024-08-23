@@ -1,0 +1,31 @@
+.custom-table {
+  background-color: #f0f0f0;
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.custom-table .ant-table-thead > tr > th {
+  background-color: #1890ff;
+  color: #fff;
+  font-weight: bold;
+}
+
+.custom-table .ant-table-tbody > tr > td {
+  padding: 16px;
+  border-bottom: 1px solid #ddd;
+}
+
+.custom-table .ant-table-tbody > tr:hover > td {
+  background-color: #e6f7ff;
+}
+
+.custom-card {
+  width: 100%;
+  box-shadow: 15px 15px 15px rgba(203, 200, 200, 0.3);
+  transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+.custom-card:hover {
+  box-shadow: 18px 18px 25px rgba(100, 100, 100, 0.5);
+  transform: translateY(-5px);
+}

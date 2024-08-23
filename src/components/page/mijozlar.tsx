@@ -1,9 +1,55 @@
-import { Button, Input } from "antd";
+import { Button, Input, Table } from "antd";
 import React, { useEffect, useState } from "react";
 import { FiPlus } from "react-icons/fi";
 import { IoSearchOutline } from "react-icons/io5";
 import { CiFilter } from "react-icons/ci";
+const columns = [
+  {
+    title: "Name",
+    dataIndex: "name",
+    key: "name",
+  },
+  {
+    title: "Age",
+    dataIndex: "age",
+    key: "age",
+  },
+  {
+    title: "Address",
+    dataIndex: "address",
+    key: "address",
+  },
+];
 
+<<<<<<< HEAD
+=======
+const data = [
+  {
+    key: "1",
+    name: "John Brown",
+    age: 32,
+    address: "New York No. 1 Lake Park",
+  },
+  {
+    key: "1",
+    name: "John Brown",
+    age: 32,
+    address: "New York No. 1 Lake Park",
+  },
+  {
+    key: "1",
+    name: "John Brown",
+    age: 32,
+    address: "New York No. 1 Lake Park",
+  },
+  {
+    key: "1",
+    name: "John Brown",
+    age: 32,
+    address: "New York No. 1 Lake Park",
+  },
+];
+>>>>>>> f281d48ab1bb59b713bd643a3b168e1e60555bd0
 const Kategoriyalar = () => {
   return (
     <div>
@@ -31,7 +77,12 @@ const Kategoriyalar = () => {
           <h2
             style={{
               fontWeight: "bold",
+<<<<<<< HEAD
             }}>
+=======
+            }}
+          >
+>>>>>>> f281d48ab1bb59b713bd643a3b168e1e60555bd0
             Yangi mijoz
             <br />
             qo’shish
@@ -79,8 +130,14 @@ const Kategoriyalar = () => {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
+<<<<<<< HEAD
           }}>
           <Button
+=======
+          }}
+        >
+          <button
+>>>>>>> f281d48ab1bb59b713bd643a3b168e1e60555bd0
             className=" bg-white"
             style={{
               width: "32px",
@@ -91,13 +148,22 @@ const Kategoriyalar = () => {
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
+<<<<<<< HEAD
             }}>
+=======
+            }}
+          >
+>>>>>>> f281d48ab1bb59b713bd643a3b168e1e60555bd0
             <CiFilter
               style={{
                 color: " #8D9BA8",
               }}
             />
+<<<<<<< HEAD
           </Button>
+=======
+          </button>
+>>>>>>> f281d48ab1bb59b713bd643a3b168e1e60555bd0
         </div>
       </div>
 
@@ -112,9 +178,24 @@ const Kategoriyalar = () => {
           height: "auto",
           padding: "10px",
         }}
+<<<<<<< HEAD
         className="tableContainer">
+=======
+        className="tableContainer"
+      >
+>>>>>>> f281d48ab1bb59b713bd643a3b168e1e60555bd0
         {/* tabel shu yerga qoyiladi */}
       </div>
+      <Table
+        columns={columns}
+        dataSource={data}
+        style={{
+          backgroundColor: "#ebebeb",
+          borderRadius: "28px",
+          padding: "20px",
+          paddingTop: "20px",
+        }}
+      />
     </div>
   );
 };
