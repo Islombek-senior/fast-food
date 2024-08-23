@@ -1,30 +1,16 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import {
-  Button,
-  Drawer,
-  Form,
-  Input,
-  Space,
-  Row,
-  Col,
-  Card,
-  Modal,
-} from "antd";
+import { Button, Drawer, Form, Input, Row, Col, Card, Modal } from "antd";
 import { FiPlus, FiTrash2 } from "react-icons/fi";
 import { IoSearchOutline } from "react-icons/io5";
 import { CiFilter } from "react-icons/ci";
 import { LuPen } from "react-icons/lu";
-import "../../../App.css";
-import { Select } from "antd";
-<<<<<<< HEAD
 import { FaRegTrashCan } from "react-icons/fa6";
-=======
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
->>>>>>> 44b6ae3 (.)
+import "../../../App.css";
 
 type FieldType = {
-  misjozIsmi: string;
+  mijozIsmi: string;
   telefonR: string;
   buyurtma: string;
   status: boolean;
@@ -40,7 +26,6 @@ interface DataType {
 
 const Mijozlar = () => {
   const [maxFood, setFoods] = useState<DataType[]>([]);
-  const [visibleItems, setVisibleItems] = useState(7);
   const [isModalOpenEdit, setIsModalOpenEdit] = useState(false);
   const [editForm] = Form.useForm();
   const [selectedItem, setSelectedItem] = useState<DataType | null>(null);
@@ -95,7 +80,6 @@ const Mijozlar = () => {
               item.id === selectedItem.id ? { ...item, ...values } : item
             )
           );
-
           handleOkEdit();
         })
         .catch((error) => {
@@ -119,20 +103,18 @@ const Mijozlar = () => {
         console.error(err);
       });
   };
+
   useEffect(() => {
     axios
       .get("https://e2ead815ad4a2894.mokky.dev/mijozlar")
       .then((res) => {
         setFoods(res.data);
-        console.log(res.data, "islom");
       })
       .catch((err) => {
         console.error(err);
       });
   }, []);
-  const onChange = (value: string) => {
-    console.log(`selected ${value}`);
-  };
+
   return (
     <div>
       <div className="bg-white flex items-center">
@@ -144,7 +126,8 @@ const Mijozlar = () => {
             paddingLeft: "50px",
             width: "270px",
           }}
-          className="flex items-center gap-5">
+          className="flex items-center gap-5"
+        >
           <Button
             onClick={showDrawer}
             style={{
@@ -160,8 +143,9 @@ const Mijozlar = () => {
           <h2
             style={{
               fontWeight: "bold",
-            }}>
-            Yangi maxsulot
+            }}
+          >
+            Yangi mahsulot
             <br />
             qo’shish
           </h2>
@@ -206,7 +190,8 @@ const Mijozlar = () => {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-          }}>
+          }}
+        >
           <Button
             className="bg-white"
             style={{
@@ -218,7 +203,8 @@ const Mijozlar = () => {
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
-            }}>
+            }}
+          >
             <CiFilter
               style={{
                 color: "#8D9BA8",
@@ -244,7 +230,8 @@ const Mijozlar = () => {
             alignContent: "center",
             fontWeight: "bolder",
             boxShadow: "5px 5px 5px rgba(124, 124, 124, 0.3)",
-          }}>
+          }}
+        >
           <div className="flex gap-10 items-center">
             <p>MIJOZ ISMI</p>
           </div>
@@ -262,103 +249,27 @@ const Mijozlar = () => {
           </div>
           <div style={{ borderRight: "1px solid grey" }}></div>
           <div className="flex gap-10 items-center">
-            <p>ACTION</p>
+            <p>AMALLAR</p>
           </div>
         </div>
-        {maxFood.map((f) => (
-          <Col span={24} style={{ padding: "13px", marginTop: -14 }} key={f.id}>
-            <Card
-              className="card-col"
-              style={{
-                borderRadius: "8px",
-                boxShadow: "1px 1px 10px rgba(124, 124, 124, 0.3)",
-                height: "80px",
-              }}>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-around",
-                  alignItems: "center",
-                  textAlign: "start",
-                }}>
-                <div
-                  style={{
-                    display: "flex",
-                    gap: "30px",
-                    alignItems: "center",
-                    width: `calc(100% / 5)`,
-<<<<<<< HEAD
-                  }}>
-                  <p>{f.misjozIsmi}</p>
-=======
-                  }}
+
+        {maxFood.map((item, index) => (
+          <Col key={index} xs={24} sm={12} md={8} lg={6}>
+            <Card>
+              <h3>{item.mijozIsmi}</h3>
+              <p>{item.telefonRaqam}</p>
+              <p>{item.buyurtmalarSoni}</p>
+              <p>{item.status ? "Active" : "Inactive"}</p>
+              <div className="flex gap-4">
+                <Button onClick={() => showModalEdit(item)}>
+                  <LuPen />
+                </Button>
+                <Button
+                  onClick={() => handleDelete(item.id)}
+                  style={{ color: "red" }}
                 >
-                  <p>{f.mijozIsmi}</p>
->>>>>>> 44b6ae3 (.)
-                </div>
-                <div style={{ width: `calc(100% / 5)` }}>
-                  <p>{f.telefonRaqam}</p>
-                </div>
-                <div style={{ width: `calc(100% / 5)` }}>
-                  <p>{f.buyurtmalarSoni}</p>
-                </div>
-                <div style={{ width: `calc(100% / 5)` }}>
-                  <button style={{ color: f.status == true ? "green" : "red" }}>
-                    {f.status == true ? "Active" : "Block"}
-                  </button>
-                </div>
-                <div className="flex space-x-2 mt-2">
-                  <Button
-                    style={{
-                      borderRadius: "50%",
-                      width: "40px",
-                      height: "40px",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-<<<<<<< HEAD
-                    icon={<LuPen />}
-                  />
-=======
-                    className="flex items-center justify-center transition-transform duration-300 hover:scale-110"
-                    // onClick={() => showModalEdit(f)}
-                  >
-                    <IoMdCheckmarkCircleOutline size={18} />
-                  </Button>
-                  <Button
-                    style={{
-                      borderRadius: "50%",
-                      width: "30px",
-                      height: "30px",
-                      boxShadow: "0px 2px 2px 0px #AEB0B550",
-                    }}
-                    className="bg-white flex items-center justify-center transition-transform duration-300 hover:scale-110"
-                    onClick={() => showModalEdit(f)}
-                  >
-                    <LuPen size={18} />
-                  </Button>
->>>>>>> 44b6ae3 (.)
-                  <Button
-                    style={{
-                      borderRadius: "50%",
-                      width: "40px",
-                      height: "40px",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-<<<<<<< HEAD
-                    icon={<FaRegTrashCan />}
-                  />
-=======
-                    className=" flex items-center justify-center transition-transform duration-300 hover:scale-110"
-                    onClick={() => handleDelete(f.id)}
-                  >
-                    <FiTrash2 size={18} style={{ color: "black" }} />
-                  </Button>
->>>>>>> 44b6ae3 (.)
-                </div>
+                  <FaRegTrashCan />
+                </Button>
               </div>
             </Card>
           </Col>
@@ -366,95 +277,126 @@ const Mijozlar = () => {
       </Row>
 
       <Drawer
-        title="Yangi mahsulot qo'shish"
-        placement="right"
+        title="Yangi mahsulot qo’shish"
+        width={720}
         onClose={onClose}
         open={open}
-        width={380}>
+        bodyStyle={{ paddingBottom: 80 }}
+        footer={
+          <div
+            style={{
+              textAlign: "right",
+            }}
+          >
+            <Button onClick={onClose} style={{ marginRight: 8 }}>
+              Bekor qilish
+            </Button>
+            <Button onClick={() => addForm.submit()} type="primary">
+              Saqlash
+            </Button>
+          </div>
+        }
+      >
         <Form
           form={addForm}
-          name="addProduct"
+          layout="vertical"
           onFinish={onFinishAdd}
           onFinishFailed={onFinishFailedAdd}
-          autoComplete="off"
-          layout="vertical">
-          <Form.Item
-            label="Rasm"
-            name="rasm"
-            rules={[{ required: true, message: "Maxsulot nomini kiriting!" }]}>
-            <Input />
-          </Form.Item>
-
-          <Form.Item
-            label="Maxsulot nomi"
-            name="maxsulot"
-            rules={[{ required: true, message: "Maxsulot nomini kiriting!" }]}>
-            <Input />
-          </Form.Item>
-          <p
-            style={{
-              display: "flex",
-              justifyContent: "flex-start",
-              marginBottom: "10px",
-              gap: "5px",
-            }}>
-            <p style={{ color: "red" }}>*</p> Kategoriya
-          </p>
-          <Form.Item
-            label="Narxi"
-            name="narxi"
-            rules={[{ required: true, message: "Narxni kiriting!" }]}>
-            <Input />
-          </Form.Item>
-
-          <Form.Item label="Qo'shimcha" name="qoshimcha">
-            <Input />
-          </Form.Item>
-
-          <Form.Item>
-            <Space>
-              <Button type="primary" htmlType="submit">
-                Qo'shish
-              </Button>
-              <Button onClick={onClose}>Bekor qilish</Button>
-            </Space>
-          </Form.Item>
+        >
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item
+                name="mijozIsmi"
+                label="Mijoz Ismi"
+                rules={[{ required: true, message: "Mijoz ismini kiriting" }]}
+              >
+                <Input placeholder="Mijoz ismi" />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                name="telefonRaqam"
+                label="Telefon Raqam"
+                rules={[
+                  {
+                    required: true,
+                    message: "Telefon raqamni kiriting",
+                  },
+                ]}
+              >
+                <Input
+                  style={{ width: "100%" }}
+                  placeholder="+998 (__) ___-__-__"
+                />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item
+                name="buyurtmalarSoni"
+                label="Buyurtmalar Soni"
+                rules={[
+                  {
+                    required: true,
+                    message: "Buyurtmalar sonini kiriting",
+                  },
+                ]}
+              >
+                <Input placeholder="Buyurtmalar soni" />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                name="status"
+                label="Status"
+                rules={[
+                  {
+                    required: true,
+                    message: "Statusni tanlang",
+                  },
+                ]}
+              >
+                <Input placeholder="Status" />
+              </Form.Item>
+            </Col>
+          </Row>
         </Form>
       </Drawer>
 
       <Modal
-        title="Maxsulotni tahrirlash"
+        title="Mijoz ma'lumotlarini tahrirlash"
         open={isModalOpenEdit}
-        onOk={editForm.submit}
-        onCancel={handleCancelEdit}>
-        <Form
-          form={editForm}
-          name="editProduct"
-          onFinish={onFinishEdit}
-          autoComplete="off"
-          layout="vertical">
+        onOk={handleOkEdit}
+        onCancel={handleCancelEdit}
+      >
+        <Form form={editForm} layout="vertical" onFinish={onFinishEdit}>
           <Form.Item
-            label="Maxsulot nomi"
-            name="maxsulot"
-            rules={[{ required: true, message: "Maxsulot nomini kiriting!" }]}>
+            name="mijozIsmi"
+            label="Mijoz Ismi"
+            rules={[{ required: true, message: "Mijoz ismini kiriting" }]}
+          >
             <Input />
           </Form.Item>
-
           <Form.Item
-            label="Kategoriya"
-            name="kategoriya"
-            rules={[{ required: true, message: "Kategoriya kiriting!" }]}>
+            name="telefonRaqam"
+            label="Telefon Raqam"
+            rules={[{ required: true, message: "Telefon raqamni kiriting" }]}
+          >
             <Input />
           </Form.Item>
-
           <Form.Item
-            label="Narxi"
-            name="narxi"
-            rules={[{ required: true, message: "Narxni kiriting!" }]}>
+            name="buyurtmalarSoni"
+            label="Buyurtmalar Soni"
+            rules={[{ required: true, message: "Buyurtmalar sonini kiriting" }]}
+          >
             <Input />
           </Form.Item>
-
-          <Form.Item label="Qo'shimcha" name="qoshimcha">
+          <Form.Item
+            name="status"
+            label="Status"
+            rules={[{ required: true, message: "Statusni tanlang" }]}
+          >
             <Input />
           </Form.Item>
         </Form>
