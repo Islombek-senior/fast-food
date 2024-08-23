@@ -14,10 +14,11 @@ import {
 import { FiPlus, FiTrash2 } from "react-icons/fi";
 import { IoSearchOutline } from "react-icons/io5";
 import { CiFilter } from "react-icons/ci";
-import { LuPen } from "react-icons/lu";
+import { LuPen, LuPencil } from "react-icons/lu";
 import "./cssmax.css";
 import { Select } from "antd";
 import { FaRegTrashCan } from "react-icons/fa6";
+import "../../../App.css";
 
 type FieldType = {
   maxsulot?: string;
@@ -266,6 +267,7 @@ const Kategoriyalar = () => {
         {maxFood.map((f) => (
           <Col span={24} style={{ padding: "13px", marginTop: -14 }} key={f.id}>
             <Card
+              className="card-col" // Apply hover effect class
               style={{
                 borderRadius: "8px",
                 boxShadow: "1px 1px 10px rgba(124, 124, 124, 0.3)",
