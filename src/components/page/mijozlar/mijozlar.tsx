@@ -344,7 +344,6 @@ const Kategoriyalar = () => {
                         <FiSlash />
                       )
                     }
-                    onClick={actveNonActive}
                   />
 
                   <Button
