@@ -1,3 +1,25 @@
-#hovers a.active {
-  background: #fcb600;
+.ant-menu-item {
+  padding: 0 24px;
+  border-radius: 8px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.ant-menu-item:hover {
+  background-color: #ffb703;
+  color: #fff;
+}
+
+.ant-menu-item-selected {
+  background-color: #ffb703 !important;
+  color: #fff !important;
+}
+
+.ant-menu-item .anticon {
+  color: #8c8c8c;
+  transition: color 0.3s ease;
+}
+
+.ant-menu-item:hover .anticon,
+.ant-menu-item-selected .anticon {
+  color: #fff;
 }

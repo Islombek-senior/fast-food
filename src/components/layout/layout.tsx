@@ -13,14 +13,13 @@ import Kategoriyalar from "../page/kategoriyalar/kategoriyalar";
 import img_1 from "../../components/imgs/Bitmap.png";
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 import { FaBoxArchive } from "react-icons/fa6";
-import { LuMapPin } from "react-icons/lu";
+import { LuMapPin, LuLayers } from "react-icons/lu";
 import { FaMapMarkerAlt } from "react-icons/fa";
-import { LuLayers } from "react-icons/lu";
-import "./cssLay.css";
-import Map from "../page/map";
 import { FiUsers } from "react-icons/fi";
 import Mijozlar from "../page/mijozlar/mijozlar";
 import Xisobot from "../page/Xisobot/xisobot";
+import Map from "../page/map";
+import "./cssLay.css";
 
 const { Header, Content, Footer, Sider } = Layout;
 
