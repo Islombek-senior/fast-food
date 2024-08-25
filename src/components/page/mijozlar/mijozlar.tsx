@@ -158,8 +158,7 @@ const Kategoriyalar = () => {
             paddingLeft: "50px",
             width: "270px",
           }}
-          className="flex items-center gap-5"
-        >
+          className="flex items-center gap-5">
           <Button
             onClick={showDrawer}
             style={{
@@ -175,8 +174,7 @@ const Kategoriyalar = () => {
           <h2
             style={{
               fontWeight: "bold",
-            }}
-          >
+            }}>
             Yangi maxsulot
             <br />
             qo’shish
@@ -222,8 +220,7 @@ const Kategoriyalar = () => {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-          }}
-        >
+          }}>
           <Button
             className="bg-white"
             style={{
@@ -235,8 +232,7 @@ const Kategoriyalar = () => {
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
-            }}
-          >
+            }}>
             <CiFilter
               style={{
                 color: "#8D9BA8",
@@ -262,8 +258,7 @@ const Kategoriyalar = () => {
             alignContent: "center",
             fontWeight: "bolder",
             boxShadow: "5px 5px 5px rgba(124, 124, 124, 0.3)",
-          }}
-        >
+          }}>
           <div className="flex gap-10 items-center">
             <p>Mijoz ismi</p>
           </div>
@@ -292,24 +287,21 @@ const Kategoriyalar = () => {
                 borderRadius: "8px",
                 boxShadow: "1px 1px 10px rgba(124, 124, 124, 0.3)",
                 height: "80px",
-              }}
-            >
+              }}>
               <div
                 style={{
                   display: "flex",
                   justifyContent: "space-around",
                   alignItems: "center",
                   textAlign: "start",
-                }}
-              >
+                }}>
                 <div
                   style={{
                     display: "flex",
                     gap: "30px",
                     alignItems: "center",
                     width: `calc(100% / 5)`,
-                  }}
-                >
+                  }}>
                   <p>{f.mijozIsmi}</p>
                 </div>
                 <div style={{ width: `calc(100% / 5)` }}>
@@ -322,8 +314,7 @@ const Kategoriyalar = () => {
                   style={{
                     width: `calc(100% / 5)`,
                     color: f.status == true ? "green" : "red",
-                  }}
-                >
+                  }}>
                   <p>{f.status == true ? "Active" : "Block"}</p>
                 </div>
                 <div className="flex space-x-2 mt-2">
@@ -365,6 +356,7 @@ const Kategoriyalar = () => {
                       display: "flex",
                       justifyContent: "center",
                       alignItems: "center",
+                      color: "red",
                     }}
                     icon={<FaRegTrashCan />}
                   />
@@ -380,36 +372,31 @@ const Kategoriyalar = () => {
         placement="right"
         onClose={onClose}
         open={open}
-        width={380}
-      >
+        width={380}>
         <Form
           form={addForm}
           name="addProduct"
           onFinish={onFinishAdd}
           onFinishFailed={onFinishFailedAdd}
           autoComplete="off"
-          layout="vertical"
-        >
+          layout="vertical">
           <Form.Item
             label="Rasm"
             name="rasm"
-            rules={[{ required: true, message: "Maxsulot nomini kiriting!" }]}
-          >
+            rules={[{ required: true, message: "Maxsulot nomini kiriting!" }]}>
             <Input />
           </Form.Item>
 
           <Form.Item
             label="Maxsulot nomi"
             name="maxsulot"
-            rules={[{ required: true, message: "Maxsulot nomini kiriting!" }]}
-          >
+            rules={[{ required: true, message: "Maxsulot nomini kiriting!" }]}>
             <Input />
           </Form.Item>
           <Form.Item
             label="Narxi"
             name="narxi"
-            rules={[{ required: true, message: "Narxni kiriting!" }]}
-          >
+            rules={[{ required: true, message: "Narxni kiriting!" }]}>
             <Input />
           </Form.Item>
 
@@ -432,36 +419,31 @@ const Kategoriyalar = () => {
         title="Maxsulotni tahrirlash"
         open={isModalOpenEdit}
         onOk={editForm.submit}
-        onCancel={handleCancelEdit}
-      >
+        onCancel={handleCancelEdit}>
         <Form
           form={editForm}
           name="editProduct"
           onFinish={onFinishEdit}
           autoComplete="off"
-          layout="vertical"
-        >
+          layout="vertical">
           <Form.Item
             label="Maxsulot nomi"
             name="maxsulot"
-            rules={[{ required: true, message: "Maxsulot nomini kiriting!" }]}
-          >
+            rules={[{ required: true, message: "Maxsulot nomini kiriting!" }]}>
             <Input />
           </Form.Item>
 
           <Form.Item
             label="Kategoriya"
             name="kategoriya"
-            rules={[{ required: true, message: "Kategoriya kiriting!" }]}
-          >
+            rules={[{ required: true, message: "Kategoriya kiriting!" }]}>
             <Input />
           </Form.Item>
 
           <Form.Item
             label="Narxi"
             name="narxi"
-            rules={[{ required: true, message: "Narxni kiriting!" }]}
-          >
+            rules={[{ required: true, message: "Narxni kiriting!" }]}>
             <Input />
           </Form.Item>
 

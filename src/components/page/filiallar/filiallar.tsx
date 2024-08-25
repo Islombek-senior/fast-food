@@ -270,6 +270,7 @@ const Filiallar: React.FC = () => {
                       display: "flex",
                       justifyContent: "center",
                       alignItems: "center",
+                      color: "red",
                     }}
                     icon={<FaRegTrashCan />}
                   />

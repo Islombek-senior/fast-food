@@ -6,14 +6,13 @@ import {
   Typography,
   Form,
   message,
-  Space,
-  Card,
   Col,
   Row,
+  Card,
   Modal,
 } from "antd";
 import axios from "axios";
-import { FiPlus, FiTrash2 } from "react-icons/fi";
+import { FiPlus } from "react-icons/fi";
 import { IoSearchOutline } from "react-icons/io5";
 import { LuPen } from "react-icons/lu";
 import { FaRegTrashCan } from "react-icons/fa6";
@@ -276,6 +275,7 @@ const Kategoriyalar = () => {
                       alignItems: "center",
                     }}
                     icon={<LuPen />}
+                    onClick={() => showDrawer(item)} // Open the drawer to edit the category
                   />
                   <Button
                     style={{
@@ -285,8 +285,10 @@ const Kategoriyalar = () => {
                       display: "flex",
                       justifyContent: "center",
                       alignItems: "center",
+                      color: "red",
                     }}
                     icon={<FaRegTrashCan />}
+                    onClick={() => handleDelete(item.id)} // Assign the delete function here
                   />
                 </div>
               </div>
@@ -294,7 +296,6 @@ const Kategoriyalar = () => {
           </Col>
         ))}
       </Row>
-
       <Drawer
         title={
           editingCategory
@@ -303,46 +304,42 @@ const Kategoriyalar = () => {
         }
         placement="right"
         onClose={closeDrawer}
-        open={drawer}
-        width={360}>
-        <Form form={form} onFinish={onFinish}>
-          <Title style={{ color: "gray" }} level={5}>
-            Kategoriya nomi uz
-          </Title>
+        visible={drawer}
+        width={400}>
+        <Form form={form} onFinish={onFinish} layout="vertical">
           <Form.Item
             name="nameUz"
+            label="Kategoriya nomi (UZ)"
             rules={[
-              { required: true, message: "Kategoriya nomi uzni kiriting" },
+              {
+                required: true,
+                message: "Iltimos, kategoriya nomini kiriting",
+              },
             ]}>
             <Input />
           </Form.Item>
-
-          <Title style={{ color: "gray" }} level={5} className="mt-4">
-            Kategoriya nomi ru
-          </Title>
           <Form.Item
             name="nameRu"
+            label="Kategoriya nomi (RU)"
             rules={[
-              { required: true, message: "Kategoriya nomi runi kiriting" },
+              {
+                required: true,
+                message: "Iltimos, kategoriya nomini kiriting",
+              },
             ]}>
             <Input />
           </Form.Item>
-
-          <Title style={{ color: "gray" }} level={5} className="mt-4">
-            Bosh Kategoriya
-          </Title>
           <Form.Item
             name="category"
-            rules={[{ required: true, message: "Bosh Kategoriyani kiriting" }]}>
+            label="Bosh kategoriya"
+            rules={[
+              { required: true, message: "Iltimos, bosh kategoriyani tanlang" },
+            ]}>
             <Input />
           </Form.Item>
-
           <Form.Item>
-            <Button
-              type="default"
-              htmlType="submit"
-              className="bg-green-400 text-white">
-              Saqlash
+            <Button type="primary" htmlType="submit">
+              {editingCategory ? "Yangilash" : "Qo'shish"}
             </Button>
           </Form.Item>
         </Form>
