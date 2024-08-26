@@ -7,6 +7,7 @@ import { HiMenuAlt4 } from "react-icons/hi";
 import { HiOutlineMenuAlt3 } from "react-icons/hi";
 import axios from "axios";
 import { LuPen } from "react-icons/lu";
+import { FaRegTrashCan } from "react-icons/fa6";
 interface Product {
   id: number;
   nameuz: string;
@@ -44,8 +45,7 @@ function Buyurtmalar() {
             paddingLeft: "50px",
             width: "270px",
           }}
-          className="flex items-center gap-5"
-        >
+          className="flex items-center gap-5">
           <Button
             style={{
               borderRadius: "50%",
@@ -60,8 +60,7 @@ function Buyurtmalar() {
           <h2
             style={{
               fontWeight: "bold",
-            }}
-          >
+            }}>
             Yangi filial
             <br />
             qo’shish
@@ -78,30 +77,25 @@ function Buyurtmalar() {
             borderRadius: "30px",
             padding: "5px",
             marginLeft: "50px",
-          }}
-        >
+          }}>
           <button
             className={activeButton === "Yangi" ? "activ" : "inActiv"}
-            onClick={() => handleButtonClick("Yangi")}
-          >
+            onClick={() => handleButtonClick("Yangi")}>
             Yangi
           </button>
           <button
             className={activeButton === "Qabul qilingan" ? "activ" : "inActiv"}
-            onClick={() => handleButtonClick("Qabul qilingan")}
-          >
+            onClick={() => handleButtonClick("Qabul qilingan")}>
             Qabul qilingan
           </button>
           <button
             className={activeButton === "Jo’natilgan" ? "activ" : "inActiv"}
-            onClick={() => handleButtonClick("Jo’natilgan")}
-          >
+            onClick={() => handleButtonClick("Jo’natilgan")}>
             Jo’natilgan
           </button>
           <button
             className={activeButton === "Yopilgan" ? "activ" : "inActiv"}
-            onClick={() => handleButtonClick("Yopilgan")}
-          >
+            onClick={() => handleButtonClick("Yopilgan")}>
             Yopilgan
           </button>
         </div>
@@ -114,8 +108,7 @@ function Buyurtmalar() {
             width: "100px",
             marginLeft: "290px",
           }}
-          className="flex items-center gap-5"
-        >
+          className="flex items-center gap-5">
           <div
             className=" flex items-center justify-between"
             style={{
@@ -126,8 +119,7 @@ function Buyurtmalar() {
               borderRadius: "30px",
               padding: "7px",
               marginLeft: "20px",
-            }}
-          >
+            }}>
             <Button className="iconActiv">
               <HiMenuAlt4 />
             </Button>
@@ -144,32 +136,28 @@ function Buyurtmalar() {
             <Col
               span={24}
               style={{ padding: "13px", marginTop: -14 }}
-              key={f.id}
-            >
+              key={f.id}>
               <Card
                 style={{
                   borderRadius: "8px",
                   boxShadow: "1px 1px 10px rgba(124, 124, 124, 0.3)",
                   height: "180px",
                 }}
-                hoverable
-              >
+                hoverable>
                 <div
                   style={{
                     display: "flex",
                     justifyContent: "space-around",
                     alignItems: "center",
                     textAlign: "start",
-                  }}
-                >
+                  }}>
                   <div
                     style={{
                       display: "flex",
                       gap: "30px",
                       alignItems: "center",
                       width: `calc(100% / 5)`,
-                    }}
-                  >
+                    }}>
                     <p>{f.nameuz}</p>
                   </div>
                   <div style={{ width: `calc(100% / 5)` }}>
@@ -186,25 +174,26 @@ function Buyurtmalar() {
                     <Button
                       style={{
                         borderRadius: "50%",
-                        width: "30px",
-                        height: "30px",
-                        boxShadow: "0px 2px 2px 0px #AEB0B550",
+                        width: "40px",
+                        height: "40px",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
                       }}
-                      className="bg-white flex items-center justify-center transition-transform duration-300 hover:scale-110"
-                    >
-                      <LuPen />
-                    </Button>
+                      icon={<LuPen />}
+                    />
                     <Button
                       style={{
                         borderRadius: "50%",
-                        width: "30px",
-                        height: "30px",
-                        boxShadow: "0px 2px 2px 0px #AEB0B550",
+                        width: "40px",
+                        height: "40px",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        color: "red",
                       }}
-                      className="bg-white flex items-center justify-center transition-transform duration-300 hover:scale-110"
-                    >
-                      <FiTrash2 />
-                    </Button>
+                      icon={<FaRegTrashCan />}
+                    />
                   </div>
                 </div>
               </Card>

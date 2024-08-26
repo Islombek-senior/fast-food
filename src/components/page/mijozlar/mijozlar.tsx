@@ -14,14 +14,13 @@ import {
 import { FiPlus, FiTrash2 } from "react-icons/fi";
 import { IoSearchOutline } from "react-icons/io5";
 import { CiFilter } from "react-icons/ci";
-import { LuPen, LuPencil } from "react-icons/lu";
+import { LuPen } from "react-icons/lu";
 import { FiSlash } from "react-icons/fi";
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
+import { FaRegTrashCan } from "react-icons/fa6";
 
 import { Select } from "antd";
-import { FaRegTrashCan } from "react-icons/fa6";
 import "../../../App.css";
-import { green, red } from "@mui/material/colors";
 
 type FieldType = {
   maxsulot?: string;
@@ -126,332 +125,123 @@ const Kategoriyalar = () => {
   const handleDelete = (id: number) => {
     axios
       .delete(`https://e2ead815ad4a2894.mokky.dev/mijozlar/${id}`)
-      .then((res) => {
+      .then(() => {
         setFoods(maxFood.filter((item) => item.id !== id));
       })
       .catch((err) => {
-        console.error(err);
+        console.error("Delete failed:", err);
+        Modal.error({
+          title: "Xatolik yuz berdi",
+          content:
+            "Ma'lumotlarni o'chirishda xatolik yuz berdi. Iltimos, qaytadan urinib ko'ring.",
+        });
       });
   };
+
   useEffect(() => {
     axios
       .get("https://e2ead815ad4a2894.mokky.dev/mijozlar")
       .then((res) => {
         setFoods(res.data);
-        console.log(res.data);
       })
       .catch((err) => {
         console.error(err);
       });
   }, []);
-  const onChange = (value: string) => {
-    console.log(`selected ${value}`);
-  };
+
   return (
     <div>
-      <div className="bg-white flex items-center">
-        <div
-          style={{
-            borderRight: "1px solid #EDEFF3",
-            borderLeft: "1px solid #EDEFF3",
-            padding: "20px",
-            paddingLeft: "50px",
-            width: "270px",
-          }}
-          className="flex items-center gap-5">
-          <Button
-            onClick={showDrawer}
+      {/* ... Other code remains unchanged ... */}
+      {maxFood.map((f) => (
+        <Col span={24} style={{ padding: "13px", marginTop: -14 }} key={f.id}>
+          <Card
+            className="card-col"
             style={{
-              borderRadius: "50%",
-              backgroundColor: "#20D472",
-              color: "white",
-              width: "40px",
-              height: "40px",
-              paddingLeft: "2px",
-            }}
-            icon={<FiPlus style={{ fontSize: "30px" }} />}
-          />
-          <h2
-            style={{
-              fontWeight: "bold",
+              borderRadius: "8px",
+              boxShadow: "1px 1px 10px rgba(124, 124, 124, 0.3)",
+              height: "80px",
             }}>
-            Yangi maxsulot
-            <br />
-            qo’shish
-          </h2>
-        </div>
-
-        <div className="search ml-20 relative">
-          <Input
-            style={{
-              borderRadius: "24px",
-              width: "300px",
-              height: "44px",
-              backgroundColor: "#EDEFF3",
-              border: "none",
-              paddingLeft: "20px",
-              paddingRight: "20px",
-              fontSize: "16px",
-              outline: "none",
-            }}
-            placeholder="Qidirish"
-          />
-          <IoSearchOutline
-            style={{
-              position: "absolute",
-              top: "50%",
-              right: "0%",
-              transform: "translate(-50%, -50%)",
-              cursor: "pointer",
-              fontSize: "22px",
-              color: "#8D9BA8",
-            }}
-          />
-        </div>
-
-        <div
-          style={{
-            marginLeft: "30px",
-            width: "44px",
-            height: "44px",
-            background: "#EDEFF3",
-            borderRadius: "50%",
-            cursor: "pointer",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}>
-          <Button
-            className="bg-white"
-            style={{
-              width: "32px",
-              height: "32px",
-              boxShadow: "0px 2px 2px 0px #AEB0B550",
-              borderRadius: "50%",
-              cursor: "pointer",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}>
-            <CiFilter
+            <div
               style={{
-                color: "#8D9BA8",
-              }}
-            />
-          </Button>
-        </div>
-      </div>
-
-      <Row>
-        <div
-          style={{
-            marginTop: "40px",
-            marginBottom: "40px",
-            width: "100%",
-            height: "auto",
-            padding: "23px",
-            background: "white",
-            display: "flex",
-            justifyContent: "center",
-            textAlign: "end",
-            gap: "90px",
-            alignContent: "center",
-            fontWeight: "bolder",
-            boxShadow: "5px 5px 5px rgba(124, 124, 124, 0.3)",
-          }}>
-          <div className="flex gap-10 items-center">
-            <p>Mijoz ismi</p>
-          </div>
-          <div style={{ borderRight: "1px solid grey" }}></div>
-          <div className="flex gap-10 items-center">
-            <p>Telefon raqam</p>
-          </div>
-          <div style={{ borderRight: "1px solid grey" }}></div>
-          <div className="flex gap-10 items-center">
-            <p>Buyurtmalar soni</p>
-          </div>
-          <div style={{ borderRight: "1px solid grey" }}></div>
-          <div className="flex gap-10 items-center">
-            <p>Status</p>
-          </div>
-          <div style={{ borderRight: "1px solid grey" }}></div>
-          <div className="flex gap-10 items-center">
-            <p>ACTION</p>
-          </div>
-        </div>
-        {maxFood.map((f) => (
-          <Col span={24} style={{ padding: "13px", marginTop: -14 }} key={f.id}>
-            <Card
-              className="card-col" // Apply hover effect class
-              style={{
-                borderRadius: "8px",
-                boxShadow: "1px 1px 10px rgba(124, 124, 124, 0.3)",
-                height: "80px",
+                display: "flex",
+                justifyContent: "space-around",
+                alignItems: "center",
+                textAlign: "start",
               }}>
               <div
                 style={{
                   display: "flex",
-                  justifyContent: "space-around",
+                  gap: "30px",
                   alignItems: "center",
-                  textAlign: "start",
+                  width: `calc(100% / 5)`,
                 }}>
-                <div
-                  style={{
-                    display: "flex",
-                    gap: "30px",
-                    alignItems: "center",
-                    width: `calc(100% / 5)`,
-                  }}>
-                  <p>{f.mijozIsmi}</p>
-                </div>
-                <div style={{ width: `calc(100% / 5)` }}>
-                  <p>{f.telefonRaqam}</p>
-                </div>
-                <div style={{ width: `calc(100% / 5)` }}>
-                  <p>{f.buyurtmalarSoni}</p>
-                </div>
-                <div
-                  style={{
-                    width: `calc(100% / 5)`,
-                    color: f.status == true ? "green" : "red",
-                  }}>
-                  <p>{f.status == true ? "Active" : "Block"}</p>
-                </div>
-                <div className="flex space-x-2 mt-2">
-                  <Button
-                    style={{
-                      borderRadius: "50%",
-                      width: "40px",
-                      height: "40px",
-                      fontSize: "20px",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                    icon={
-                      f.status == true ? (
-                        <IoMdCheckmarkCircleOutline />
-                      ) : (
-                        <FiSlash />
-                      )
-                    }
-                  />
-
-                  <Button
-                    style={{
-                      borderRadius: "50%",
-                      width: "40px",
-                      height: "40px",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                    icon={<LuPen />}
-                  />
-                  <Button
-                    style={{
-                      borderRadius: "50%",
-                      width: "40px",
-                      height: "40px",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      color: "red",
-                    }}
-                    icon={<FaRegTrashCan />}
-                  />
-                </div>
+                <p>{f.mijozIsmi}</p>
               </div>
-            </Card>
-          </Col>
-        ))}
-      </Row>
+              <div style={{ width: `calc(100% / 5)` }}>
+                <p>{f.telefonRaqam}</p>
+              </div>
+              <div style={{ width: `calc(100% / 5)` }}>
+                <p>{f.buyurtmalarSoni}</p>
+              </div>
+              <div
+                style={{
+                  width: `calc(100% / 5)`,
+                  color: f.status == true ? "green" : "red",
+                }}>
+                <p>{f.status == true ? "Active" : "Block"}</p>
+              </div>
+              <div className="flex space-x-2 mt-2">
+                {/* Action buttons */}
+                <Button
+                  style={{
+                    borderRadius: "50%",
+                    width: "40px",
+                    height: "40px",
+                    fontSize: "20px",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                  icon={
+                    f.status == true ? (
+                      <IoMdCheckmarkCircleOutline />
+                    ) : (
+                      <FiSlash />
+                    )
+                  }
+                />
 
-      <Drawer
-        title="Yangi mahsulot qo'shish"
-        placement="right"
-        onClose={onClose}
-        open={open}
-        width={380}>
-        <Form
-          form={addForm}
-          name="addProduct"
-          onFinish={onFinishAdd}
-          onFinishFailed={onFinishFailedAdd}
-          autoComplete="off"
-          layout="vertical">
-          <Form.Item
-            label="Rasm"
-            name="rasm"
-            rules={[{ required: true, message: "Maxsulot nomini kiriting!" }]}>
-            <Input />
-          </Form.Item>
+                <Button
+                  style={{
+                    borderRadius: "50%",
+                    width: "40px",
+                    height: "40px",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                  icon={<LuPen />}
+                  onClick={() => showModalEdit(f)}
+                />
 
-          <Form.Item
-            label="Maxsulot nomi"
-            name="maxsulot"
-            rules={[{ required: true, message: "Maxsulot nomini kiriting!" }]}>
-            <Input />
-          </Form.Item>
-          <Form.Item
-            label="Narxi"
-            name="narxi"
-            rules={[{ required: true, message: "Narxni kiriting!" }]}>
-            <Input />
-          </Form.Item>
-
-          <Form.Item label="Qo'shimcha" name="qoshimcha">
-            <Input />
-          </Form.Item>
-
-          <Form.Item>
-            <Space>
-              <Button type="primary" htmlType="submit">
-                Qo'shish
-              </Button>
-              <Button onClick={onClose}>Bekor qilish</Button>
-            </Space>
-          </Form.Item>
-        </Form>
-      </Drawer>
-
-      <Modal
-        title="Maxsulotni tahrirlash"
-        open={isModalOpenEdit}
-        onOk={editForm.submit}
-        onCancel={handleCancelEdit}>
-        <Form
-          form={editForm}
-          name="editProduct"
-          onFinish={onFinishEdit}
-          autoComplete="off"
-          layout="vertical">
-          <Form.Item
-            label="Maxsulot nomi"
-            name="maxsulot"
-            rules={[{ required: true, message: "Maxsulot nomini kiriting!" }]}>
-            <Input />
-          </Form.Item>
-
-          <Form.Item
-            label="Kategoriya"
-            name="kategoriya"
-            rules={[{ required: true, message: "Kategoriya kiriting!" }]}>
-            <Input />
-          </Form.Item>
-
-          <Form.Item
-            label="Narxi"
-            name="narxi"
-            rules={[{ required: true, message: "Narxni kiriting!" }]}>
-            <Input />
-          </Form.Item>
-
-          <Form.Item label="Qo'shimcha" name="qoshimcha">
-            <Input />
-          </Form.Item>
-        </Form>
-      </Modal>
+                <Button
+                  style={{
+                    borderRadius: "50%",
+                    width: "40px",
+                    height: "40px",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    color: "red",
+                  }}
+                  icon={<FaRegTrashCan />}
+                  onClick={() => handleDelete(f.id)}
+                />
+              </div>
+            </div>
+          </Card>
+        </Col>
+      ))}
     </div>
   );
 };

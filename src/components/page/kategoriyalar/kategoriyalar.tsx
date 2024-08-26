@@ -275,7 +275,7 @@ const Kategoriyalar = () => {
                       alignItems: "center",
                     }}
                     icon={<LuPen />}
-                    onClick={() => showDrawer(item)} // Open the drawer to edit the category
+                    onClick={() => showDrawer(item)}
                   />
                   <Button
                     style={{
@@ -288,7 +288,7 @@ const Kategoriyalar = () => {
                       color: "red",
                     }}
                     icon={<FaRegTrashCan />}
-                    onClick={() => handleDelete(item.id)} // Assign the delete function here
+                    onClick={() => handleDelete(item.id)}
                   />
                 </div>
               </div>
