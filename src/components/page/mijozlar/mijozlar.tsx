@@ -10,18 +10,21 @@ import {
   Col,
   Card,
   Modal,
+  Checkbox,
 } from "antd";
 import { FiPlus, FiTrash2 } from "react-icons/fi";
 import { IoSearchOutline } from "react-icons/io5";
 import { CiFilter } from "react-icons/ci";
-import { LuPen, LuPencil } from "react-icons/lu";
+import { LuPen } from "react-icons/lu";
 import { FiSlash } from "react-icons/fi";
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
-
-import { Select } from "antd";
 import { FaRegTrashCan } from "react-icons/fa6";
+import { Select } from "antd";
+import { Dropdown } from "antd";
 import "../../../App.css";
-import { green, red } from "@mui/material/colors";
+import { DownOutlined } from "@ant-design/icons";
+import { CheckboxChangeEvent } from "antd/es/checkbox";
+import { useNavigate } from "react-router-dom";
 
 type FieldType = {
   maxsulot?: string;
@@ -46,18 +49,76 @@ const Kategoriyalar = () => {
   const [selectedItem, setSelectedItem] = useState<DataType | null>(null);
   const [addForm] = Form.useForm();
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
 
-  const actveNonActive = () => {
+  const onCnge = (e: CheckboxChangeEvent) => {
+    const isChecked = e.target.checked;
     axios
-      .get(`https://e2ead815ad4a2894.mokky.dev/mijozlar`)
+      .get("https://e2ead815ad4a2894.mokky.dev/mijozlar")
       .then((res) => {
-        setFoods(
-          res.data.map((item: any) => ({ ...item, status: item.status }))
+        const sortedData = res.data.sort((a: DataType, b: DataType) =>
+          isChecked
+            ? a.mijozIsmi.localeCompare(b.mijozIsmi)
+            : b.mijozIsmi.localeCompare(a.mijozIsmi)
         );
+        setFoods(sortedData);
       })
       .catch((err) => {
         console.error(err);
       });
+    console.log("Checked:", isChecked);
+  };
+
+  const items = [
+    {
+      key: "1",
+      label: <Checkbox onChange={onCnge}>Nom bo’yicha (A-Z)</Checkbox>,
+    },
+    {
+      key: "2",
+      label: <Checkbox>Nom bo’yicha (Z-A)</Checkbox>,
+    },
+    {
+      key: "3",
+      label: <Checkbox>Buyurtmalar soni (O’sish tartibida)</Checkbox>,
+    },
+    {
+      key: "4",
+      label: <Checkbox>Buyurtmalar soni (Kamayish tartibida)</Checkbox>,
+    },
+    {
+      key: "5",
+      label: <Checkbox>Blocklangan mijozlar</Checkbox>,
+    },
+    {
+      key: "6",
+      label: <Checkbox>Aktiv mijozlar</Checkbox>,
+    },
+  ];
+
+  const handleStatusChange = (id: number) => {
+    const updatedFoods = maxFood.map((item) => {
+      if (item.id === id) {
+        const updatedStatus = !item.status;
+
+        axios
+          .put(`https://e2ead815ad4a2894.mokky.dev/mijozlar/${id}`, {
+            ...item,
+            status: updatedStatus,
+          })
+          .then((res) => {
+            console.log("Status o'zgartirildi:", res.data);
+          })
+          .catch((error) => {
+            console.error("Status o'zgartirishda xatolik yuz berdi:", error);
+          });
+
+        return { ...item, status: updatedStatus };
+      }
+      return item;
+    });
+
+    setFoods(updatedFoods);
   };
 
   const onClose = () => {
@@ -133,6 +194,7 @@ const Kategoriyalar = () => {
         console.error(err);
       });
   };
+
   useEffect(() => {
     axios
       .get("https://e2ead815ad4a2894.mokky.dev/mijozlar")
@@ -144,9 +206,11 @@ const Kategoriyalar = () => {
         console.error(err);
       });
   }, []);
+
   const onChange = (value: string) => {
     console.log(`selected ${value}`);
   };
+
   return (
     <div>
       <div className="bg-white flex items-center">
@@ -171,6 +235,7 @@ const Kategoriyalar = () => {
             }}
             icon={<FiPlus style={{ fontSize: "30px" }} />}
           />
+
           <h2
             style={{
               fontWeight: "bold",
@@ -212,14 +277,15 @@ const Kategoriyalar = () => {
         <div
           style={{
             marginLeft: "30px",
-            width: "44px",
-            height: "44px",
+            width: "54px",
+            height: "54px",
             background: "#EDEFF3",
             borderRadius: "50%",
             cursor: "pointer",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
+<<<<<<< HEAD
           }}>
           <Button
             className="bg-white"
@@ -318,23 +384,61 @@ const Kategoriyalar = () => {
                   <p>{f.status == true ? "Active" : "Block"}</p>
                 </div>
                 <div className="flex space-x-2 mt-2">
+=======
+          }}
+        >
+          <Space direction="vertical">
+            <Space wrap>
+              <Dropdown menu={{ items }} placement="bottomRight" arrow>
+                <Button
+                  style={{
+                    width: "42px",
+                    height: "42px",
+                    boxShadow: "0px 2px 2px 0px #AEB0B550",
+                    borderRadius: "50%",
+                    cursor: "pointer",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    border: "none",
+                    backgroundColor: "#EDEFF3",
+                  }}
+                  icon={<CiFilter style={{ fontSize: "30px" }} />}
+                />
+              </Dropdown>
+            </Space>
+          </Space>
+        </div>
+      </div>
+
+      <div className="px-10 py-8" style={{ backgroundColor: "#f7f7f7" }}>
+        <Row gutter={16}>
+          {maxFood.map((item) => (
+            <Col key={item.id} xs={24}>
+              <Card
+                style={{
+                  borderRadius: "10px",
+                  marginBottom: "10px",
+                  boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
+                }}
+              >
+                <div className="flex justify-between items-center">
+                  <h3>{item.mijozIsmi}</h3>
+                  <p>{item.telefonRaqam}</p>
+                  <p>{item.buyurtmalarSoni} ta buyurtma</p>
+>>>>>>> 6dadf95 (mijozlar)
                   <Button
-                    style={{
-                      borderRadius: "50%",
-                      width: "40px",
-                      height: "40px",
-                      fontSize: "20px",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
+                    type="link"
                     icon={
-                      f.status == true ? (
-                        <IoMdCheckmarkCircleOutline />
+                      item.status ? (
+                        <IoMdCheckmarkCircleOutline
+                          style={{ color: "#20D472" }}
+                        />
                       ) : (
-                        <FiSlash />
+                        <FiSlash style={{ color: "#FF4D4F" }} />
                       )
                     }
+<<<<<<< HEAD
                   />
 
                   <Button
@@ -360,24 +464,66 @@ const Kategoriyalar = () => {
                     }}
                     icon={<FaRegTrashCan />}
                   />
+=======
+                    onClick={() => handleStatusChange(item.id)}
+                  >
+                    {item.status ? "Aktiv" : "Block"}
+                  </Button>
+                  <Space>
+                    <Button
+                      type="text"
+                      onClick={() => showModalEdit(item)}
+                      icon={<LuPen />}
+                    />
+                    <Button
+                      type="text"
+                      danger
+                      onClick={() => handleDelete(item.id)}
+                      icon={<FaRegTrashCan />}
+                    />
+                  </Space>
+>>>>>>> 6dadf95 (mijozlar)
                 </div>
-              </div>
-            </Card>
-          </Col>
-        ))}
-      </Row>
+              </Card>
+            </Col>
+          ))}
+        </Row>
+
+        {visibleItems < maxFood.length && (
+          <div className="text-center mt-8">
+            <Button
+              style={{
+                borderRadius: "30px",
+                backgroundColor: "#20D472",
+                color: "white",
+                paddingLeft: "40px",
+                paddingRight: "40px",
+              }}
+              onClick={() => setVisibleItems((prev) => prev + 7)}
+            >
+              Ko'proq ko'rsatish
+            </Button>
+          </div>
+        )}
+      </div>
 
       <Drawer
-        title="Yangi mahsulot qo'shish"
-        placement="right"
+        title="Yangi maxsulot qo’shish"
+        width={720}
         onClose={onClose}
         open={open}
+<<<<<<< HEAD
         width={380}>
+=======
+        bodyStyle={{ paddingBottom: 80 }}
+      >
+>>>>>>> 6dadf95 (mijozlar)
         <Form
           form={addForm}
-          name="addProduct"
+          layout="vertical"
           onFinish={onFinishAdd}
           onFinishFailed={onFinishFailedAdd}
+<<<<<<< HEAD
           autoComplete="off"
           layout="vertical">
           <Form.Item
@@ -398,30 +544,65 @@ const Kategoriyalar = () => {
             name="narxi"
             rules={[{ required: true, message: "Narxni kiriting!" }]}>
             <Input />
+=======
+        >
+          <Form.Item
+            name="mijozIsmi"
+            label="Mijoz ismi"
+            rules={[
+              { required: true, message: "Mijoz ismi kiritilishi kerak" },
+            ]}
+          >
+            <Input placeholder="Mijoz ismi" />
           </Form.Item>
 
-          <Form.Item label="Qo'shimcha" name="qoshimcha">
-            <Input />
+          <Form.Item
+            name="telefonRaqam"
+            label="Telefon raqami"
+            rules={[
+              { required: true, message: "Telefon raqami kiritilishi kerak" },
+            ]}
+          >
+            <Input placeholder="Telefon raqami" />
+>>>>>>> 6dadf95 (mijozlar)
+          </Form.Item>
+
+          <Form.Item
+            name="buyurtmalarSoni"
+            label="Buyurtmalar soni"
+            rules={[
+              {
+                required: true,
+                message: "Buyurtmalar soni kiritilishi kerak",
+              },
+            ]}
+          >
+            <Input placeholder="Buyurtmalar soni" />
+          </Form.Item>
+
+          <Form.Item name="status" label="Status">
+            <Select placeholder="Statusni tanlang">
+              <Select.Option value="true">Aktiv</Select.Option>
+              <Select.Option value="false">Blocklangan</Select.Option>
+            </Select>
           </Form.Item>
 
           <Form.Item>
-            <Space>
-              <Button type="primary" htmlType="submit">
-                Qo'shish
-              </Button>
-              <Button onClick={onClose}>Bekor qilish</Button>
-            </Space>
+            <Button type="primary" htmlType="submit">
+              Saqlash
+            </Button>
           </Form.Item>
         </Form>
       </Drawer>
 
       <Modal
-        title="Maxsulotni tahrirlash"
+        title="Ma'lumotlarni tahrirlash"
         open={isModalOpenEdit}
         onOk={editForm.submit}
         onCancel={handleCancelEdit}>
         <Form
           form={editForm}
+<<<<<<< HEAD
           name="editProduct"
           onFinish={onFinishEdit}
           autoComplete="off"
@@ -445,10 +626,50 @@ const Kategoriyalar = () => {
             name="narxi"
             rules={[{ required: true, message: "Narxni kiriting!" }]}>
             <Input />
+=======
+          layout="vertical"
+          onFinish={onFinishEdit}
+          initialValues={selectedItem || {}}
+        >
+          <Form.Item
+            name="mijozIsmi"
+            label="Mijoz ismi"
+            rules={[
+              { required: true, message: "Mijoz ismi kiritilishi kerak" },
+            ]}
+          >
+            <Input placeholder="Mijoz ismi" />
           </Form.Item>
 
-          <Form.Item label="Qo'shimcha" name="qoshimcha">
-            <Input />
+          <Form.Item
+            name="telefonRaqam"
+            label="Telefon raqami"
+            rules={[
+              { required: true, message: "Telefon raqami kiritilishi kerak" },
+            ]}
+          >
+            <Input placeholder="Telefon raqami" />
+          </Form.Item>
+
+          <Form.Item
+            name="buyurtmalarSoni"
+            label="Buyurtmalar soni"
+            rules={[
+              {
+                required: true,
+                message: "Buyurtmalar soni kiritilishi kerak",
+              },
+            ]}
+          >
+            <Input placeholder="Buyurtmalar soni" />
+>>>>>>> 6dadf95 (mijozlar)
+          </Form.Item>
+
+          <Form.Item name="status" label="Status">
+            <Select placeholder="Statusni tanlang">
+              <Select.Option value="true">Aktiv</Select.Option>
+              <Select.Option value="false">Blocklangan</Select.Option>
+            </Select>
           </Form.Item>
         </Form>
       </Modal>

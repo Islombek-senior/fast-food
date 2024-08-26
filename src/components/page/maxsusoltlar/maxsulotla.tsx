@@ -14,7 +14,7 @@ import {
 import { FiPlus, FiTrash2 } from "react-icons/fi";
 import { IoSearchOutline } from "react-icons/io5";
 import { CiFilter } from "react-icons/ci";
-import { LuPen, LuPencil } from "react-icons/lu";
+import { LuPen } from "react-icons/lu";
 import "./cssmax.css";
 import { Select } from "antd";
 import { FaRegTrashCan } from "react-icons/fa6";
@@ -74,7 +74,7 @@ const Kategoriyalar = () => {
   };
 
   const handleOkEdit = () => {
-    setIsModalOpenEdit(false);
+    editForm.submit(); // Formani yuboring
   };
 
   const handleCancelEdit = () => {
@@ -118,6 +118,7 @@ const Kategoriyalar = () => {
         console.error(err);
       });
   };
+
   useEffect(() => {
     axios
       .get("https://e2ead815ad4a2894.mokky.dev/maxsulotlar")
@@ -129,9 +130,11 @@ const Kategoriyalar = () => {
         console.error(err);
       });
   }, []);
+
   const onChange = (value: string) => {
     console.log(`selected ${value}`);
   };
+
   return (
     <div>
       <div className="bg-white flex items-center">
@@ -143,7 +146,8 @@ const Kategoriyalar = () => {
             paddingLeft: "50px",
             width: "270px",
           }}
-          className="flex items-center gap-5">
+          className="flex items-center gap-5"
+        >
           <Button
             onClick={showDrawer}
             style={{
@@ -159,7 +163,8 @@ const Kategoriyalar = () => {
           <h2
             style={{
               fontWeight: "bold",
-            }}>
+            }}
+          >
             Yangi maxsulot
             <br />
             qo’shish
@@ -205,7 +210,8 @@ const Kategoriyalar = () => {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-          }}>
+          }}
+        >
           <Button
             className="bg-white"
             style={{
@@ -217,7 +223,8 @@ const Kategoriyalar = () => {
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
-            }}>
+            }}
+          >
             <CiFilter
               style={{
                 color: "#8D9BA8",
@@ -243,7 +250,8 @@ const Kategoriyalar = () => {
             alignContent: "center",
             fontWeight: "bolder",
             boxShadow: "5px 5px 5px rgba(124, 124, 124, 0.3)",
-          }}>
+          }}
+        >
           <div className="flex gap-10 items-center">
             <p>MAXSULOT</p>
           </div>
@@ -264,28 +272,22 @@ const Kategoriyalar = () => {
             <p>ACTION</p>
           </div>
         </div>
-        {maxFood.map((f) => (
-          <Col span={24} style={{ padding: "13px", marginTop: -14 }} key={f.id}>
-            <Card
-              className="card-col" // Apply hover effect class
-              style={{
-                borderRadius: "8px",
-                boxShadow: "1px 1px 10px rgba(124, 124, 124, 0.3)",
-                height: "80px",
-              }}>
+        <Col xs={24}>
+          {maxFood.map((item) => (
+            <Card key={item.id} style={{ marginBottom: "10px" }}>
               <div
                 style={{
                   display: "flex",
-                  justifyContent: "space-around",
+                  justifyContent: "space-between",
+                  gap: 20,
                   alignItems: "center",
-                  textAlign: "start",
-                }}>
+                  width: "100%",
+                }}
+              >
                 <div
                   style={{
-                    display: "flex",
-                    gap: "30px",
-                    alignItems: "center",
                     width: `calc(100% / 5)`,
+<<<<<<< HEAD
                   }}>
                   <img src={f.img} alt="" className="w-10 h-10 rounded-full" />
                   <p>{f.maxsulot}</p>
@@ -322,76 +324,110 @@ const Kategoriyalar = () => {
                       color: "red",
                     }}
                     icon={<FaRegTrashCan />}
+=======
+                    display: "flex",
+                    justifyContent: "start",
+                    alignItems: "center",
+                    gap: "20px",
+                  }}
+                >
+                  <img
+                    src={item.img}
+                    alt="Maxsulot"
+                    className="rounded-full w-11 h-11"
+>>>>>>> 6dadf95 (mijozlar)
                   />
+                  {item.maxsulot}
+                </div>
+                <div style={{ width: `calc(100% / 5)` }}></div>
+                <div style={{ width: `calc(100% / 5)` }}>{item.kategoriya}</div>
+                <div style={{ width: `calc(100% / 5)` }}>{item.narxi}</div>
+                <div style={{ width: `calc(100% / 5)` }}>{item.qoshimcha}</div>
+                <div className="flex gap-4">
+                  <Button onClick={() => showModalEdit(item)}>
+                    <LuPen />
+                  </Button>
+                  <Button onClick={() => handleDelete(item.id)}>
+                    <FiTrash2 />
+                  </Button>
                 </div>
               </div>
             </Card>
-          </Col>
-        ))}
+          ))}
+        </Col>
       </Row>
 
       <Drawer
-        title="Yangi mahsulot qo'shish"
-        placement="right"
+        title="Maxsulot qo'shish"
+        width={520}
         onClose={onClose}
         open={open}
-        width={380}>
+        bodyStyle={{ paddingBottom: 80 }}
+      >
         <Form
-          form={addForm}
-          name="addProduct"
+          layout="vertical"
           onFinish={onFinishAdd}
           onFinishFailed={onFinishFailedAdd}
-          autoComplete="off"
-          layout="vertical">
-          <Form.Item
-            label="Rasm"
-            name="rasm"
-            rules={[{ required: true, message: "Maxsulot nomini kiriting!" }]}>
-            <Input />
-          </Form.Item>
-
-          <Form.Item
-            label="Maxsulot nomi"
-            name="maxsulot"
-            rules={[{ required: true, message: "Maxsulot nomini kiriting!" }]}>
-            <Input />
-          </Form.Item>
-          <p
-            style={{
-              display: "flex",
-              justifyContent: "flex-start",
-              marginBottom: "10px",
-              gap: "5px",
-            }}>
-            <p style={{ color: "red" }}>*</p> Kategoriya
-          </p>
-          <Select
-            onChange={onChange}
-            style={{ width: "100%", marginBottom: "20px" }}
-            defaultValue="Burger">
-            {maxFood.map((t) => (
-              <Select.Option>{t.kategoriya}</Select.Option>
-            ))}
-          </Select>
-
-          <Form.Item
-            label="Narxi"
-            name="narxi"
-            rules={[{ required: true, message: "Narxni kiriting!" }]}>
-            <Input />
-          </Form.Item>
-
-          <Form.Item label="Qo'shimcha" name="qoshimcha">
-            <Input />
-          </Form.Item>
-
+          form={addForm}
+        >
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item
+                name="img"
+                label="Maxsulot rasmi"
+                rules={[{ required: true, message: "Please enter rasm" }]}
+              >
+                <Input placeholder="Please enter maxsulot rasmi" />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                name="maxsulot"
+                label="Maxsulot nomi"
+                rules={[{ required: true, message: "Please enter maxsulot" }]}
+              >
+                <Input placeholder="Please enter maxsulot" />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item
+                name="kategoriya"
+                label="Kategoriya"
+                rules={[{ required: true, message: "Please enter kategoriya" }]}
+              >
+                <Input placeholder="Please enter kategoriya" />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                name="narxi"
+                label="Narxi"
+                rules={[{ required: true, message: "Please enter narxi" }]}
+              >
+                <Input placeholder="Please enter narxi" />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item
+                name="qoshimcha"
+                label="Qoshimcha"
+                rules={[{ required: true, message: "Please enter qoshimcha" }]}
+              >
+                <Input placeholder="Please enter qoshimcha" />
+              </Form.Item>
+            </Col>
+          </Row>
           <Form.Item>
-            <Space>
-              <Button type="primary" htmlType="submit">
-                Qo'shish
-              </Button>
-              <Button onClick={onClose}>Bekor qilish</Button>
-            </Space>
+            <Button
+              style={{ backgroundColor: "#20D472", color: "white" }}
+              htmlType="submit"
+            >
+              Saqlash
+            </Button>
           </Form.Item>
         </Form>
       </Drawer>
@@ -399,37 +435,49 @@ const Kategoriyalar = () => {
       <Modal
         title="Maxsulotni tahrirlash"
         open={isModalOpenEdit}
-        onOk={editForm.submit}
-        onCancel={handleCancelEdit}>
+        onOk={handleOkEdit}
+        onCancel={handleCancelEdit}
+      >
         <Form
           form={editForm}
-          name="editProduct"
           onFinish={onFinishEdit}
-          autoComplete="off"
-          layout="vertical">
+          layout="vertical"
+          initialValues={selectedItem || {}}
+        >
           <Form.Item
-            label="Maxsulot nomi"
+            name="img"
+            label="Rasm"
+            rules={[{ required: true, message: "Please enter rasm" }]}
+          >
+            <Input placeholder="Please enter rasm" />
+          </Form.Item>
+          <Form.Item
             name="maxsulot"
-            rules={[{ required: true, message: "Maxsulot nomini kiriting!" }]}>
-            <Input />
+            label="Maxsulot"
+            rules={[{ required: true, message: "Please enter maxsulot" }]}
+          >
+            <Input placeholder="Please enter maxsulot" />
           </Form.Item>
-
           <Form.Item
-            label="Kategoriya"
             name="kategoriya"
-            rules={[{ required: true, message: "Kategoriya kiriting!" }]}>
-            <Input />
+            label="Kategoriya"
+            rules={[{ required: true, message: "Please enter kategoriya" }]}
+          >
+            <Input placeholder="Please enter kategoriya" />
           </Form.Item>
-
           <Form.Item
-            label="Narxi"
             name="narxi"
-            rules={[{ required: true, message: "Narxni kiriting!" }]}>
-            <Input />
+            label="Narxi"
+            rules={[{ required: true, message: "Please enter narxi" }]}
+          >
+            <Input placeholder="Please enter narxi" />
           </Form.Item>
-
-          <Form.Item label="Qo'shimcha" name="qoshimcha">
-            <Input />
+          <Form.Item
+            name="qoshimcha"
+            label="Qoshimcha"
+            rules={[{ required: true, message: "Please enter qoshimcha" }]}
+          >
+            <Input placeholder="Please enter qoshimcha" />
           </Form.Item>
         </Form>
       </Modal>
