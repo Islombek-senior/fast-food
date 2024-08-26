@@ -234,7 +234,7 @@ const Kategoriyalar = () => {
             style={{ padding: "13px", marginTop: -14 }}
             key={item.id}>
             <Card
-              className="card-col" // Apply hover effect class
+              className="card-col"
               style={{
                 borderRadius: "8px",
                 boxShadow: "1px 1px 10px rgba(124, 124, 124, 0.3)",

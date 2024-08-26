@@ -36,9 +36,9 @@ const Filiallar: React.FC = () => {
   const [location, setLocation] = useState("");
   const [mapPosition, setMapPosition] = useState<[number, number]>([
     51.505, -0.09,
-  ]); // Default position [Lat, Lng]
+  ]);
 
-  const [form] = Form.useForm(); // Ant Design Form instance
+  const [form] = Form.useForm();
 
   const showDefaultDrawer = () => {
     setSize("default");
@@ -126,7 +126,8 @@ const Filiallar: React.FC = () => {
             paddingLeft: "50px",
             width: "270px",
           }}
-          className="flex items-center gap-5">
+          className="flex items-center gap-5"
+        >
           <Button
             onClick={showDefaultDrawer}
             style={{
@@ -142,7 +143,8 @@ const Filiallar: React.FC = () => {
           <h2
             style={{
               fontWeight: "bold",
-            }}>
+            }}
+          >
             Yangi filial <br />
             qo’shish
           </h2>
@@ -193,7 +195,8 @@ const Filiallar: React.FC = () => {
             alignContent: "center",
             fontWeight: "bolder",
             boxShadow: "5px 5px 5px rgba(124, 124, 124, 0.3)",
-          }}>
+          }}
+        >
           <div className="flex gap-10 items-center">
             <p>Filial nomi (UZ)</p>
           </div>
@@ -223,21 +226,24 @@ const Filiallar: React.FC = () => {
                 boxShadow: "1px 1px 10px rgba(124, 124, 124, 0.3)",
                 height: "80px",
               }}
-              hoverable>
+              hoverable
+            >
               <div
                 style={{
                   display: "flex",
                   justifyContent: "space-around",
                   alignItems: "center",
                   textAlign: "start",
-                }}>
+                }}
+              >
                 <div
                   style={{
                     display: "flex",
                     gap: "30px",
                     alignItems: "center",
                     width: `calc(100% / 5)`,
-                  }}>
+                  }}
+                >
                   <p>{f.nameuz}</p>
                 </div>
                 <div style={{ width: `calc(100% / 5)` }}>
@@ -294,14 +300,16 @@ const Filiallar: React.FC = () => {
               Saqlash
             </Button>
           </Space>
-        }>
+        }
+      >
         <Form layout="vertical" form={form}>
           <Form.Item
             name="nameuz"
             label="Filial nomi (UZ)"
             rules={[
               { required: true, message: "Iltimos, filial nomini kiriting!" },
-            ]}>
+            ]}
+          >
             <Input />
           </Form.Item>
 
@@ -310,7 +318,8 @@ const Filiallar: React.FC = () => {
             label="Filial nomi (RU)"
             rules={[
               { required: true, message: "Iltimos, filial nomini kiriting!" },
-            ]}>
+            ]}
+          >
             <Input />
           </Form.Item>
 
@@ -323,7 +332,8 @@ const Filiallar: React.FC = () => {
               center={mapPosition}
               zoom={13}
               scrollWheelZoom={false}
-              style={{ height: "300px", width: "100%" }}>
+              style={{ height: "300px", width: "100%" }}
+            >
               <TileLayer
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
