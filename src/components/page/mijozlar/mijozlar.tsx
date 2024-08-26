@@ -11,6 +11,8 @@ import {
   Card,
   Modal,
   Checkbox,
+  Select,
+  Dropdown,
 } from "antd";
 import { FiPlus, FiTrash2 } from "react-icons/fi";
 import { IoSearchOutline } from "react-icons/io5";
@@ -19,12 +21,10 @@ import { LuPen } from "react-icons/lu";
 import { FiSlash } from "react-icons/fi";
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 import { FaRegTrashCan } from "react-icons/fa6";
-import { Select } from "antd";
-import { Dropdown } from "antd";
-import "../../../App.css";
 import { DownOutlined } from "@ant-design/icons";
 import { CheckboxChangeEvent } from "antd/es/checkbox";
 import { useNavigate } from "react-router-dom";
+import "../../../App.css";
 
 type FieldType = {
   maxsulot?: string;
@@ -222,7 +222,8 @@ const Kategoriyalar = () => {
             paddingLeft: "50px",
             width: "270px",
           }}
-          className="flex items-center gap-5">
+          className="flex items-center gap-5"
+        >
           <Button
             onClick={showDrawer}
             style={{
@@ -239,7 +240,8 @@ const Kategoriyalar = () => {
           <h2
             style={{
               fontWeight: "bold",
-            }}>
+            }}
+          >
             Yangi maxsulot
             <br />
             qo’shish
@@ -269,410 +271,186 @@ const Kategoriyalar = () => {
               transform: "translate(-50%, -50%)",
               cursor: "pointer",
               fontSize: "22px",
-              color: "#8D9BA8",
             }}
           />
         </div>
-
-        <div
-          style={{
-            marginLeft: "30px",
-            width: "54px",
-            height: "54px",
-            background: "#EDEFF3",
-            borderRadius: "50%",
-            cursor: "pointer",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-<<<<<<< HEAD
-          }}>
+        <Dropdown menu={{ items }} placement="bottomRight" arrow>
           <Button
-            className="bg-white"
             style={{
-              width: "32px",
-              height: "32px",
-              boxShadow: "0px 2px 2px 0px #AEB0B550",
-              borderRadius: "50%",
-              cursor: "pointer",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}>
+              borderRadius: "24px",
+              border: "none",
+              backgroundColor: "#EDEFF3",
+              height: "44px",
+              marginLeft: "20px",
+            }}
+          >
             <CiFilter
               style={{
-                color: "#8D9BA8",
+                fontSize: "22px",
               }}
             />
+            <span>Filtr</span>
+            <DownOutlined style={{ fontSize: "16px", marginLeft: "10px" }} />
           </Button>
-        </div>
-      </div>
-
-      <Row>
-        <div
-          style={{
-            marginTop: "40px",
-            marginBottom: "40px",
-            width: "100%",
-            height: "auto",
-            padding: "23px",
-            background: "white",
-            display: "flex",
-            justifyContent: "center",
-            textAlign: "end",
-            gap: "90px",
-            alignContent: "center",
-            fontWeight: "bolder",
-            boxShadow: "5px 5px 5px rgba(124, 124, 124, 0.3)",
-          }}>
-          <div className="flex gap-10 items-center">
-            <p>Mijoz ismi</p>
-          </div>
-          <div style={{ borderRight: "1px solid grey" }}></div>
-          <div className="flex gap-10 items-center">
-            <p>Telefon raqam</p>
-          </div>
-          <div style={{ borderRight: "1px solid grey" }}></div>
-          <div className="flex gap-10 items-center">
-            <p>Buyurtmalar soni</p>
-          </div>
-          <div style={{ borderRight: "1px solid grey" }}></div>
-          <div className="flex gap-10 items-center">
-            <p>Status</p>
-          </div>
-          <div style={{ borderRight: "1px solid grey" }}></div>
-          <div className="flex gap-10 items-center">
-            <p>ACTION</p>
-          </div>
-        </div>
-        {maxFood.map((f) => (
-          <Col span={24} style={{ padding: "13px", marginTop: -14 }} key={f.id}>
-            <Card
-              className="card-col" // Apply hover effect class
-              style={{
-                borderRadius: "8px",
-                boxShadow: "1px 1px 10px rgba(124, 124, 124, 0.3)",
-                height: "80px",
-              }}>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-around",
-                  alignItems: "center",
-                  textAlign: "start",
-                }}>
-                <div
-                  style={{
-                    display: "flex",
-                    gap: "30px",
-                    alignItems: "center",
-                    width: `calc(100% / 5)`,
-                  }}>
-                  <p>{f.mijozIsmi}</p>
-                </div>
-                <div style={{ width: `calc(100% / 5)` }}>
-                  <p>{f.telefonRaqam}</p>
-                </div>
-                <div style={{ width: `calc(100% / 5)` }}>
-                  <p>{f.buyurtmalarSoni}</p>
-                </div>
-                <div
-                  style={{
-                    width: `calc(100% / 5)`,
-                    color: f.status == true ? "green" : "red",
-                  }}>
-                  <p>{f.status == true ? "Active" : "Block"}</p>
-                </div>
-                <div className="flex space-x-2 mt-2">
-=======
-          }}
-        >
-          <Space direction="vertical">
-            <Space wrap>
-              <Dropdown menu={{ items }} placement="bottomRight" arrow>
-                <Button
-                  style={{
-                    width: "42px",
-                    height: "42px",
-                    boxShadow: "0px 2px 2px 0px #AEB0B550",
-                    borderRadius: "50%",
-                    cursor: "pointer",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    border: "none",
-                    backgroundColor: "#EDEFF3",
-                  }}
-                  icon={<CiFilter style={{ fontSize: "30px" }} />}
-                />
-              </Dropdown>
-            </Space>
-          </Space>
-        </div>
-      </div>
-
-      <div className="px-10 py-8" style={{ backgroundColor: "#f7f7f7" }}>
-        <Row gutter={16}>
-          {maxFood.map((item) => (
-            <Col key={item.id} xs={24}>
-              <Card
-                style={{
-                  borderRadius: "10px",
-                  marginBottom: "10px",
-                  boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
-                }}
-              >
-                <div className="flex justify-between items-center">
-                  <h3>{item.mijozIsmi}</h3>
-                  <p>{item.telefonRaqam}</p>
-                  <p>{item.buyurtmalarSoni} ta buyurtma</p>
->>>>>>> 6dadf95 (mijozlar)
-                  <Button
-                    type="link"
-                    icon={
-                      item.status ? (
-                        <IoMdCheckmarkCircleOutline
-                          style={{ color: "#20D472" }}
-                        />
-                      ) : (
-                        <FiSlash style={{ color: "#FF4D4F" }} />
-                      )
-                    }
-<<<<<<< HEAD
-                  />
-
-                  <Button
-                    style={{
-                      borderRadius: "50%",
-                      width: "40px",
-                      height: "40px",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                    icon={<LuPen />}
-                  />
-                  <Button
-                    style={{
-                      borderRadius: "50%",
-                      width: "40px",
-                      height: "40px",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      color: "red",
-                    }}
-                    icon={<FaRegTrashCan />}
-                  />
-=======
-                    onClick={() => handleStatusChange(item.id)}
-                  >
-                    {item.status ? "Aktiv" : "Block"}
-                  </Button>
-                  <Space>
-                    <Button
-                      type="text"
-                      onClick={() => showModalEdit(item)}
-                      icon={<LuPen />}
-                    />
-                    <Button
-                      type="text"
-                      danger
-                      onClick={() => handleDelete(item.id)}
-                      icon={<FaRegTrashCan />}
-                    />
-                  </Space>
->>>>>>> 6dadf95 (mijozlar)
-                </div>
-              </Card>
-            </Col>
-          ))}
-        </Row>
-
-        {visibleItems < maxFood.length && (
-          <div className="text-center mt-8">
-            <Button
-              style={{
-                borderRadius: "30px",
-                backgroundColor: "#20D472",
-                color: "white",
-                paddingLeft: "40px",
-                paddingRight: "40px",
-              }}
-              onClick={() => setVisibleItems((prev) => prev + 7)}
-            >
-              Ko'proq ko'rsatish
-            </Button>
-          </div>
-        )}
+        </Dropdown>
       </div>
 
       <Drawer
         title="Yangi maxsulot qo’shish"
-        width={720}
+        placement="right"
         onClose={onClose}
         open={open}
-<<<<<<< HEAD
-        width={380}>
-=======
-        bodyStyle={{ paddingBottom: 80 }}
       >
->>>>>>> 6dadf95 (mijozlar)
         <Form
           form={addForm}
           layout="vertical"
           onFinish={onFinishAdd}
           onFinishFailed={onFinishFailedAdd}
-<<<<<<< HEAD
-          autoComplete="off"
-          layout="vertical">
-          <Form.Item
-            label="Rasm"
-            name="rasm"
-            rules={[{ required: true, message: "Maxsulot nomini kiriting!" }]}>
-            <Input />
-          </Form.Item>
-
-          <Form.Item
-            label="Maxsulot nomi"
-            name="maxsulot"
-            rules={[{ required: true, message: "Maxsulot nomini kiriting!" }]}>
-            <Input />
-          </Form.Item>
-          <Form.Item
-            label="Narxi"
-            name="narxi"
-            rules={[{ required: true, message: "Narxni kiriting!" }]}>
-            <Input />
-=======
+          initialValues={{ qoshimcha: "" }}
         >
           <Form.Item
-            name="mijozIsmi"
-            label="Mijoz ismi"
-            rules={[
-              { required: true, message: "Mijoz ismi kiritilishi kerak" },
-            ]}
+            name="maxsulot"
+            label="Maxsulot"
+            rules={[{ required: true, message: "Maxsulotni kiriting!" }]}
           >
-            <Input placeholder="Mijoz ismi" />
+            <Input placeholder="Maxsulot" />
           </Form.Item>
-
           <Form.Item
-            name="telefonRaqam"
-            label="Telefon raqami"
-            rules={[
-              { required: true, message: "Telefon raqami kiritilishi kerak" },
-            ]}
+            name="kategoriya"
+            label="Kategoriya"
+            rules={[{ required: true, message: "Kategoriya tanlang!" }]}
           >
-            <Input placeholder="Telefon raqami" />
->>>>>>> 6dadf95 (mijozlar)
-          </Form.Item>
-
-          <Form.Item
-            name="buyurtmalarSoni"
-            label="Buyurtmalar soni"
-            rules={[
-              {
-                required: true,
-                message: "Buyurtmalar soni kiritilishi kerak",
-              },
-            ]}
-          >
-            <Input placeholder="Buyurtmalar soni" />
-          </Form.Item>
-
-          <Form.Item name="status" label="Status">
-            <Select placeholder="Statusni tanlang">
-              <Select.Option value="true">Aktiv</Select.Option>
-              <Select.Option value="false">Blocklangan</Select.Option>
+            <Select placeholder="Kategoriya" onChange={onChange}>
+              <Select.Option value="option1">Option 1</Select.Option>
+              <Select.Option value="option2">Option 2</Select.Option>
             </Select>
           </Form.Item>
-
+          <Form.Item
+            name="narxi"
+            label="Narxi"
+            rules={[{ required: true, message: "Narxni kiriting!" }]}
+          >
+            <Input placeholder="Narxi" />
+          </Form.Item>
+          <Form.Item
+            name="qoshimcha"
+            label="Qo'shimcha"
+            rules={[{ required: true, message: "Qo'shimchani kiriting!" }]}
+          >
+            <Input placeholder="Qo'shimcha" />
+          </Form.Item>
           <Form.Item>
-            <Button type="primary" htmlType="submit">
-              Saqlash
-            </Button>
+            <Space>
+              <Button type="primary" htmlType="submit">
+                Saqlash
+              </Button>
+              <Button onClick={onClose}>Bekor qilish</Button>
+            </Space>
           </Form.Item>
         </Form>
       </Drawer>
 
       <Modal
-        title="Ma'lumotlarni tahrirlash"
+        title="Maxsulotni tahrirlash"
         open={isModalOpenEdit}
-        onOk={editForm.submit}
-        onCancel={handleCancelEdit}>
+        onOk={handleOkEdit}
+        onCancel={handleCancelEdit}
+        footer={[
+          <Button key="back" onClick={handleCancelEdit}>
+            Bekor qilish
+          </Button>,
+          <Button key="submit" type="primary" onClick={() => editForm.submit()}>
+            Saqlash
+          </Button>,
+        ]}
+      >
         <Form
           form={editForm}
-<<<<<<< HEAD
-          name="editProduct"
-          onFinish={onFinishEdit}
-          autoComplete="off"
-          layout="vertical">
-          <Form.Item
-            label="Maxsulot nomi"
-            name="maxsulot"
-            rules={[{ required: true, message: "Maxsulot nomini kiriting!" }]}>
-            <Input />
-          </Form.Item>
-
-          <Form.Item
-            label="Kategoriya"
-            name="kategoriya"
-            rules={[{ required: true, message: "Kategoriya kiriting!" }]}>
-            <Input />
-          </Form.Item>
-
-          <Form.Item
-            label="Narxi"
-            name="narxi"
-            rules={[{ required: true, message: "Narxni kiriting!" }]}>
-            <Input />
-=======
           layout="vertical"
           onFinish={onFinishEdit}
-          initialValues={selectedItem || {}}
+          requiredMark={false}
         >
           <Form.Item
             name="mijozIsmi"
             label="Mijoz ismi"
-            rules={[
-              { required: true, message: "Mijoz ismi kiritilishi kerak" },
-            ]}
+            rules={[{ required: true, message: "Mijoz ismini kiriting!" }]}
           >
             <Input placeholder="Mijoz ismi" />
           </Form.Item>
-
           <Form.Item
             name="telefonRaqam"
-            label="Telefon raqami"
-            rules={[
-              { required: true, message: "Telefon raqami kiritilishi kerak" },
-            ]}
+            label="Telefon raqam"
+            rules={[{ required: true, message: "Telefon raqamni kiriting!" }]}
           >
-            <Input placeholder="Telefon raqami" />
+            <Input placeholder="Telefon raqam" />
           </Form.Item>
-
           <Form.Item
             name="buyurtmalarSoni"
             label="Buyurtmalar soni"
             rules={[
-              {
-                required: true,
-                message: "Buyurtmalar soni kiritilishi kerak",
-              },
+              { required: true, message: "Buyurtmalar sonini kiriting!" },
             ]}
           >
             <Input placeholder="Buyurtmalar soni" />
->>>>>>> 6dadf95 (mijozlar)
           </Form.Item>
-
-          <Form.Item name="status" label="Status">
-            <Select placeholder="Statusni tanlang">
-              <Select.Option value="true">Aktiv</Select.Option>
-              <Select.Option value="false">Blocklangan</Select.Option>
-            </Select>
+          <Form.Item name="status" label="Status" valuePropName="checked">
+            <Checkbox>Status</Checkbox>
           </Form.Item>
         </Form>
       </Modal>
+
+      <div
+        style={{
+          border: "1px solid #EDEFF3",
+          borderRadius: "10px",
+          padding: "20px",
+        }}
+      >
+        <div className="products">
+          {maxFood.slice(0, visibleItems).map((item) => (
+            <Card
+              key={item.id}
+              style={{
+                marginBottom: "20px",
+                borderRadius: "10px",
+                border: "1px solid #EDEFF3",
+              }}
+            >
+              <Row>
+                <Col span={18}>
+                  <h3>{item.mijozIsmi}</h3>
+                  <p>{item.telefonRaqam}</p>
+                  <p>Buyurtmalar soni: {item.buyurtmalarSoni}</p>
+                  <p>Status: {item.status ? "Aktiv" : "Bloklangan"}</p>
+                </Col>
+                <Col span={6} style={{ textAlign: "right" }}>
+                  <Button
+                    onClick={() => showModalEdit(item)}
+                    style={{ marginRight: "10px" }}
+                    icon={<LuPen />}
+                  />
+                  <Button
+                    onClick={() => handleDelete(item.id)}
+                    icon={<FaRegTrashCan />}
+                  />
+                </Col>
+              </Row>
+            </Card>
+          ))}
+          {visibleItems < maxFood.length && (
+            <Button
+              style={{
+                width: "100%",
+                borderRadius: "24px",
+                marginTop: "20px",
+              }}
+              onClick={() => setVisibleItems(visibleItems + 7)}
+            >
+              Ko'proq ko'rsatish
+            </Button>
+          )}
+        </div>
+      </div>
     </div>
   );
 };

@@ -287,19 +287,23 @@ const Kategoriyalar = () => {
                 <div
                   style={{
                     width: `calc(100% / 5)`,
-<<<<<<< HEAD
-                  }}>
-                  <img src={f.img} alt="" className="w-10 h-10 rounded-full" />
-                  <p>{f.maxsulot}</p>
+                  }}
+                >
+                  <img
+                    src={item.img}
+                    alt=""
+                    className="w-10 h-10 rounded-full"
+                  />
+                  <p>{item.maxsulot}</p>
                 </div>
                 <div style={{ width: `calc(100% / 5)` }}>
-                  <p>{f.kategoriya}</p>
+                  <p>{item.kategoriya}</p>
                 </div>
                 <div style={{ width: `calc(100% / 5)` }}>
-                  <p>{f.narxi}</p>
+                  <p>{item.narxi}</p>
                 </div>
                 <div style={{ width: `calc(100% / 5)` }}>
-                  <p>{f.qoshimcha}</p>
+                  <p>{item.qoshimcha}</p>
                 </div>
                 <div className="flex space-x-2 mt-2">
                   <Button
@@ -324,18 +328,11 @@ const Kategoriyalar = () => {
                       color: "red",
                     }}
                     icon={<FaRegTrashCan />}
-=======
-                    display: "flex",
-                    justifyContent: "start",
-                    alignItems: "center",
-                    gap: "20px",
-                  }}
-                >
+                  />
                   <img
                     src={item.img}
                     alt="Maxsulot"
                     className="rounded-full w-11 h-11"
->>>>>>> 6dadf95 (mijozlar)
                   />
                   {item.maxsulot}
                 </div>
