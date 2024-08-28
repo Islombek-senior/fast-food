@@ -19,6 +19,9 @@ import "./cssmax.css";
 import { Select } from "antd";
 import { FaRegTrashCan } from "react-icons/fa6";
 import "../../../App.css";
+import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+import queryString from "query-string";
 
 type FieldType = {
   maxsulot?: string;
@@ -43,14 +46,24 @@ const Kategoriyalar = () => {
   const [editForm] = Form.useForm();
   const [selectedItem, setSelectedItem] = useState<DataType | null>(null);
   const [addForm] = Form.useForm();
-  const [open, setOpen] = useState(false);
+  // const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const params = queryString.parse(location.search, {
+    parseNumbers: true,
+    parseBooleans: true,
+  });
+  console.log({ ...params });
 
   const onClose = () => {
-    setOpen(false);
+    navigate("?" + queryString.stringify({ add: false }));
+    // setOpen(false);
   };
 
   const showDrawer = () => {
-    setOpen(true);
+    navigate("?" + queryString.stringify({ add: true }));
+    // setOpen(true);
   };
 
   const onFinishAdd = (values: any) => {
@@ -72,9 +85,15 @@ const Kategoriyalar = () => {
     editForm.setFieldsValue(item);
     setIsModalOpenEdit(true);
   };
-
   const handleOkEdit = () => {
-    editForm.submit(); // Formani yuboring
+    editForm
+      .validateFields()
+      .then(() => {
+        editForm.submit(); // Formani yuboring
+      })
+      .catch((errorInfo) => {
+        console.log("Validation failed:", errorInfo);
+      });
   };
 
   const handleCancelEdit = () => {
@@ -87,15 +106,14 @@ const Kategoriyalar = () => {
       const url = `https://e2ead815ad4a2894.mokky.dev/maxsulotlar/${selectedItem.id}`;
 
       axios
-        .put(url, values)
+        .patch(url, values)
         .then((res) => {
           setFoods((prevFoods) =>
             prevFoods.map((item) =>
               item.id === selectedItem.id ? { ...item, ...values } : item
             )
           );
-
-          handleOkEdit();
+          setIsModalOpenEdit(false); // Modalni yopish
         })
         .catch((error) => {
           console.error("Xatolik yuz berdi:", error.response || error);
@@ -106,6 +124,10 @@ const Kategoriyalar = () => {
           });
         });
     }
+  };
+
+  const search = () => {
+    axios.get(`https://e2ead815ad4a2894.mokky.dev/maxsulotlar/`);
   };
 
   const handleDelete = (id: number) => {
@@ -278,65 +300,25 @@ const Kategoriyalar = () => {
               <div
                 style={{
                   display: "flex",
-                  justifyContent: "space-between",
+                  justifyContent: "flex-start",
                   gap: 20,
                   alignItems: "center",
                   width: "100%",
                 }}
               >
                 <div
-                  style={{
-                    width: `calc(100% / 5)`,
-                  }}
+                  style={{ width: `calc(100% / 5)` }}
+                  className="flex justify-start gap-4 align-middle"
                 >
-                  <img
-                    src={item.img}
-                    alt=""
-                    className="w-10 h-10 rounded-full"
-                  />
-                  <p>{item.maxsulot}</p>
-                </div>
-                <div style={{ width: `calc(100% / 5)` }}>
-                  <p>{item.kategoriya}</p>
-                </div>
-                <div style={{ width: `calc(100% / 5)` }}>
-                  <p>{item.narxi}</p>
-                </div>
-                <div style={{ width: `calc(100% / 5)` }}>
-                  <p>{item.qoshimcha}</p>
-                </div>
-                <div className="flex space-x-2 mt-2">
-                  <Button
-                    style={{
-                      borderRadius: "50%",
-                      width: "40px",
-                      height: "40px",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                    icon={<LuPen />}
-                  />
-                  <Button
-                    style={{
-                      borderRadius: "50%",
-                      width: "40px",
-                      height: "40px",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      color: "red",
-                    }}
-                    icon={<FaRegTrashCan />}
-                  />
                   <img
                     src={item.img}
                     alt="Maxsulot"
                     className="rounded-full w-11 h-11"
                   />
-                  {item.maxsulot}
+                  <div>
+                    <p>{item.maxsulot}</p>
+                  </div>
                 </div>
-                <div style={{ width: `calc(100% / 5)` }}></div>
                 <div style={{ width: `calc(100% / 5)` }}>{item.kategoriya}</div>
                 <div style={{ width: `calc(100% / 5)` }}>{item.narxi}</div>
                 <div style={{ width: `calc(100% / 5)` }}>{item.qoshimcha}</div>
@@ -358,7 +340,7 @@ const Kategoriyalar = () => {
         title="Maxsulot qo'shish"
         width={520}
         onClose={onClose}
-        open={open}
+        open={params.add as boolean}
         bodyStyle={{ paddingBottom: 80 }}
       >
         <Form
