@@ -16,8 +16,6 @@ import { IoSearchOutline } from "react-icons/io5";
 import { CiFilter } from "react-icons/ci";
 import { LuPen } from "react-icons/lu";
 import "./cssmax.css";
-import { Select } from "antd";
-import { FaRegTrashCan } from "react-icons/fa6";
 import "../../../App.css";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
@@ -42,6 +40,7 @@ interface DataType {
 const Kategoriyalar = () => {
   const [maxFood, setFoods] = useState<DataType[]>([]);
   const [visibleItems, setVisibleItems] = useState(7);
+  const [searchText, setSearchText] = useState<string>("");
   const [isModalOpenEdit, setIsModalOpenEdit] = useState(false);
   const [editForm] = Form.useForm();
   const [selectedItem, setSelectedItem] = useState<DataType | null>(null);
@@ -55,6 +54,17 @@ const Kategoriyalar = () => {
     parseBooleans: true,
   });
   console.log({ ...params });
+
+  const handleDelete = (id: number) => {
+    axios
+      .delete(`https://e2ead815ad4a2894.mokky.dev/maxsulotlar/${id}`)
+      .then(() => {
+        setFoods(maxFood.filter((f) => f.id !== id));
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   const onClose = () => {
     navigate("?" + queryString.stringify({ add: false }));
@@ -124,21 +134,6 @@ const Kategoriyalar = () => {
           });
         });
     }
-  };
-
-  const search = () => {
-    axios.get(`https://e2ead815ad4a2894.mokky.dev/maxsulotlar/`);
-  };
-
-  const handleDelete = (id: number) => {
-    axios
-      .delete(`https://e2ead815ad4a2894.mokky.dev/maxsulotlar/${id}`)
-      .then((res) => {
-        setFoods(maxFood.filter((item) => item.id !== id));
-      })
-      .catch((err) => {
-        console.error(err);
-      });
   };
 
   useEffect(() => {
