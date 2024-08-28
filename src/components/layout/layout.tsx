@@ -16,8 +16,10 @@ import { FaBoxArchive } from "react-icons/fa6";
 import { LuMapPin, LuLayers } from "react-icons/lu";
 import { FaMapMarkerAlt } from "react-icons/fa";
 import { FiUsers } from "react-icons/fi";
+import { FaLocationArrow } from "react-icons/fa";
 import Mijozlar from "../page/mijozlar/mijozlar";
 import Xisobot from "../page/Xisobot/xisobot";
+import ShikoyatFikrlar from "../page/shikoyatFikrlar/shikoyatFikrlar";
 import Map from "../page/map";
 import "./cssLay.css";
 
@@ -56,8 +58,7 @@ const items = [
         to="/filiallar"
         className={({ isActive, isPending }) =>
           isPending ? "pending" : isActive ? "active" : ""
-        }
-      >
+        }>
         Filiallar
       </NavLink>
     ),
@@ -76,6 +77,11 @@ const items = [
     key: "7",
     icon: <FiUsers />,
     label: <NavLink to="/Xisobot">Xisobot</NavLink>,
+  },
+  {
+    key: "8",
+    icon: <FaLocationArrow />,
+    label: <NavLink to="/ShikoyatFikrlar">Shikoyat va Fikrlar</NavLink>,
   },
 ];
 
@@ -102,8 +108,7 @@ const Lyout: React.FC = () => {
           style={sider}
           onCollapse={(collapsed, type) => {
             console.log(collapsed, type);
-          }}
-        >
+          }}>
           <div className="demo-logo-vertical" />
           <div
             style={{
@@ -113,8 +118,7 @@ const Lyout: React.FC = () => {
               alignItems: "center",
               marginBottom: "30px",
               paddingTop: 15,
-            }}
-          >
+            }}>
             <div>
               <img
                 src={img_1}
@@ -128,8 +132,7 @@ const Lyout: React.FC = () => {
                 style={{
                   fontSize: "10px",
                   fontWeight: "light",
-                }}
-              >
+                }}>
                 Online maxsulot sotuvi
               </p>
             </div>
@@ -147,8 +150,7 @@ const Lyout: React.FC = () => {
               style={{
                 height: "100%",
                 overflow: "auto",
-              }}
-            >
+              }}>
               <Routes>
                 <Route path="/buyurtmalar" element={<Buyurtmalar />} />
                 <Route path="/filiallar" element={<Filiallar />} />
@@ -157,6 +159,7 @@ const Lyout: React.FC = () => {
                 <Route path="/maxsulotlar" element={<Maxsulotla />} />
                 <Route path="/kategoriyalar" element={<Kategoriyalar />} />
                 <Route path="/Map" element={<Map />} />
+                <Route path="/ShikoyatFikrlar" element={<ShikoyatFikrlar />} />
               </Routes>
             </div>
           </Content>
