@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import imglogo from "../imgs/3390 (1).png"; // Rasmni import qilish
 import Lyout from '../layout/layout';
 
@@ -6,15 +6,24 @@ const Logout: React.FC = () => {
   const [password, setPassword] = useState('');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
+  // Check if the password is already in local storage
+  useEffect(() => {
+    const storedPassword = localStorage.getItem('password');
+    if (storedPassword) {
+      setIsAuthenticated(true);
+    }
+  }, []);
+
   const handleLogin = () => {
     if (password === '1234') {
+      // Save password to local storage
+      localStorage.setItem('password', password);
       setIsAuthenticated(true);
     } else {
       alert('Noto\'g\'ri parol');
     }
   };
 
-  // Agar foydalanuvchi autentifikatsiyadan o'tgan bo'lsa, Lyout komponentini ko'rsatish
   if (isAuthenticated) {
     return <Lyout />;
   }
