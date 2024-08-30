@@ -10,6 +10,7 @@ import { CiFilter } from "react-icons/ci";
 import axios from "axios";
 import { CheckboxChangeEvent } from "antd/es/checkbox";
 import { RiInboxArchiveLine } from "react-icons/ri";
+import Chart from "react-apexcharts";
 
 interface Xisobot {
   id: number;
@@ -26,24 +27,57 @@ interface Xisobot {
 function Xisobot() {
   const [activeButton, setActiveButton] = useState("Yangi");
   const [xisobot, setXisobot] = useState<Xisobot[]>([]);
+  const [switches, setSwitch] = useState(false);
+
   const deleteX = (id: number) => {
     axios
       .delete(`https://e2ead815ad4a2894.mokky.dev/xisobot/${id}`)
       .then(() => {
-        setXisobot(xisobot.filter((t) => t.id === id));
+        setXisobot(xisobot.filter((t) => t.id !== id));
       })
       .catch((err) => {
         console.error(err);
       });
   };
 
-  const serachX = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const searchValue = e.target.value;
+  const switchesCom = () => {
+    setSwitch(!switches);
+  };
 
+  const options = {
+    chart: {
+      id: "basic-line-chart",
+      type: "line",
+    },
+    xaxis: {
+      categories: ["Yanvar", "Fevral", "Mart", "Aprel", "May", "Iyun"],
+    },
+    title: {
+      text: "Oylik Savdo Diagrammasi",
+      align: "center",
+    },
+    stroke: {
+      curve: "smooth", // Bu to'g'ri qiymat
+    },
+    yaxis: {
+      title: {
+        text: "Savdo miqdori",
+      },
+    },
+  };
+
+  const series = [
+    {
+      name: "Savdo miqdori",
+      data: [450, 400, 650, 700, 800, 700],
+    },
+  ];
+
+  const serachX = (e: React.ChangeEvent<HTMLInputElement>) => {
     axios
-      .get(`https://e2ead815ad4a2894.mokky.dev/xisobot`, {
-        params: { mijoz: searchValue }, // Bu yerdan foydalanildi
-      })
+      .get(
+        `https://e2ead815ad4a2894.mokky.dev/xisobot?mijoz*=${e.target.value}`
+      )
       .then((res) => {
         setXisobot(res.data);
       })
@@ -250,151 +284,166 @@ function Xisobot() {
               marginRight: "10px",
             }}
           >
-            <Button className="iconActiv">
+            <Button className="iconActiv" onClick={switchesCom}>
               <IoShapesOutline />
             </Button>
-            <Button>
+            <Button onClick={switchesCom}>
               <RiInboxArchiveLine />
             </Button>
           </div>
         </div>
       </div>
 
-      <Row>
-        <div
-          style={{
-            marginTop: "40px",
-            marginBottom: "40px",
-            width: "100%",
-            height: "auto",
-            padding: "13px",
-            background: "white",
-            display: "flex",
-            justifyContent: "center",
-            textAlign: "end",
-            gap: "90px",
-            alignContent: "center",
-            fontWeight: "bolder",
-            boxShadow: "5px 5px 5px rgba(124, 124, 124, 0.3)",
-          }}
-        >
-          <div className="flex gap-10 items-center">
-            <p>FILIAL</p>
+      {switches ? (
+        <Row>
+          <div
+            style={{
+              marginTop: "40px",
+              marginBottom: "40px",
+              width: "100%",
+              height: "auto",
+              padding: "13px",
+              background: "white",
+              display: "flex",
+              justifyContent: "center",
+              textAlign: "end",
+              gap: "90px",
+              alignContent: "center",
+              fontWeight: "bolder",
+              boxShadow: "5px 5px 5px rgba(124, 124, 124, 0.3)",
+            }}
+          >
+            <div className="flex gap-10 items-center">
+              <p>FILIAL</p>
+            </div>
+            <div style={{ borderRight: "1px solid grey" }}></div>
+            <div className="flex gap-10 items-center">
+              <p>BUYURTMA SUMMASI</p>
+            </div>
+            <div style={{ borderRight: "1px solid grey" }}></div>
+            <div className="flex gap-10 items-center">
+              <p>MIJOZ</p>
+            </div>
+            <div style={{ borderRight: "1px solid grey" }}></div>
+            <div className="flex gap-10 items-center">
+              <p>SANA</p>
+            </div>
+            <div style={{ borderRight: "1px solid grey" }}></div>
+            <div className="flex gap-10 items-center">
+              <p>ACTION</p>
+            </div>
           </div>
-          <div style={{ borderRight: "1px solid grey" }}></div>
-          <div className="flex gap-10 items-center">
-            <p>BUYURTMA SUMMASI</p>
-          </div>
-          <div style={{ borderRight: "1px solid grey" }}></div>
-          <div className="flex gap-10 items-center">
-            <p>MIJOZ</p>
-          </div>
-          <div style={{ borderRight: "1px solid grey" }}></div>
-          <div className="flex gap-10 items-center">
-            <p>SANA</p>
-          </div>
-          <div style={{ borderRight: "1px solid grey" }}></div>
-          <div className="flex gap-10 items-center">
-            <p>ACTION</p>
-          </div>
-        </div>
-        <Col xs={24}>
-          {xisobot.map((it) => (
-            <Card
-              key={it.id}
-              style={{
-                marginLeft: "30px",
-                marginRight: "30px",
-                marginBottom: "10px",
-              }}
-              className="hover:translate-x-2, translate-y-2, shadow-lg"
-            >
-              <div className="flex justify-around align-middle w-full">
-                <div style={{ width: `calc(100 / 5)` }}>
-                  <p
-                    style={{
-                      fontSize: "17px",
-                      fontWeight: "revert",
-                      marginBottom: "8px",
-                    }}
-                  >
-                    {it.filial}
-                  </p>
-                  <p style={{ color: "grey" }}>{it.opName}</p>
-                </div>
-                <div style={{ width: `calc(100 / 5)` }}>
-                  <p
-                    style={{
-                      fontSize: "17px",
-                      fontWeight: "revert",
-                      marginBottom: "8px",
-                    }}
-                  >
-                    {it.orderSum},000
-                  </p>
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "flex-start",
-                      alignItems: "center",
-                      gap: "15px",
-                      color: "grey",
-                    }}
-                  >
-                    <span
+          <Col xs={24}>
+            {xisobot.map((it) => (
+              <Card
+                key={it.id}
+                style={{
+                  marginLeft: "30px",
+                  marginRight: "30px",
+                  marginBottom: "10px",
+                }}
+                className="hover:translate-x-2, translate-y-2, shadow-lg"
+              >
+                <div className="flex justify-around align-middle w-full">
+                  <div style={{ width: `calc(100 / 5)` }}>
+                    <p
                       style={{
-                        width: "2px",
-                        height: "2px",
-                        borderRadius: "50%",
-                        backgroundColor: "#64EDF4",
-                        padding: "4px",
+                        fontSize: "17px",
+                        fontWeight: "revert",
+                        marginBottom: "8px",
                       }}
-                    ></span>
-                    {it.orderType}
+                    >
+                      {it.filial}
+                    </p>
+                    <p style={{ color: "grey" }}>{it.opName}</p>
+                  </div>
+                  <div style={{ width: `calc(100 / 5)` }}>
+                    <p
+                      style={{
+                        fontSize: "17px",
+                        fontWeight: "revert",
+                        marginBottom: "8px",
+                      }}
+                    >
+                      {it.orderSum},000
+                    </p>
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "flex-start",
+                        alignItems: "center",
+                        gap: "15px",
+                        color: "grey",
+                      }}
+                    >
+                      <span
+                        style={{
+                          width: "2px",
+                          height: "2px",
+                          borderRadius: "50%",
+                          backgroundColor: "#64EDF4",
+                          padding: "4px",
+                        }}
+                      ></span>
+                      {it.orderType}
+                    </div>
+                  </div>
+
+                  <div style={{ width: `calc(100 / 5)` }}>
+                    <p
+                      style={{
+                        fontSize: "17px",
+                        fontWeight: "revert",
+                        marginBottom: "8px",
+                      }}
+                    >
+                      {it.mijoz}
+                    </p>
+                    <p style={{ color: "grey" }}>{it.customNum}</p>
+                  </div>
+                  <div style={{ width: `calc(100 / 5)` }}>
+                    <p
+                      style={{
+                        fontSize: "17px",
+                        fontWeight: "revert",
+                        marginBottom: "8px",
+                      }}
+                    >
+                      {it.dates}
+                    </p>
+                    <p style={{ color: "grey" }}>{it.hours}</p>
+                  </div>
+                  <div style={{ width: `calc(100 / 5)` }}>
+                    <Button
+                      onClick={() => deleteX(it.id)}
+                      style={{
+                        borderRadius: "50%",
+                        width: "50px",
+                        height: "50px",
+                      }}
+                    >
+                      <FiTrash2 />
+                    </Button>
                   </div>
                 </div>
-
-                <div style={{ width: `calc(100 / 5)` }}>
-                  <p
-                    style={{
-                      fontSize: "17px",
-                      fontWeight: "revert",
-                      marginBottom: "8px",
-                    }}
-                  >
-                    {it.mijoz}
-                  </p>
-                  <p style={{ color: "grey" }}>{it.customNum}</p>
-                </div>
-                <div style={{ width: `calc(100 / 5)` }}>
-                  <p
-                    style={{
-                      fontSize: "17px",
-                      fontWeight: "revert",
-                      marginBottom: "8px",
-                    }}
-                  >
-                    {it.dates}
-                  </p>
-                  <p style={{ color: "grey" }}>{it.hours}</p>
-                </div>
-                <div style={{ width: `calc(100 / 5)` }}>
-                  <Button
-                    onClick={() => deleteX(it.id)}
-                    style={{
-                      borderRadius: "50%",
-                      width: "50px",
-                      height: "50px",
-                    }}
-                  >
-                    <FiTrash2 />
-                  </Button>
-                </div>
-              </div>
+              </Card>
+            ))}
+          </Col>
+        </Row>
+      ) : (
+        <Row>
+          <Col>
+            <Card>
+              <Chart
+                options={options}
+                series={series}
+                type="line"
+                width="600"
+              />
             </Card>
-          ))}
-        </Col>
-      </Row>
+          </Col>
+        </Row>
+      )}
     </div>
   );
 }
