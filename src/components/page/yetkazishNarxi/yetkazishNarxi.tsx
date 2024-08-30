@@ -11,6 +11,8 @@ import {
   Form,
   message,
   Modal,
+  InputNumber,
+  Select,
 } from "antd";
 import { FiPlus } from "react-icons/fi";
 import { IoSearchOutline } from "react-icons/io5";
@@ -19,6 +21,7 @@ import { LuPen } from "react-icons/lu";
 
 const { Title } = Typography;
 const { confirm } = Modal;
+const { Option } = Select;
 
 interface DataType {
   id: number;
@@ -35,6 +38,7 @@ const YetkazishNarxi = () => {
   const [currentItem, setCurrentItem] = useState<DataType | null>(null);
   const [form] = Form.useForm();
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectOptions, setSelectOptions] = useState<DataType[]>([]);
 
   const showDrawer = () => {
     form.resetFields();
@@ -54,7 +58,7 @@ const YetkazishNarxi = () => {
   }) => {
     if (isEditing && currentItem) {
       axios
-        .put(
+        .patch(
           `https://392e0f5b09d05ee3.mokky.dev/userss/${currentItem.id}`,
           values
         )
@@ -93,7 +97,6 @@ const YetkazishNarxi = () => {
   const handleDelete = (id: number) => {
     confirm({
       title: "Haqiqatan ham o'chirmoqchimisiz?",
-      content: "O'chirilgan ma'lumotni qaytarib bo'lmaydi.",
       okText: "Ha",
       okType: "danger",
       cancelText: "Yo'q",
@@ -131,6 +134,7 @@ const YetkazishNarxi = () => {
       .then((res) => {
         setData(res.data);
         setFilteredData(res.data);
+        setSelectOptions(res.data);
       })
       .catch((error) => {
         console.log(error);
@@ -312,7 +316,13 @@ const YetkazishNarxi = () => {
                 message: "Iltimos, filialni kiriting",
               },
             ]}>
-            <Input />
+            <Select placeholder="Tanlang">
+              {selectOptions.map((option) => (
+                <Option key={option.id} value={option.branch}>
+                  {option.branch}
+                </Option>
+              ))}
+            </Select>
           </Form.Item>
           <Form.Item
             name="price"
@@ -324,11 +334,17 @@ const YetkazishNarxi = () => {
               },
             ]}
             className="mt-4">
-            <Input />
+            <InputNumber
+              style={{ width: "100%" }}
+              formatter={(value) =>
+                `UZS ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+              }
+              parser={(value) => value!.replace(/\UZS\s?|(,*)/g, "")}
+            />
           </Form.Item>
           <Form.Item
             name="minimumPrice"
-            label="MinimalNarxi"
+            label="Minimal Narxi"
             rules={[
               {
                 required: true,
@@ -336,11 +352,16 @@ const YetkazishNarxi = () => {
               },
             ]}
             className="mt-4">
-            <Input />
+            <InputNumber
+              style={{ width: "100%" }}
+              formatter={(value) =>
+                `UZS ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+              }
+              parser={(value) => value!.replace(/\UZS\s?|(,*)/g, "")}
+            />
           </Form.Item>
-
           <Form.Item>
-            <Button type="primary" htmlType="submit" className="mt-10">
+            <Button type="primary" htmlType="submit" className="mt-20">
               Saqlash
             </Button>
           </Form.Item>
