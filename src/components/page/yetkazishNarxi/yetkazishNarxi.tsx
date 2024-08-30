@@ -15,25 +15,31 @@ import {
 import { FiPlus } from "react-icons/fi";
 import { IoSearchOutline } from "react-icons/io5";
 import { FaRegTrashCan } from "react-icons/fa6";
+import { LuPen } from "react-icons/lu";
 
 const { Title } = Typography;
 const { confirm } = Modal;
 
 interface DataType {
   id: number;
-  name: string;
-  type: string;
+  branch: string;
+  price: string;
+  minimumPrice: string;
 }
 
-const ShikoyatFikrlar = () => {
+const YetkazishNarxi = () => {
   const [data, setData] = useState<DataType[]>([]);
-  const [filteredData, setFilteredData] = useState<DataType[]>([]); // New state for filtered data
+  const [filteredData, setFilteredData] = useState<DataType[]>([]);
   const [open, setOpen] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [currentItem, setCurrentItem] = useState<DataType | null>(null);
   const [form] = Form.useForm();
-  const [searchTerm, setSearchTerm] = useState(""); // State for search term
+  const [searchQuery, setSearchQuery] = useState("");
 
   const showDrawer = () => {
     form.resetFields();
+    setCurrentItem(null);
+    setIsEditing(false);
     setOpen(true);
   };
 
@@ -41,70 +47,95 @@ const ShikoyatFikrlar = () => {
     setOpen(false);
   };
 
-  const handleSubmit = (values: { name: string; type: string }) => {
-    axios
-      .post("https://392e0f5b09d05ee3.mokky.dev/users", values)
-      .then((res) => {
-        setData([...data, res.data]);
-        setFilteredData([...data, res.data]); // Update filtered data
-        message.success("Maʼlumot muvaffaqiyatli qoʻshildi!");
-      })
-      .catch((error) => {
-        console.log(error);
-        message.error("Maʼlumotlarni qoʻshishda xatolik yuz berdi");
-      });
+  const handleSubmit = (values: {
+    branch: string;
+    price: string;
+    minimumPrice: string;
+  }) => {
+    if (isEditing && currentItem) {
+      axios
+        .put(
+          `https://392e0f5b09d05ee3.mokky.dev/userss/${currentItem.id}`,
+          values
+        )
+        .then((res) => {
+          setData(
+            data.map((item) => (item.id === currentItem.id ? res.data : item))
+          );
+          message.success("Maʼlumot muvaffaqiyatli yangilandi!");
+        })
+        .catch((error) => {
+          console.log(error);
+          message.error("Maʼlumotlarni yangilashda xatolik yuz berdi");
+        });
+    } else {
+      axios
+        .post("https://392e0f5b09d05ee3.mokky.dev/userss", values)
+        .then((res) => {
+          setData([...data, res.data]);
+          message.success("Maʼlumot muvaffaqiyatli qoʻshildi!");
+        })
+        .catch((error) => {
+          console.log(error);
+          message.error("Maʼlumotlarni qoʻshishda xatolik yuz berdi");
+        });
+    }
     setOpen(false);
+  };
+
+  const handleEdit = (item: DataType) => {
+    setCurrentItem(item);
+    form.setFieldsValue(item);
+    setIsEditing(true);
+    setOpen(true);
   };
 
   const handleDelete = (id: number) => {
     confirm({
-      title: "Rostdan ham o'chirmoqchimisiz?",
+      title: "Haqiqatan ham o'chirmoqchimisiz?",
+      content: "O'chirilgan ma'lumotni qaytarib bo'lmaydi.",
       okText: "Ha",
       okType: "danger",
       cancelText: "Yo'q",
       onOk() {
         axios
-          .delete(`https://392e0f5b09d05ee3.mokky.dev/users/${id}`)
+          .delete(`https://392e0f5b09d05ee3.mokky.dev/userss/${id}`)
           .then(() => {
-            const updatedData = data.filter((item) => item.id !== id);
-            setData(updatedData);
-            setFilteredData(updatedData); // Update filtered data
+            setData(data.filter((item) => item.id !== id));
+            setFilteredData(filteredData.filter((item) => item.id !== id));
             message.success("Maʼlumot muvaffaqiyatli o'chirildi!");
           })
           .catch((error) => {
-            console.error("Xatolik yuz berdi:", error);
+            console.log(error);
             message.error("Maʼlumotlarni o'chirishda xatolik yuz berdi");
           });
-      },
-      onCancel() {
-        message.info("O'chirish amalini bekor qildingiz");
       },
     });
   };
 
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const query = e.target.value.toLowerCase();
+    setSearchQuery(query);
+    const filtered = data.filter(
+      (item) =>
+        item.branch.toLowerCase().includes(query) ||
+        item.price.toLowerCase().includes(query) ||
+        item.minimumPrice.toLowerCase().includes(query)
+    );
+    setFilteredData(filtered);
+  };
+
   useEffect(() => {
     axios
-      .get("https://392e0f5b09d05ee3.mokky.dev/users")
+      .get("https://392e0f5b09d05ee3.mokky.dev/userss")
       .then((res) => {
         setData(res.data);
-        setFilteredData(res.data); // Set filtered data on initial load
+        setFilteredData(res.data);
       })
       .catch((error) => {
         console.log(error);
       });
   }, []);
-
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setSearchTerm(value);
-    setFilteredData(
-      data.filter(
-        (item) =>
-          item.name.toLowerCase().includes(value.toLowerCase()) ||
-          item.type.toLowerCase().includes(value.toLowerCase())
-      )
-    );
-  };
 
   return (
     <div>
@@ -152,8 +183,8 @@ const ShikoyatFikrlar = () => {
               outline: "none",
             }}
             placeholder="Qidirish"
-            value={searchTerm}
-            onChange={handleSearch} // Update search input handler
+            value={searchQuery}
+            onChange={handleSearch}
           />
           <IoSearchOutline
             style={{
@@ -185,11 +216,15 @@ const ShikoyatFikrlar = () => {
           boxShadow: "5px 5px 5px rgba(124, 124, 124, 0.3)",
         }}>
         <Col>
-          <p>Kimdan</p>
+          <p>Filial</p>
         </Col>
         <div style={{ borderRight: "1px solid grey", height: "100%" }}></div>
         <Col>
-          <p>Turi</p>
+          <p>Narxi</p>
+        </Col>
+        <div style={{ borderRight: "1px solid grey", height: "100%" }}></div>
+        <Col>
+          <p>Minimal narx</p>
         </Col>
         <div style={{ borderRight: "1px solid grey", height: "100%" }}></div>
         <Col>
@@ -223,12 +258,27 @@ const ShikoyatFikrlar = () => {
                     alignItems: "center",
                     width: `calc(100% / 5)`,
                   }}>
-                  <p>{item.name}</p>
+                  <p>{item.branch}</p>
                 </div>
                 <div style={{ width: `calc(100% / 5)` }}>
-                  <p>{item.type}</p>
+                  <p>{item.price}</p>
                 </div>
-                <div>
+                <div style={{ width: `calc(100% / 5)` }}>
+                  <p>{item.minimumPrice}</p>
+                </div>
+                <div className="flex space-x-2 mt-2">
+                  <Button
+                    style={{
+                      borderRadius: "50%",
+                      width: "40px",
+                      height: "40px",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                    icon={<LuPen />}
+                    onClick={() => handleEdit(item)}
+                  />
                   <Button
                     style={{
                       borderRadius: "50%",
@@ -248,26 +298,41 @@ const ShikoyatFikrlar = () => {
           </Col>
         ))}
       </Row>
-      <Drawer title="Yangi qo'shish" onClose={onClose} open={open}>
+      <Drawer
+        title={isEditing ? "Ma'lumotni tahrirlash" : "Yangi qo'shish"}
+        onClose={onClose}
+        open={open}>
         <Form form={form} layout="vertical" onFinish={handleSubmit}>
           <Form.Item
-            name="name"
-            label="Kimdan"
+            name="branch"
+            label="Filial"
             rules={[
               {
                 required: true,
-                message: "Iltimos, kimdanligini kiriting",
+                message: "Iltimos, filialni kiriting",
               },
             ]}>
             <Input />
           </Form.Item>
           <Form.Item
-            name="type"
-            label="Turi"
+            name="price"
+            label="Narxi"
             rules={[
               {
                 required: true,
-                message: "Iltimos, turini kiriting",
+                message: "Iltimos, narxini kiriting",
+              },
+            ]}
+            className="mt-4">
+            <Input />
+          </Form.Item>
+          <Form.Item
+            name="minimumPrice"
+            label="MinimalNarxi"
+            rules={[
+              {
+                required: true,
+                message: "Iltimos, minimal narxni kiriting",
               },
             ]}
             className="mt-4">
@@ -285,4 +350,4 @@ const ShikoyatFikrlar = () => {
   );
 };
 
-export default ShikoyatFikrlar;
+export default YetkazishNarxi;

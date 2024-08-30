@@ -29,9 +29,11 @@ interface DataType {
 
 const Kategoriyalar = () => {
   const [data, setData] = useState<DataType[]>([]);
+  const [filteredData, setFilteredData] = useState<DataType[]>([]);
   const [drawer, setDrawer] = useState(false);
   const [form] = Form.useForm();
   const [editingCategory, setEditingCategory] = useState<DataType | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const showDrawer = (r?: DataType) => {
     setEditingCategory(r || null);
@@ -59,6 +61,7 @@ const Kategoriyalar = () => {
       .then((res) => {
         const newCategory = { ...res.data, id: res.data._id };
         setData((prevData) => [...prevData, newCategory]);
+        setFilteredData((prevData) => [...prevData, newCategory]);
         closeDrawer();
         message.success("Added successfully");
       })
@@ -83,6 +86,11 @@ const Kategoriyalar = () => {
             item.id === editingCategory.id ? updatedCategory : item
           )
         );
+        setFilteredData((prevData) =>
+          prevData.map((item) =>
+            item.id === editingCategory.id ? updatedCategory : item
+          )
+        );
         closeDrawer();
         message.success("Category updated successfully");
       })
@@ -103,6 +111,9 @@ const Kategoriyalar = () => {
           .delete(`https://392e0f5b09d05ee3.mokky.dev/fas-food/${id}`)
           .then(() => {
             setData((prevData) => prevData.filter((item) => item.id !== id));
+            setFilteredData((prevData) =>
+              prevData.filter((item) => item.id !== id)
+            );
             message.success("Muvaffaqiyatli o'chirildi");
           })
           .catch((error) => {
@@ -125,12 +136,27 @@ const Kategoriyalar = () => {
           id: item._id,
         }));
         setData(fetchedData);
+        setFilteredData(fetchedData);
       })
       .catch((error) => {
         console.error(error);
         message.error("Failed to fetch categories");
       });
   }, []);
+
+  useEffect(() => {
+    if (searchTerm) {
+      setFilteredData(
+        data.filter((item) =>
+          `${item.nameUz} ${item.nameRu} ${item.category}`
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase())
+        )
+      );
+    } else {
+      setFilteredData(data);
+    }
+  }, [searchTerm, data]);
 
   return (
     <div>
@@ -180,6 +206,8 @@ const Kategoriyalar = () => {
               outline: "none",
             }}
             placeholder="Qidirish"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
           />
           <IoSearchOutline
             style={{
@@ -228,7 +256,7 @@ const Kategoriyalar = () => {
             <p>ACTION</p>
           </div>
         </div>
-        {data.map((item) => (
+        {filteredData.map((item) => (
           <Col
             span={24}
             style={{ padding: "13px", marginTop: -14 }}
