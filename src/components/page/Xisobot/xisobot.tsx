@@ -462,7 +462,17 @@ function Xisobot() {
         </Row>
       ) : (
         <Row>
-          <Col span={24}>
+          <Col span={14}>
+            <Card title="Sales Data">
+              <ApexCharts
+                options={options}
+                series={series}
+                type="line"
+                height={350}
+              />
+            </Card>
+          </Col>
+          <Col span={14}>
             <Card title="Sales Data">
               <ApexCharts
                 options={options}
