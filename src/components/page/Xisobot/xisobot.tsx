@@ -434,12 +434,12 @@ function Xisobot() {
         <Row>
           <Col>
             <Card>
-              <Chart
+              {/* <Chart
                 options={options}
                 series={series}
                 type="line"
                 width="600"
-              />
+              /> */}
             </Card>
           </Col>
         </Row>
