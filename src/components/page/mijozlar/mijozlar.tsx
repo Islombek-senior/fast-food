@@ -56,7 +56,6 @@ const Kategoriyalar = () => {
     parseNumbers: true,
     parseBooleans: true,
   });
-  console.log({ ...params });
 
   const onCnge = (e: CheckboxChangeEvent) => {
     const isChecked = e.target.checked;
@@ -247,7 +246,6 @@ const Kategoriyalar = () => {
               item.id === selectedItem.id ? { ...item, ...values } : item
             )
           );
-
           handleOkEdit();
         })
         .catch((error) => {
@@ -271,7 +269,6 @@ const Kategoriyalar = () => {
         console.error(err);
       });
   };
-
   useEffect(() => {
     axios
       .get("https://e2ead815ad4a2894.mokky.dev/mijozlar")
@@ -284,8 +281,18 @@ const Kategoriyalar = () => {
       });
   }, []);
 
-  const onChange = (value: string) => {
-    console.log(`selected ${value}`);
+  const onChangeSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    axios
+      .get(
+        `https://e2ead815ad4a2894.mokky.dev/mijozlar?mijozIsmi=*${e.target.value}`
+      )
+      .then((res) => {
+        setFoods(res.data);
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   };
 
   return (
@@ -338,6 +345,7 @@ const Kategoriyalar = () => {
               fontSize: "16px",
               outline: "none",
             }}
+            onChange={onChangeSearch}
             placeholder="Qidirish"
           />
           <IoSearchOutline

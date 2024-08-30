@@ -10,6 +10,8 @@ import {
   Col,
   Card,
   Modal,
+  Dropdown,
+  Checkbox,
 } from "antd";
 import { FiPlus, FiTrash2 } from "react-icons/fi";
 import { IoSearchOutline } from "react-icons/io5";
@@ -33,7 +35,7 @@ interface DataType {
   img: string;
   maxsulot: string;
   kategoriya: string;
-  narxi: string;
+  narxi: number;
   qoshimcha: string;
 }
 
@@ -54,6 +56,81 @@ const Kategoriyalar = () => {
     parseBooleans: true,
   });
   console.log({ ...params });
+
+  const nUp = () => {
+    axios
+      .get("https://e2ead815ad4a2894.mokky.dev/maxsulotlar")
+      .then((res) => {
+        const sorted = res.data.sort((a: DataType, b: DataType) =>
+          a.maxsulot.localeCompare(b.maxsulot)
+        );
+        setFoods(sorted);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  const nDown = () => {
+    axios
+      .get("https://e2ead815ad4a2894.mokky.dev/maxsulotlar")
+      .then((res) => {
+        const sorted = res.data.sort((a: DataType, b: DataType) =>
+          b.maxsulot.localeCompare(a.maxsulot)
+        );
+        setFoods(sorted);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  const bUp = () => {
+    axios
+      .get("https://e2ead815ad4a2894.mokky.dev/maxsulotlar")
+      .then((response) => {
+        const sorted = response.data.sort(
+          (a: any, b: any) => a.narxi - b.narxi
+        );
+        setFoods(sorted);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+
+  const downN = () => {
+    axios
+      .get("https://e2ead815ad4a2894.mokky.dev/maxsulotlar")
+      .then((res) => {
+        const sorted = res.data.sort((a: any, b: any) => b.narxi - a.narxi);
+        setFoods(sorted);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+
+  const items = [
+    {
+      key: "1",
+      label: <Checkbox onChange={nUp}>Nom bo’yicha (A-Z)</Checkbox>,
+    },
+    {
+      key: "2",
+      label: <Checkbox onChange={nDown}>Nom bo’yicha (Z-A)</Checkbox>,
+    },
+    {
+      key: "3",
+      label: <Checkbox onChange={bUp}>Narx soni (O’sish tartibida)</Checkbox>,
+    },
+    {
+      key: "4",
+      label: (
+        <Checkbox onChange={downN}>Narx soni (Kamayish tartibida)</Checkbox>
+      ),
+    },
+  ];
 
   const handleDelete = (id: number) => {
     axios
@@ -148,8 +225,17 @@ const Kategoriyalar = () => {
       });
   }, []);
 
-  const onChange = (value: string) => {
-    console.log(`selected ${value}`);
+  const searchIn = (e: React.ChangeEvent<HTMLInputElement>) => {
+    axios
+      .get(
+        `https://e2ead815ad4a2894.mokky.dev/maxsulotlar?maxsulot=*${e.target.value}`
+      )
+      .then((res) => {
+        setFoods(res.data);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   };
 
   return (
@@ -177,12 +263,13 @@ const Kategoriyalar = () => {
             }}
             icon={<FiPlus style={{ fontSize: "30px" }} />}
           />
+
           <h2
             style={{
               fontWeight: "bold",
             }}
           >
-            Yangi maxsulot
+            Yangi maxsulotlar
             <br />
             qo’shish
           </h2>
@@ -190,6 +277,7 @@ const Kategoriyalar = () => {
 
         <div className="search ml-20 relative">
           <Input
+            onChange={searchIn}
             style={{
               borderRadius: "24px",
               width: "300px",
@@ -201,6 +289,7 @@ const Kategoriyalar = () => {
               fontSize: "16px",
               outline: "none",
             }}
+            // onChange={onChangeSearch}
             placeholder="Qidirish"
           />
           <IoSearchOutline
@@ -211,44 +300,28 @@ const Kategoriyalar = () => {
               transform: "translate(-50%, -50%)",
               cursor: "pointer",
               fontSize: "22px",
-              color: "#8D9BA8",
             }}
           />
         </div>
-
-        <div
-          style={{
-            marginLeft: "30px",
-            width: "44px",
-            height: "44px",
-            background: "#EDEFF3",
-            borderRadius: "50%",
-            cursor: "pointer",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
+        <Dropdown menu={{ items }} placement="bottomRight" arrow>
           <Button
-            className="bg-white"
             style={{
-              width: "32px",
-              height: "32px",
-              boxShadow: "0px 2px 2px 0px #AEB0B550",
               borderRadius: "50%",
-              cursor: "pointer",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
+              border: "none",
+              backgroundColor: "#ffffff",
+              boxShadow: "4px 14px 18px rgba(114, 113, 113, 0.2)",
+              height: "54px",
+              width: "54px",
+              marginLeft: "20px",
             }}
           >
             <CiFilter
               style={{
-                color: "#8D9BA8",
+                fontSize: "22px",
               }}
             />
           </Button>
-        </div>
+        </Dropdown>
       </div>
 
       <Row>
@@ -315,7 +388,9 @@ const Kategoriyalar = () => {
                   </div>
                 </div>
                 <div style={{ width: `calc(100% / 5)` }}>{item.kategoriya}</div>
-                <div style={{ width: `calc(100% / 5)` }}>{item.narxi}</div>
+                <div style={{ width: `calc(100% / 5)` }}>
+                  {item.narxi},000 UZS
+                </div>
                 <div style={{ width: `calc(100% / 5)` }}>{item.qoshimcha}</div>
                 <div className="flex gap-4">
                   <Button onClick={() => showModalEdit(item)}>
