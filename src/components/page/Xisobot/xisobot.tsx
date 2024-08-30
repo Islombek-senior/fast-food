@@ -11,6 +11,7 @@ import axios from "axios";
 import { CheckboxChangeEvent } from "antd/es/checkbox";
 import { RiInboxArchiveLine } from "react-icons/ri";
 import Chart from "react-apexcharts";
+import ApexCharts from "react-apexcharts";
 
 interface Xisobot {
   id: number;
@@ -29,6 +30,64 @@ function Xisobot() {
   const [xisobot, setXisobot] = useState<Xisobot[]>([]);
   const [switches, setSwitch] = useState(false);
 
+  interface ApexOptions {
+    chart?: {
+      id?: string;
+      type?:
+        | "line"
+        | "area"
+        | "bar"
+        | "pie"
+        | "donut"
+        | "radialBar"
+        | "scatter"
+        | "bubble"
+        | "heatmap"
+        | "candlestick"
+        | "boxPlot"
+        | "radar"
+        | "polarArea"
+        | "rangeBar"
+        | "rangeArea"
+        | "treemap";
+    };
+    xaxis?: {
+      categories?: string[];
+    };
+    title?: {
+      text?: string;
+      align?: "left" | "center" | "right";
+    };
+    stroke?: {
+      curve?: "smooth" | "straight" | "stepline" | "linestep" | "monotoneCubic";
+    };
+    yaxis?: {
+      title?: {
+        text?: string;
+      };
+    };
+    // boshqa parametrlar...
+  }
+
+  const options: ApexOptions = {
+    chart: {
+      id: "line-chart",
+    },
+    xaxis: {
+      categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
+    },
+    stroke: {
+      curve: "smooth",
+    },
+  };
+
+  const series = [
+    {
+      name: "Sales",
+      data: [30, 40, 35, 50, 49, 60],
+    },
+  ];
+
   const deleteX = (id: number) => {
     axios
       .delete(`https://e2ead815ad4a2894.mokky.dev/xisobot/${id}`)
@@ -43,35 +102,6 @@ function Xisobot() {
   const switchesCom = () => {
     setSwitch(!switches);
   };
-
-  const options = {
-    chart: {
-      id: "basic-line-chart",
-      type: "line",
-    },
-    xaxis: {
-      categories: ["Yanvar", "Fevral", "Mart", "Aprel", "May", "Iyun"],
-    },
-    title: {
-      text: "Oylik Savdo Diagrammasi",
-      align: "center",
-    },
-    stroke: {
-      curve: "smooth", // Bu to'g'ri qiymat
-    },
-    yaxis: {
-      title: {
-        text: "Savdo miqdori",
-      },
-    },
-  };
-
-  const series = [
-    {
-      name: "Savdo miqdori",
-      data: [450, 400, 650, 700, 800, 700],
-    },
-  ];
 
   const serachX = (e: React.ChangeEvent<HTMLInputElement>) => {
     axios
@@ -432,14 +462,14 @@ function Xisobot() {
         </Row>
       ) : (
         <Row>
-          <Col>
-            <Card>
-              {/* <Chart
+          <Col span={24}>
+            <Card title="Sales Data">
+              <ApexCharts
                 options={options}
                 series={series}
                 type="line"
-                width="600"
-              /> */}
+                height={350}
+              />
             </Card>
           </Col>
         </Row>
