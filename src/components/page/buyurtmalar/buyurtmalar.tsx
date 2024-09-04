@@ -1,30 +1,125 @@
-import { Button, Card, Col, Input, Row } from "antd";
 import React, { useEffect, useState } from "react";
-import { FiPlus, FiTrash2 } from "react-icons/fi";
-import { IoSearchOutline } from "react-icons/io5";
-import "../buyurtmalar/css.css";
-import { HiMenuAlt4 } from "react-icons/hi";
-import { HiOutlineMenuAlt3 } from "react-icons/hi";
+import { Button, Card, Col, Row, Segmented, Select, Typography } from "antd";
+import { FiPlus } from "react-icons/fi";
 import axios from "axios";
-import { LuPen } from "react-icons/lu";
-import { FaRegTrashCan } from "react-icons/fa6";
+import {
+  Box,
+  CardContent,
+  Drawer,
+  InputAdornment,
+  TextField,
+} from "@mui/material"; // MUI import
+import { GoClock } from "react-icons/go";
+import { CiBookmark, CiDeliveryTruck } from "react-icons/ci";
+import { FiUser, FiPhone } from "react-icons/fi";
+import { IoMdCheckmark } from "react-icons/io";
+import { HiMenuAlt4, HiOutlineMenuAlt3 } from "react-icons/hi";
+import "./css.css";
+import Tabs from "@mui/joy/Tabs";
+import TabList from "@mui/joy/TabList";
+import Tab, { tabClasses } from "@mui/joy/Tab";
+import { Person } from "@mui/icons-material";
+import { GoogleMap, LoadScript } from "@react-google-maps/api";
+import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
+import "leaflet/dist/leaflet.css";
+import defaultMarkerIcon from "leaflet/dist/images/marker-icon.png"; // Rename import
+import defaultMarkerShadow from "leaflet/dist/images/marker-shadow.png";
+import L from "leaflet";
+// Standart marker ikonkasini to'g'ri sozlash
+import "leaflet/dist/leaflet.css";
+
+const markerIcon = "path/to/marker-icon.png"; // Adjust the path as needed
+const markerShadow = "path/to/marker-shadow.png"; // Adjust the path as needed
+
+const customIcon = L.icon({
+  iconUrl: defaultMarkerIcon, // Use renamed import
+  shadowUrl: defaultMarkerShadow, // Use renamed import
+  iconSize: [20, 34], // Adjusted size
+  iconAnchor: [10, 34], // Adjusted anchor
+  popupAnchor: [0, -30], // Adjusted popup anchor
+  shadowSize: [30, 30], // Adjusted shadow size
+});
+
+// Filiallar ma'lumotlari
+interface Branch {
+  position: [number, number];
+  owner: string;
+  phone: string;
+  name: string;
+}
+
+const branches: Branch[] = [
+  {
+    position: [41.2995, 69.2401],
+    owner: "Asror Soliyev",
+    phone: "+998991234567",
+    name: "Maxway Filial 1",
+  },
+  {
+    position: [41.3111, 69.2797],
+    owner: "Shavkat Karimov",
+    phone: "+998991234568",
+    name: "Maxway Filial 2",
+  },
+  {
+    position: [41.3134, 69.2826],
+    owner: "Ali Akbarov",
+    phone: "+998991234569",
+    name: "Maxway Filial 3",
+  },
+  {
+    position: [41.326543, 69.228495],
+    owner: "Ali Akbarov",
+    phone: "+998991234569",
+    name: "Maxway Filial 4",
+  },
+];
+
 interface Product {
   id: number;
-  nameuz: string;
-  nameru: string;
-  locate: string;
-  hour: string;
+  mijoz: string;
+  customNum: string;
+  orderSum: number;
+  opName: string;
+  filial: string;
+}
+
+interface Products {
+  id: number;
+  img: string;
+  name: string;
+  category: string;
+  filters: number;
+  price: number;
+  qoshimcha: string;
 }
 
 function Buyurtmalar() {
   const [activeButton, setActiveButton] = useState("Yangi");
   const [data, setData] = useState<Product[]>([]);
+  const [maxsulot, setMaxsulot] = useState<Products[]>([]);
+  const [open, setOpen] = useState(false);
+  const [selectedSegment, setSelectedSegment] = React.useState(0);
+
+  const handleSegmentChange = (index: any) => {
+    setSelectedSegment(index);
+  };
+  useEffect(() => {
+    axios
+      .get("https://e2ead815ad4a2894.mokky.dev/xisobot")
+      .then((res) => {
+        setData(res.data);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  }, []);
 
   useEffect(() => {
     axios
-      .get("https://4a39859802af3eec.mokky.dev/filiallar")
+      .get("https://e2ead815ad4a2894.mokky.dev/maxsulotlar")
       .then((res) => {
-        setData(res.data);
+        setMaxsulot(res.data);
       })
       .catch((e) => {
         console.log(e);
@@ -34,6 +129,409 @@ function Buyurtmalar() {
   const handleButtonClick = (buttonName: string) => {
     setActiveButton(buttonName);
   };
+
+  const showLargeDrawer = () => {
+    setOpen(true);
+  };
+
+  const onClose = () => {
+    setOpen(false);
+  };
+
+  const handleChange = (value: string) => {
+    console.log(`selected ${value}`);
+  };
+
+  const mapContainerStyle = {
+    width: "100%",
+    height: "400px",
+  };
+
+  const center = {
+    lat: 37.7749,
+    lng: -122.4194,
+  };
+  const [selectedItems, setSelectedItems] = useState<string[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState("");
+
+  const handleCategoryChange = (category: any) => {
+    setSelectedCategory(category);
+  };
+  const burgerF = () => {
+    axios
+      .get("https://e2ead815ad4a2894.mokky.dev/maxsulotlar")
+      .then((res) => {
+        const fillBurger = res.data.filter(
+          (item: Products) => item.category === "Lavash"
+        );
+        setMaxsulot(fillBurger);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const renderProducts = () => {
+    switch (selectedCategory) {
+      case "Burger":
+        return maxsulot
+          .filter((product) => product.category === "Burger")
+          .map((it) => (
+            <div
+              key={it.id}
+              style={{
+                width: "290px",
+                borderRadius: "10px",
+                marginTop: "20px",
+              }}
+              className=" shadow-lg"
+            >
+              <img
+                src={it.img}
+                alt="dfsa"
+                className="w-full h-36"
+                style={{
+                  objectFit: "cover",
+                  borderTopLeftRadius: "10px",
+                  borderTopRightRadius: "10px",
+                }}
+              />
+              <div className="p-3 pb-5">
+                <p style={{ fontSize: "25px", paddingTop: "3px" }}>{it.name}</p>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    cursor: "pointer",
+                  }}
+                >
+                  <p>{it.price} UZS</p>
+                  <div
+                    style={{
+                      border: "1px solid #EDEFF3",
+                      borderRadius: "10px",
+                      padding: "5px",
+                      width: "100px",
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      cursor: "pointer",
+                    }}
+                  >
+                    <Button style={{ border: "none", background: "white" }}>
+                      -
+                    </Button>
+                    <span>w</span>
+                    <Button style={{ border: "none", background: "white" }}>
+                      +
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ));
+
+      case "Lavash":
+        return maxsulot
+          .filter((product) => product.category === "Lavash")
+          .map((it) => (
+            <div
+              key={it.id}
+              style={{
+                width: "290px",
+                borderRadius: "10px",
+                marginTop: "20px",
+              }}
+              className=" shadow-lg"
+            >
+              <img
+                src={it.img}
+                alt="dfsa"
+                className="w-full h-36"
+                style={{
+                  objectFit: "cover",
+                  borderTopLeftRadius: "10px",
+                  borderTopRightRadius: "10px",
+                }}
+              />
+              <div className="p-3 pb-5">
+                <p style={{ fontSize: "25px", paddingTop: "3px" }}>{it.name}</p>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    cursor: "pointer",
+                  }}
+                >
+                  <p>{it.price} UZS</p>
+                  <div
+                    style={{
+                      border: "1px solid #EDEFF3",
+                      borderRadius: "10px",
+                      padding: "5px",
+                      width: "100px",
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      cursor: "pointer",
+                    }}
+                  >
+                    <Button style={{ border: "none", background: "white" }}>
+                      -
+                    </Button>
+                    <span>w</span>
+                    <Button style={{ border: "none", background: "white" }}>
+                      +
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ));
+
+      case "Garnish":
+        return maxsulot
+          .filter((product) => product.category === "Garnish")
+          .map((it) => (
+            <div
+              key={it.id}
+              style={{
+                width: "290px",
+                borderRadius: "10px",
+                marginTop: "20px",
+              }}
+              className=" shadow-lg"
+            >
+              <img
+                src={it.img}
+                alt="dfsa"
+                className="w-full h-36"
+                style={{
+                  objectFit: "cover",
+                  borderTopLeftRadius: "10px",
+                  borderTopRightRadius: "10px",
+                }}
+              />
+              <div className="p-3 pb-5">
+                <p style={{ fontSize: "25px", paddingTop: "3px" }}>{it.name}</p>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    cursor: "pointer",
+                  }}
+                >
+                  <p>{it.price} UZS</p>
+                  <div
+                    style={{
+                      border: "1px solid #EDEFF3",
+                      borderRadius: "10px",
+                      padding: "5px",
+                      width: "100px",
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      cursor: "pointer",
+                    }}
+                  >
+                    <Button style={{ border: "none", background: "white" }}>
+                      -
+                    </Button>
+                    <span>w</span>
+                    <Button style={{ border: "none", background: "white" }}>
+                      +
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ));
+
+      case "Salad":
+        return maxsulot
+          .filter((product) => product.category === "Salad")
+          .map((it) => (
+            <div
+              key={it.id}
+              style={{
+                width: "290px",
+                borderRadius: "10px",
+                marginTop: "20px",
+              }}
+              className=" shadow-lg"
+            >
+              <img
+                src={it.img}
+                alt="dfsa"
+                className="w-full h-36"
+                style={{
+                  objectFit: "cover",
+                  borderTopLeftRadius: "10px",
+                  borderTopRightRadius: "10px",
+                }}
+              />
+              <div className="p-3 pb-5">
+                <p style={{ fontSize: "25px", paddingTop: "3px" }}>{it.name}</p>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    cursor: "pointer",
+                  }}
+                >
+                  <p>{it.price} UZS</p>
+                  <div
+                    style={{
+                      border: "1px solid #EDEFF3",
+                      borderRadius: "10px",
+                      padding: "5px",
+                      width: "100px",
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      cursor: "pointer",
+                    }}
+                  >
+                    <Button style={{ border: "none", background: "white" }}>
+                      -
+                    </Button>
+                    <span>w</span>
+                    <Button style={{ border: "none", background: "white" }}>
+                      +
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ));
+
+      case "Drink":
+        return maxsulot
+          .filter((product) => product.category === "Drink")
+          .map((it) => (
+            <div
+              key={it.id}
+              style={{
+                width: "290px",
+                borderRadius: "10px",
+                marginTop: "20px",
+              }}
+              className=" shadow-lg"
+            >
+              <img
+                src={it.img}
+                alt="dfsa"
+                className="w-full h-36"
+                style={{
+                  objectFit: "cover",
+                  borderTopLeftRadius: "10px",
+                  borderTopRightRadius: "10px",
+                }}
+              />
+              <div className="p-3 pb-5">
+                <p style={{ fontSize: "25px", paddingTop: "3px" }}>{it.name}</p>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    cursor: "pointer",
+                  }}
+                >
+                  <p>{it.price} UZS</p>
+                  <div
+                    style={{
+                      border: "1px solid #EDEFF3",
+                      borderRadius: "10px",
+                      padding: "5px",
+                      width: "100px",
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      cursor: "pointer",
+                    }}
+                  >
+                    <Button style={{ border: "none", background: "white" }}>
+                      -
+                    </Button>
+                    <span>w</span>
+                    <Button style={{ border: "none", background: "white" }}>
+                      +
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ));
+
+      case "Sauce":
+        return maxsulot
+          .filter((product) => product.category === "Sauce")
+          .map((it) => (
+            <div
+              key={it.id}
+              style={{
+                width: "290px",
+                borderRadius: "10px",
+                marginTop: "20px",
+              }}
+              className=" shadow-lg"
+            >
+              <img
+                src={it.img}
+                alt="dfsa"
+                className="w-full h-36"
+                style={{
+                  objectFit: "cover",
+                  borderTopLeftRadius: "10px",
+                  borderTopRightRadius: "10px",
+                }}
+              />
+              <div className="p-3 pb-5">
+                <p style={{ fontSize: "25px", paddingTop: "3px" }}>{it.name}</p>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    cursor: "pointer",
+                  }}
+                >
+                  <p>{it.price} UZS</p>
+                  <div
+                    style={{
+                      border: "1px solid #EDEFF3",
+                      borderRadius: "10px",
+                      padding: "5px",
+                      width: "100px",
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      cursor: "pointer",
+                    }}
+                  >
+                    <Button style={{ border: "none", background: "white" }}>
+                      -
+                    </Button>
+                    <span>w</span>
+                    <Button style={{ border: "none", background: "white" }}>
+                      +
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ));
+
+      default:
+        return <div>Mahsulotlar ro'yxati</div>;
+    }
+  };
+
   return (
     <div>
       <div className="bg-white flex items-center">
@@ -45,8 +543,10 @@ function Buyurtmalar() {
             paddingLeft: "50px",
             width: "270px",
           }}
-          className="flex items-center gap-5">
+          className="flex items-center gap-5"
+        >
           <Button
+            onClick={showLargeDrawer}
             style={{
               borderRadius: "50%",
               backgroundColor: "#20D472",
@@ -60,7 +560,8 @@ function Buyurtmalar() {
           <h2
             style={{
               fontWeight: "bold",
-            }}>
+            }}
+          >
             Yangi filial
             <br />
             qo’shish
@@ -77,25 +578,30 @@ function Buyurtmalar() {
             borderRadius: "30px",
             padding: "5px",
             marginLeft: "50px",
-          }}>
+          }}
+        >
           <button
             className={activeButton === "Yangi" ? "activ" : "inActiv"}
-            onClick={() => handleButtonClick("Yangi")}>
+            onClick={() => handleButtonClick("Yangi")}
+          >
             Yangi
           </button>
           <button
             className={activeButton === "Qabul qilingan" ? "activ" : "inActiv"}
-            onClick={() => handleButtonClick("Qabul qilingan")}>
+            onClick={() => handleButtonClick("Qabul qilingan")}
+          >
             Qabul qilingan
           </button>
           <button
             className={activeButton === "Jo’natilgan" ? "activ" : "inActiv"}
-            onClick={() => handleButtonClick("Jo’natilgan")}>
+            onClick={() => handleButtonClick("Jo’natilgan")}
+          >
             Jo’natilgan
           </button>
           <button
             className={activeButton === "Yopilgan" ? "activ" : "inActiv"}
-            onClick={() => handleButtonClick("Yopilgan")}>
+            onClick={() => handleButtonClick("Yopilgan")}
+          >
             Yopilgan
           </button>
         </div>
@@ -106,11 +612,12 @@ function Buyurtmalar() {
           style={{
             borderLeft: "1px solid #EDEFF3",
             width: "100px",
-            marginLeft: "290px",
+            marginLeft: "230px",
           }}
-          className="flex items-center gap-5">
+          className="flex items-center gap-5"
+        >
           <div
-            className=" flex items-center justify-between"
+            className=" flex items-center justify-between gap-3"
             style={{
               width: "120px",
               height: "45px",
@@ -118,8 +625,9 @@ function Buyurtmalar() {
               paddingRight: "10px",
               borderRadius: "30px",
               padding: "7px",
-              marginLeft: "20px",
-            }}>
+              marginLeft: "10px",
+            }}
+          >
             <Button className="iconActiv">
               <HiMenuAlt4 />
             </Button>
@@ -131,76 +639,554 @@ function Buyurtmalar() {
       </div>
 
       <Row>
-        <div className=" mt-10 w-full">
-          {data.map((f) => (
-            <Col
-              span={24}
-              style={{ padding: "13px", marginTop: -14 }}
-              key={f.id}>
-              <Card
-                style={{
-                  borderRadius: "8px",
-                  boxShadow: "1px 1px 10px rgba(124, 124, 124, 0.3)",
-                  height: "180px",
+        <Col span={23}>
+          {data.map((item) => (
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                marginTop: "2px",
+              }}
+              key={item.id}
+            >
+              {/* Card component implementation */}
+              <Box
+                sx={{
+                  border: "1px solid EDEFF3",
+                  padding: "20px",
+                  background: "white",
+                  height: "200px",
+                  marginTop: "20px",
+                  marginLeft: "30px",
+                  borderRadius: "10px",
+                  borderBottomRightRadius: "0px",
+                  borderTopRightRadius: "0px",
+                  borderRight: "2px solid #EDEFF3",
+                  width: "370px",
                 }}
-                hoverable>
+              >
                 <div
                   style={{
                     display: "flex",
-                    justifyContent: "space-around",
+                    justifyContent: "space-between",
                     alignItems: "center",
-                    textAlign: "start",
-                  }}>
+                    width: "160px",
+                    borderBottom: "1px solid #dfdede",
+                    textAlign: "center",
+                    paddingBottom: "30px",
+                  }}
+                >
                   <div
                     style={{
-                      display: "flex",
-                      gap: "30px",
-                      alignItems: "center",
-                      width: `calc(100% / 5)`,
-                    }}>
-                    <p>{f.nameuz}</p>
+                      width: "100px",
+                      padding: "10px",
+                      background: "#20D472",
+                      textAlign: "center",
+                      borderRadius: "50px",
+                      color: "white",
+                      fontSize: "16px",
+                    }}
+                  >
+                    <p>8549</p>
                   </div>
-                  <div style={{ width: `calc(100% / 5)` }}>
-                    <p>{f.nameru}</p>
-                  </div>
-                  <div style={{ width: `calc(100% / 5)` }}>
-                    <p>{f.locate}</p>
-                  </div>
-                  <div style={{ width: `calc(100% / 5)` }}>
-                    <p>{f.hour}</p>
-                  </div>
-
-                  <div className="flex space-x-2 mt-2">
-                    <Button
-                      style={{
-                        borderRadius: "50%",
-                        width: "40px",
-                        height: "40px",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                      }}
-                      icon={<LuPen />}
-                    />
-                    <Button
-                      style={{
-                        borderRadius: "50%",
-                        width: "40px",
-                        height: "40px",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        color: "red",
-                      }}
-                      icon={<FaRegTrashCan />}
+                  <div
+                    style={{
+                      width: "45px",
+                      height: "45px",
+                      padding: "10px",
+                      borderRadius: "50%",
+                      fontSize: "16px",
+                      textAlign: "center",
+                      backgroundColor: "#EDEFF3",
+                    }}
+                  >
+                    <CiBookmark
+                      style={{ fontSize: "25px", fontWeight: "bolder" }}
                     />
                   </div>
                 </div>
-              </Card>
-            </Col>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "flex-start",
+                    gap: "20px",
+                    alignItems: "center",
+                    paddingTop: "20px",
+                  }}
+                >
+                  <GoClock style={{ fontSize: "20px" }} />
+                  <p style={{ fontSize: "20px" }}>00:24</p>
+                </div>
+              </Box>
+              <Box
+                sx={{
+                  border: "1px solid EDEFF3",
+                  padding: "20px",
+                  background: "white",
+                  height: "200px",
+                  marginTop: "20px",
+                  borderRight: "2px solid #EDEFF3",
+                  width: "370px",
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "flex-start",
+                    gap: "15px",
+                    alignItems: "baseline",
+                  }}
+                >
+                  <FiUser style={{ fontSize: "20px", color: "#8D9BA8" }} />
+                  <p style={{ fontSize: "20px" }}>{item.mijoz}</p>
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    gap: "15px",
+                    alignItems: "center",
+                    marginTop: "20px",
+                    paddingTop: "20px",
+                    marginRight: "65px",
+                  }}
+                >
+                  <FiPhone style={{ fontSize: "20px", color: "#8D9BA8" }} />
+                  <p style={{ fontSize: "15px" }}>{item.customNum}</p>
+                </div>
+              </Box>
+              <Box
+                sx={{
+                  border: "1px solid EDEFF3",
+                  padding: "20px",
+                  background: "white",
+                  borderRight: "2px solid #EDEFF3",
+                  width: "370px",
+                  height: "200px",
+                  marginTop: "20px",
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "flex-start",
+                    gap: "30px",
+                  }}
+                >
+                  <div>
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        gap: 10,
+                      }}
+                    >
+                      <CiBookmark style={{ color: "grey", fontSize: "20px" }} />
+                      <p style={{ fontSize: "17px" }}>35,400 UZS</p>
+                    </div>
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        gap: 10,
+                      }}
+                    >
+                      <CiDeliveryTruck
+                        style={{ color: "grey", fontSize: "20px" }}
+                      />
+                      <p style={{ fontSize: "17px" }}>5,000 UZS</p>
+                    </div>
+                  </div>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      gap: "10px",
+                    }}
+                  >
+                    <span
+                      style={{
+                        background: "#14E5E4",
+                        borderRadius: "50%",
+                        padding: "6px",
+                      }}
+                    ></span>
+                    <p style={{ fontSize: "15px" }}>Payme</p>
+                  </div>
+                </div>
+                <div
+                  style={{
+                    marginTop: "20px",
+                    marginLeft: "18px",
+                    paddingTop: "20px",
+                  }}
+                >
+                  <p style={{ fontSize: "11px", color: "#8D9BA8" }}>
+                    Umumiy summa
+                  </p>
+                  <p style={{ fontSize: "23px", color: "black" }}>
+                    {item.orderSum} UZS
+                  </p>
+                </div>
+              </Box>
+              <Box
+                sx={{
+                  border: "1px solid EDEFF3",
+                  borderRadius: "10px",
+                  padding: "20px",
+                  background: "white",
+                  width: "370px",
+                  height: "200px",
+                  marginTop: "20px",
+                  borderBottomLeftRadius: "0px",
+                  borderTopLeftRadius: "0px",
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    gap: "55px",
+                  }}
+                >
+                  <div>
+                    <p style={{ color: "#8D9BA8" }}>Operator:</p>
+                    <p
+                      style={{
+                        fontSize: "16px",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      {item.opName}
+                    </p>
+                  </div>
+                  <div
+                    style={{
+                      marginRight: "-40px",
+                    }}
+                  >
+                    <Button
+                      style={{
+                        borderRadius: "50%",
+                        width: "45px",
+                        height: "45px",
+                      }}
+                    >
+                      X
+                    </Button>
+                  </div>
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    gap: "55px",
+                    marginTop: "25px",
+                  }}
+                >
+                  <div>
+                    <p style={{ color: "#8D9BA8" }}>Filial:</p>
+                    <p
+                      style={{
+                        fontSize: "16px",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      {item.filial}
+                    </p>
+                  </div>
+                  <div
+                    style={{
+                      marginRight: "-40px",
+                    }}
+                  >
+                    <Button
+                      style={{
+                        borderRadius: "50%",
+                        width: "45px",
+                        height: "45px",
+                      }}
+                    >
+                      <IoMdCheckmark />
+                    </Button>
+                  </div>
+                </div>
+              </Box>
+            </Box>
           ))}
-        </div>
+        </Col>
       </Row>
+
+      {/* Drawer implementation */}
+      <Drawer
+        anchor="right"
+        open={open}
+        onClose={onClose}
+        PaperProps={{
+          sx: {
+            width: 1170,
+          },
+        }}
+      >
+        <Box
+          sx={{
+            padding: "25px",
+          }}
+        >
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <Button
+              onClick={onClose}
+              style={{ minWidth: "auto", marginRight: "450px", zIndex: -1 }}
+            >
+              X
+            </Button>
+          </div>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "baseline",
+            }}
+          >
+            <p style={{ marginBottom: "20px" }}>Yangi buyurtma qo’shish</p>
+            <p style={{ marginBottom: "20px" }}>Buyurtma ro’yxati</p>
+          </div>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "baseline",
+            }}
+          >
+            <div style={{ width: "55%" }}>
+              <Box
+                sx={{
+                  bgcolor: "transparent",
+                  p: "3px",
+                  gap: "10px",
+                  borderRadius: "40px",
+                  backgroundColor: "#EDEFF3",
+                  whiteSpace: "nowrap", // Elementlarni bir qatorda saqlash
+                  "&::-webkit-scrollbar": {
+                    height: "6px", // Scrollning balandligi
+                  },
+                  "&::-webkit-scrollbar-thumb": {
+                    backgroundColor: "#b0b0b0", // Scroll rangini sozlash
+                    borderRadius: "10px", // Scrollning radiusini sozlash
+                  },
+                }}
+              >
+                <Box
+                  sx={{
+                    display: "flex", // Flexni gorizontal qilish
+                    width: "100%", // Kenglikni avtomatik saqlash
+                    justifyContent: "space-between",
+                    overflowX: "auto", // Scrollni o'rnatish
+                    scrollbarWidth: "none",
+                    "& button": {
+                      flex: "0 0 auto", // Kenglikni avto saqlash, faqat kerakli joyni olish
+                      p: "10px",
+                      m: "5px",
+                      borderRadius: "xl",
+                      backgroundColor:
+                        selectedSegment === 0
+                          ? "background.surface"
+                          : "inherit",
+                      boxShadow: selectedSegment === 0 ? "sm" : "none",
+                      "&:hover": {
+                        boxShadow: "sm",
+                      },
+                    },
+                  }}
+                >
+                  <Button
+                    onClick={() => setSelectedCategory("Burger")}
+                    style={{
+                      padding: "19px",
+                      borderRadius: "20px",
+                      border: "none",
+                    }}
+                  >
+                    Burger
+                  </Button>
+                  <Button
+                    onClick={() => setSelectedCategory("Lavash")}
+                    style={{
+                      padding: "19px",
+                      borderRadius: "20px",
+                      border: "none",
+                    }}
+                  >
+                    Lavash
+                  </Button>
+                  <Button
+                    onClick={() => setSelectedCategory("Garnish")}
+                    style={{
+                      padding: "19px",
+                      borderRadius: "20px",
+                      border: "none",
+                    }}
+                  >
+                    Garnish
+                  </Button>
+                  <Button
+                    onClick={() => setSelectedCategory("Salad")}
+                    style={{
+                      padding: "19px",
+                      borderRadius: "20px",
+                      border: "none",
+                    }}
+                  >
+                    Salad
+                  </Button>
+                  <Button
+                    onClick={() => setSelectedCategory("Drink")}
+                    style={{
+                      padding: "19px",
+                      borderRadius: "20px",
+                      border: "none",
+                    }}
+                  >
+                    Drink
+                  </Button>
+                  <Button
+                    onClick={() => setSelectedCategory("Sauce")}
+                    style={{
+                      padding: "19px",
+                      borderRadius: "20px",
+                      border: "none",
+                    }}
+                  >
+                    Sauce
+                  </Button>
+                </Box>
+              </Box>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-around",
+                  alignItems: "center",
+                  flexWrap: "wrap",
+                }}
+              >
+                {renderProducts()}
+              </div>
+            </div>
+            <div style={{ width: "37%" }}>
+              <Card>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  <p>Shaurma o’rtacha</p>
+                  <p>4*15,000 UZS</p>
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    marginTop: "10px",
+                  }}
+                >
+                  <p>Shaurma o’rtacha</p>
+                  <p>4*15,000 UZS</p>
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    marginTop: "10px",
+                  }}
+                >
+                  <p>Shaurma o’rtacha</p>
+                  <p>4*15,000 UZS</p>
+                </div>
+                <div>
+                  <div
+                    style={{
+                      background: "#EDEFF3",
+                      width: "215px",
+                      padding: "10px",
+                      borderRadius: "10px",
+                      marginTop: "50px",
+                    }}
+                  >
+                    <p>Umumiy summa</p>
+                    <p>120,000 UZS</p>
+                  </div>
+                </div>
+              </Card>
+              <div>
+                <p style={{ marginTop: "20px" }}>Mijoz ismi</p>
+                <Select
+                  mode="multiple"
+                  placeholder="Inserted are removed"
+                  value={selectedItems}
+                  onChange={setSelectedItems}
+                  style={{ width: "100%" }}
+                  options={data.map((item) => ({
+                    value: item.mijoz,
+                    label: item.mijoz,
+                  }))}
+                />
+              </div>
+              <div style={{ marginTop: "20px" }}>
+                <p style={{ marginBottom: "10px" }}>Telefon raqam</p>
+                <Card>
+                  <p>(+99 893) 461-41-88</p>
+                </Card>
+              </div>
+              <div style={{ marginTop: "20px" }}>
+                <p style={{ marginBottom: "10px" }}>Manzil</p>
+                <Card>
+                  <p>Yunusobod t., Bog’ishamol 12, 34</p>
+                </Card>
+              </div>
+              <div style={{ marginTop: "20px" }}>
+                <Card>
+                  <MapContainer
+                    center={[41.2995, 69.2401]}
+                    zoom={14}
+                    style={{ height: "300px", width: "100%" }}
+                  >
+                    <TileLayer
+                      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                      attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                    />
+                    {branches.map((branch, idx) => (
+                      <Marker
+                        key={idx}
+                        position={branch.position}
+                        icon={customIcon}
+                      >
+                        <Popup>
+                          <strong>{branch.name}</strong>
+                          <br />
+                          Egasi: {branch.owner}
+                          <br />
+                          Tel: {branch.phone}
+                        </Popup>
+                      </Marker>
+                    ))}
+                  </MapContainer>
+                </Card>
+              </div>
+            </div>
+          </div>
+        </Box>
+      </Drawer>
     </div>
   );
 }

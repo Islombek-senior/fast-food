@@ -1,4 +1,16 @@
-import { Button, Card, Checkbox, Col, Dropdown, Input, Row } from "antd";
+import {
+  Button,
+  Card,
+  Checkbox,
+  Col,
+  DatePicker,
+  DatePickerProps,
+  Dropdown,
+  Input,
+  Row,
+  Select,
+  Space,
+} from "antd";
 import React, { useEffect, useState } from "react";
 import { FiPenTool, FiPlus, FiTrash2 } from "react-icons/fi";
 import "../Xisobot/xisobot.css";
@@ -12,6 +24,7 @@ import { CheckboxChangeEvent } from "antd/es/checkbox";
 import { RiInboxArchiveLine } from "react-icons/ri";
 import Chart from "react-apexcharts";
 import ApexCharts from "react-apexcharts";
+import { Box } from "@mui/material";
 
 interface Xisobot {
   id: number;
@@ -28,8 +41,9 @@ interface Xisobot {
 function Xisobot() {
   const [activeButton, setActiveButton] = useState("Yangi");
   const [xisobot, setXisobot] = useState<Xisobot[]>([]);
-  const [switches, setSwitch] = useState(false);
-
+  const [switches, setSwitch] = useState<boolean>(false);
+  // const count = useSelector((state: RootState) => state.counter.value);
+  // const dispatch = useDispatch();
   interface ApexOptions {
     chart?: {
       id?: string;
@@ -69,24 +83,35 @@ function Xisobot() {
     // boshqa parametrlar...
   }
 
-  const options: ApexOptions = {
+  const options1 = {
     chart: {
-      id: "line-chart",
+      id: "chart1",
     },
+    colors: ["#19C655"], // Blue color for the first chart
     xaxis: {
-      categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
-    },
-    stroke: {
-      curve: "smooth",
+      categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
     },
   };
 
+  const options2 = {
+    chart: {
+      id: "chart2",
+    },
+    colors: ["#FA2738"], // Red color for the second chart
+    xaxis: {
+      categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
+    },
+  };
   const series = [
     {
       name: "Sales",
       data: [30, 40, 35, 50, 49, 60],
     },
   ];
+
+  const onChange: DatePickerProps["onChange"] = (date, dateString) => {
+    console.log(date, dateString);
+  };
 
   const deleteX = (id: number) => {
     axios
@@ -99,14 +124,14 @@ function Xisobot() {
       });
   };
 
-  const switchesCom = () => {
-    setSwitch(!switches);
+  const switchesCom = (y: boolean) => {
+    setSwitch(y);
   };
 
   const serachX = (e: React.ChangeEvent<HTMLInputElement>) => {
     axios
       .get(
-        `https://e2ead815ad4a2894.mokky.dev/xisobot?mijoz*=${e.target.value}`
+        `https://e2ead815ad4a2894.mokky.dev/xisobot?mijoz=*${e.target.value}`
       )
       .then((res) => {
         setXisobot(res.data);
@@ -207,6 +232,7 @@ function Xisobot() {
   ];
   return (
     <div>
+      {/* <h1>{count}</h1> */}
       <div className="bg-white flex items-center">
         <div
           style={{
@@ -314,10 +340,23 @@ function Xisobot() {
               marginRight: "10px",
             }}
           >
-            <Button className="iconActiv" onClick={switchesCom}>
+            <Button
+              className="iconActiv"
+              style={{
+                background: switches === false ? "#EDEFF3" : "white",
+                border: switches === false ? "none" : "white",
+              }}
+              onClick={() => switchesCom(false)}
+            >
               <IoShapesOutline />
             </Button>
-            <Button onClick={switchesCom}>
+            <Button
+              style={{
+                background: switches === true ? "#EDEFF3" : "white",
+                border: switches === false ? "none" : "white",
+              }}
+              onClick={() => switchesCom(true)}
+            >
               <RiInboxArchiveLine />
             </Button>
           </div>
@@ -462,24 +501,232 @@ function Xisobot() {
         </Row>
       ) : (
         <Row>
-          <Col span={14}>
-            <Card title="Sales Data">
+          <Col
+            span={11}
+            style={{
+              paddingTop: "10px",
+              paddingLeft: "25px",
+              marginRight: "25px",
+            }}
+          >
+            <Card>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  marginBottom: "30px",
+                }}
+              >
+                <Box>
+                  <h1 style={{ fontSize: "20px", fontWeight: "bold" }}>
+                    Sales Data
+                  </h1>
+                </Box>
+                <Space>
+                  <DatePicker onChange={onChange} />
+                </Space>
+              </Box>
               <ApexCharts
-                options={options}
+                options={options1}
                 series={series}
                 type="line"
                 height={350}
               />
             </Card>
           </Col>
-          <Col span={14}>
+          <Col
+            span={11}
+            style={{
+              paddingTop: "10px",
+              paddingLeft: "25px",
+              marginRight: "25px",
+            }}
+          >
             <Card title="Sales Data">
               <ApexCharts
-                options={options}
+                options={options2}
                 series={series}
                 type="line"
                 height={350}
               />
+            </Card>
+          </Col>
+          <Col
+            span={11}
+            style={{
+              paddingTop: "10px",
+              paddingLeft: "25px",
+              marginRight: "25px",
+            }}
+          >
+            <Card>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  marginBottom: "30px",
+                }}
+              >
+                <Box>
+                  <p>To’lov turlari | Xadra</p>
+                </Box>
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    gap: "30px",
+                  }}
+                >
+                  <p>19.02.2020</p>
+                  <Space>
+                    <DatePicker onChange={onChange} />
+                  </Space>
+                </Box>
+              </Box>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  gap: "20px",
+                }}
+              >
+                <div
+                  style={{
+                    marginBottom: "20px",
+                    display: "flex",
+                    justifyContent: "flex-start",
+                    alignItems: "center",
+                    gap: "20px",
+                  }}
+                >
+                  <span
+                    style={{
+                      width: "2px",
+                      height: "2px",
+                      borderRadius: "50%",
+                      backgroundColor: "#FCB600",
+                      padding: "4px",
+                    }}
+                  ></span>
+                  <p>Terminal - 1,200,000 UZS</p>
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    gap: "20px",
+                  }}
+                >
+                  <div
+                    style={{
+                      background: "#FCB600",
+                      padding: "5px",
+                      width: "210px",
+                      borderRadius: "10px",
+                    }}
+                  ></div>
+                  <p>45%</p>
+                </div>
+              </Box>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  gap: "20px",
+                }}
+              >
+                <div
+                  style={{
+                    marginBottom: "20px",
+                    display: "flex",
+                    justifyContent: "flex-start",
+                    alignItems: "center",
+                    gap: "20px",
+                  }}
+                >
+                  <span
+                    style={{
+                      width: "2px",
+                      height: "2px",
+                      borderRadius: "50%",
+                      backgroundColor: "#20D472",
+                      padding: "4px",
+                    }}
+                  ></span>{" "}
+                  <p>Naqd - 1,340,000 UZS</p>
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    gap: "20px",
+                  }}
+                >
+                  <div
+                    style={{
+                      background: "#20D472",
+                      padding: "5px",
+                      width: "110px",
+                      borderRadius: "10px",
+                    }}
+                  ></div>
+                  <p>57%</p>
+                </div>
+              </Box>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  gap: "20px",
+                }}
+              >
+                <div
+                  style={{
+                    marginBottom: "20px",
+                    display: "flex",
+                    justifyContent: "flex-start",
+                    alignItems: "center",
+                    gap: "20px",
+                  }}
+                >
+                  <span
+                    style={{
+                      width: "2px",
+                      height: "2px",
+                      borderRadius: "50%",
+                      backgroundColor: "#64EDF4",
+                      padding: "4px",
+                    }}
+                  ></span>{" "}
+                  <p>Payme - 1,200,000 UZS</p>
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "left",
+                    alignItems: "center",
+                    gap: "20px",
+                  }}
+                >
+                  <div
+                    style={{
+                      background: "#64EDF4",
+                      padding: "5px",
+                      width: "100px",
+                      borderRadius: "10px",
+                    }}
+                  ></div>
+                  <p>45%</p>
+                </div>
+              </Box>
+              <Button style={{ marginTop: "20px" }}>3,740,000 UZS</Button>
             </Card>
           </Col>
         </Row>

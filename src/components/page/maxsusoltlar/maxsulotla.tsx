@@ -24,18 +24,18 @@ import { useLocation } from "react-router-dom";
 import queryString from "query-string";
 
 type FieldType = {
-  maxsulot?: string;
-  kategoriya?: string;
-  narxi?: string;
-  qoshimcha: string;
+  name?: string;
+  category?: string;
+  price?: string;
 };
 
 interface DataType {
   id: number;
   img: string;
-  maxsulot: string;
-  kategoriya: string;
-  narxi: number;
+  name: string;
+  category: string;
+  filters: number;
+  price: number;
   qoshimcha: string;
 }
 
@@ -62,7 +62,7 @@ const Kategoriyalar = () => {
       .get("https://e2ead815ad4a2894.mokky.dev/maxsulotlar")
       .then((res) => {
         const sorted = res.data.sort((a: DataType, b: DataType) =>
-          a.maxsulot.localeCompare(b.maxsulot)
+          a.name.localeCompare(b.name)
         );
         setFoods(sorted);
       })
@@ -76,7 +76,7 @@ const Kategoriyalar = () => {
       .get("https://e2ead815ad4a2894.mokky.dev/maxsulotlar")
       .then((res) => {
         const sorted = res.data.sort((a: DataType, b: DataType) =>
-          b.maxsulot.localeCompare(a.maxsulot)
+          b.name.localeCompare(a.name)
         );
         setFoods(sorted);
       })
@@ -218,6 +218,7 @@ const Kategoriyalar = () => {
       .get("https://e2ead815ad4a2894.mokky.dev/maxsulotlar")
       .then((res) => {
         setFoods(res.data);
+
         console.log(res.data);
       })
       .catch((err) => {
@@ -384,12 +385,12 @@ const Kategoriyalar = () => {
                     className="rounded-full w-11 h-11"
                   />
                   <div>
-                    <p>{item.maxsulot}</p>
+                    <p>{item.name}</p>
                   </div>
                 </div>
-                <div style={{ width: `calc(100% / 5)` }}>{item.kategoriya}</div>
+                <div style={{ width: `calc(100% / 5)` }}>{item.category}</div>
                 <div style={{ width: `calc(100% / 5)` }}>
-                  {item.narxi},000 UZS
+                  {item.price},000 UZS
                 </div>
                 <div style={{ width: `calc(100% / 5)` }}>{item.qoshimcha}</div>
                 <div className="flex gap-4">
@@ -501,32 +502,25 @@ const Kategoriyalar = () => {
             <Input placeholder="Please enter rasm" />
           </Form.Item>
           <Form.Item
-            name="maxsulot"
+            name="name"
             label="Maxsulot"
             rules={[{ required: true, message: "Please enter maxsulot" }]}
           >
             <Input placeholder="Please enter maxsulot" />
           </Form.Item>
           <Form.Item
-            name="kategoriya"
+            name="category"
             label="Kategoriya"
             rules={[{ required: true, message: "Please enter kategoriya" }]}
           >
             <Input placeholder="Please enter kategoriya" />
           </Form.Item>
           <Form.Item
-            name="narxi"
+            name="price"
             label="Narxi"
             rules={[{ required: true, message: "Please enter narxi" }]}
           >
             <Input placeholder="Please enter narxi" />
-          </Form.Item>
-          <Form.Item
-            name="qoshimcha"
-            label="Qoshimcha"
-            rules={[{ required: true, message: "Please enter qoshimcha" }]}
-          >
-            <Input placeholder="Please enter qoshimcha" />
           </Form.Item>
         </Form>
       </Modal>

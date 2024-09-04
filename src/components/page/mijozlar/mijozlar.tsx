@@ -36,8 +36,8 @@ type FieldType = {
 
 interface DataType {
   id: number;
-  mijozIsmi: string;
-  telefonRaqam: string;
+  mijoz: string;
+  customNum: string;
   buyurtmalarSoni: number;
   status: boolean;
 }
@@ -60,10 +60,10 @@ const Kategoriyalar = () => {
   const onCnge = (e: CheckboxChangeEvent) => {
     const isChecked = e.target.checked;
     axios
-      .get("https://e2ead815ad4a2894.mokky.dev/mijozlar")
+      .get("https://e2ead815ad4a2894.mokky.dev/xisobot")
       .then((res) => {
         const sortedData = res.data.sort((a: DataType, b: DataType) =>
-          a.mijozIsmi.localeCompare(b.mijozIsmi)
+          a.mijoz.localeCompare(b.mijoz)
         );
         setFoods(sortedData);
       })
@@ -75,9 +75,9 @@ const Kategoriyalar = () => {
 
   const downToUp = (e: CheckboxChangeEvent) => {
     const isChecked = e.target.checked;
-    axios.get("https://e2ead815ad4a2894.mokky.dev/mijozlar").then((res) => {
+    axios.get("https://e2ead815ad4a2894.mokky.dev/xisobot").then((res) => {
       const sorted = res.data.sort((a: DataType, b: DataType) =>
-        b.mijozIsmi.localeCompare(a.mijozIsmi)
+        b.mijoz.localeCompare(a.mijoz)
       );
       setFoods(sorted);
     });
@@ -85,7 +85,7 @@ const Kategoriyalar = () => {
 
   const orderUp = (e: CheckboxChangeEvent) => {
     axios
-      .get("https://e2ead815ad4a2894.mokky.dev/mijozlar")
+      .get("https://e2ead815ad4a2894.mokky.dev/xisobot")
       .then((res) => {
         const sortNumber = res.data.sort(
           (a: DataType, b: DataType) => a.buyurtmalarSoni - b.buyurtmalarSoni
@@ -99,7 +99,7 @@ const Kategoriyalar = () => {
 
   const orderDown = (e: CheckboxChangeEvent) => {
     axios
-      .get("https://e2ead815ad4a2894.mokky.dev/mijozlar")
+      .get("https://e2ead815ad4a2894.mokky.dev/xisobot")
       .then((res) => {
         const numDown = res.data.sort(
           (a: DataType, b: DataType) => b.buyurtmalarSoni - a.buyurtmalarSoni
@@ -113,7 +113,7 @@ const Kategoriyalar = () => {
 
   const blockCustom = (e: CheckboxChangeEvent) => {
     axios
-      .get("https://e2ead815ad4a2894.mokky.dev/mijozlar")
+      .get("https://e2ead815ad4a2894.mokky.dev/xisobot")
       .then((res) => {
         const customBlock = res.data.filter((b: DataType) => b.status == false);
         setFoods(customBlock);
@@ -125,7 +125,7 @@ const Kategoriyalar = () => {
 
   const activeCustom = (e: CheckboxChangeEvent) => {
     axios
-      .get("https://e2ead815ad4a2894.mokky.dev/mijozlar")
+      .get("https://e2ead815ad4a2894.mokky.dev/xisobot")
       .then((res) => {
         const activeCustoms = res.data.filter(
           (a: DataType) => a.status == true
@@ -177,7 +177,7 @@ const Kategoriyalar = () => {
       if (item.id === id) {
         const updatedStatus = !item.status;
         axios
-          .patch(`https://e2ead815ad4a2894.mokky.dev/mijozlar/${id}`, {
+          .patch(`https://e2ead815ad4a2894.mokky.dev/xisobot/${id}`, {
             ...item,
             status: updatedStatus,
           })
@@ -208,7 +208,7 @@ const Kategoriyalar = () => {
 
   const onFinishAdd = (values: any) => {
     axios
-      .post(`https://e2ead815ad4a2894.mokky.dev/mijozlar`, values)
+      .post(`https://e2ead815ad4a2894.mokky.dev/xisobot`, values)
       .then((res) => {
         setFoods([...maxFood, res.data]);
         addForm.resetFields();
@@ -237,7 +237,7 @@ const Kategoriyalar = () => {
 
   const onFinishEdit = (values: any) => {
     if (selectedItem) {
-      const url = `https://e2ead815ad4a2894.mokky.dev/mijozlar/${selectedItem.id}`;
+      const url = `https://e2ead815ad4a2894.mokky.dev/xisobot/${selectedItem.id}`;
       axios
         .patch(url, values)
         .then((res) => {
@@ -261,7 +261,7 @@ const Kategoriyalar = () => {
 
   const handleDelete = (id: number) => {
     axios
-      .delete(`https://e2ead815ad4a2894.mokky.dev/mijozlar/${id}`)
+      .delete(`https://e2ead815ad4a2894.mokky.dev/xisobot/${id}`)
       .then((res) => {
         setFoods(maxFood.filter((item) => item.id !== id));
       })
@@ -271,7 +271,7 @@ const Kategoriyalar = () => {
   };
   useEffect(() => {
     axios
-      .get("https://e2ead815ad4a2894.mokky.dev/mijozlar")
+      .get("https://e2ead815ad4a2894.mokky.dev/xisobot")
       .then((res) => {
         setFoods(res.data);
         console.log(res.data);
@@ -284,7 +284,7 @@ const Kategoriyalar = () => {
   const onChangeSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     axios
       .get(
-        `https://e2ead815ad4a2894.mokky.dev/mijozlar?mijozIsmi=*${e.target.value}`
+        `https://e2ead815ad4a2894.mokky.dev/xisobot?mijoz=*${e.target.value}`
       )
       .then((res) => {
         setFoods(res.data);
@@ -393,7 +393,7 @@ const Kategoriyalar = () => {
           initialValues={{ qoshimcha: "" }}
         >
           <Form.Item
-            name="mijozIsmi"
+            name="mijoz"
             label="Mijoz Ismi"
             rules={[{ required: true, message: "Maxsulotni kiriting!" }]}
           >
@@ -401,7 +401,7 @@ const Kategoriyalar = () => {
           </Form.Item>
 
           <Form.Item
-            name="telefonRaqam"
+            name="customNum"
             label="Telefon raqam"
             rules={[{ required: true, message: "Narxni kiriting!" }]}
           >
@@ -452,14 +452,14 @@ const Kategoriyalar = () => {
           requiredMark={false}
         >
           <Form.Item
-            name="mijozIsmi"
+            name="mijoz"
             label="Mijoz ismi"
             rules={[{ required: true, message: "Mijoz ismini kiriting!" }]}
           >
             <Input placeholder="Mijoz ismi" />
           </Form.Item>
           <Form.Item
-            name="telefonRaqam"
+            name="customNum"
             label="Telefon raqam"
             rules={[{ required: true, message: "Telefon raqamni kiriting!" }]}
           >
@@ -484,6 +484,44 @@ const Kategoriyalar = () => {
         }}
       >
         <div className="products">
+          <div
+            style={{
+              marginTop: "40px",
+              marginBottom: "40px",
+              marginLeft: "-20px",
+              width: "100%",
+              height: "auto",
+              padding: "23px",
+              background: "white",
+              display: "flex",
+              justifyContent: "center",
+              textAlign: "end",
+              gap: "90px",
+              alignContent: "center",
+              fontWeight: "bolder",
+              boxShadow: "5px 5px 5px rgba(124, 124, 124, 0.3)",
+            }}
+          >
+            <div className="flex gap-10 items-center">
+              <p>Mijoz ismi</p>
+            </div>
+            <div style={{ borderRight: "1px solid grey" }}></div>
+            <div className="flex gap-10 items-center">
+              <p>Telefon raqami</p>
+            </div>
+            <div style={{ borderRight: "1px solid grey" }}></div>
+            <div className="flex gap-10 items-center">
+              <p>Buyrtmalar soni</p>
+            </div>
+            <div style={{ borderRight: "1px solid grey" }}></div>
+            <div className="flex gap-10 items-center">
+              <p>Status</p>
+            </div>
+            <div style={{ borderRight: "1px solid grey" }}></div>
+            <div className="flex gap-10 items-center">
+              <p>ACTION</p>
+            </div>
+          </div>
           {maxFood.slice(0, visibleItems).map((item) => (
             <Card
               key={item.id}
@@ -497,10 +535,10 @@ const Kategoriyalar = () => {
                 <Col span={24}>
                   <div className="flex justify-between align-middle">
                     <div style={{ width: `calc(100% / 5)` }}>
-                      <h3>{item.mijozIsmi}</h3>
+                      <h3>{item.mijoz}</h3>
                     </div>
                     <div style={{ width: `calc(100% / 5)` }}>
-                      <p>{item.telefonRaqam}</p>
+                      <p>{item.customNum}</p>
                     </div>
                     <div style={{ width: `calc(100% / 5)` }}>
                       <p>{item.buyurtmalarSoni}</p>

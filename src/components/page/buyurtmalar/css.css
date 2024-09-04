@@ -1,28 +1,129 @@
 .activ {
-    width: 162px;
-    height: 36px;
-    background: #FFFFFF;
-    box-shadow: 0px 2px 2px 0px #AEB0B550;
-    border-radius: 30px;
-    transition: all 0.3s ease; /* Add transition */
-  }
-  
-  .inActiv {
-    width: 84px;
-    height: 16px;
-    opacity: 0.4;
-    font-family: SFProDisplay;
-    font-size: 14px;
-    line-height: 16px;
-    transition: all 0.3s ease; /* Add transition */
-  }
-  
+  width: 162px;
+  height: 36px;
+  background: #ffffff;
+  box-shadow: 0px 2px 2px 0px #aeb0b550;
+  border-radius: 30px;
+  transition: all 0.3s ease; /* Add transition */
+}
 
-  .iconActiv{
-    width: 36px;
-height: 36px;
-background: #FFFFFF;
-box-shadow: 0px 2px 2px 0px #AEB0B550;
-border-radius:50%;
-padding-left: 10px;
-  }
+.inActiv {
+  width: 84px;
+  height: 16px;
+  opacity: 0.4;
+  font-family: SFProDisplay;
+  font-size: 14px;
+  line-height: 16px;
+  transition: all 0.3s ease; /* Add transition */
+}
+
+.iconActiv {
+  width: 36px;
+  height: 36px;
+  background: #ffffff;
+  box-shadow: 0px 2px 2px 0px #aeb0b550;
+  border-radius: 50%;
+  padding-left: 10px;
+}
+
+.card-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px;
+  /* width: "100%"; */
+  border-radius: 8px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+}
+
+.left-section {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.order-number-container {
+  background-color: #34c759;
+  padding: 8px 16px;
+  border-radius: 20px;
+}
+
+.order-number {
+  color: #fff;
+  font-weight: bold;
+}
+
+.timer {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: #5c6bc0;
+}
+
+.middle-section {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.customer-name {
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.contact-info {
+  color: #5c6bc0;
+}
+
+.order-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.delivery-cost {
+  color: #757575;
+}
+
+.total-sum {
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.right-section {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+}
+/* Asosiy segment konteyneri uchun stil */
+.ant-segmented {
+  /* width: 480px; */
+  border-radius: 50px;
+}
+
+/* Har bir segment elementi uchun stil */
+.ant-segmented-item {
+  padding: 5px !important;
+  margin: 5px !important;
+  border-radius: 30px !important;
+}
+
+/* Tanlangan segment elementi uchun stil */
+.ant-segmented-item-selected {
+  padding: 5px !important;
+  border-radius: 20px !important;
+  color: white;
+}
+
+/* Tanlangan segment elementi fonining stil */
+.ant-segmented-thumb {
+  border-radius: 30px !important;
+}
+
+/* Har bir segmentdagi matn uchun stil */
+.ant-segmented-label {
+  font-weight: bold;
+}
