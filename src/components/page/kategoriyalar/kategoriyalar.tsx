@@ -60,7 +60,7 @@ const Kategoriyalar = () => {
     axios
       .post("https://392e0f5b09d05ee3.mokky.dev/fas-food", values)
       .then((res) => {
-        const newCategory = { ...res.data, id: res.data._id };
+        const newCategory = { ...res.data };
         setData((prevData) => [...prevData, newCategory]);
         setFilteredData((prevData) => [...prevData, newCategory]);
         closeDrawer();
@@ -154,7 +154,8 @@ const Kategoriyalar = () => {
             paddingLeft: "50px",
             width: "270px",
           }}
-          className="flex items-center gap-5">
+          className="flex items-center gap-5"
+        >
           <Button
             style={{
               borderRadius: "50%",
@@ -170,7 +171,8 @@ const Kategoriyalar = () => {
           <h2
             style={{
               fontWeight: "bold",
-            }}>
+            }}
+          >
             Yangi kategoriya
             <br />
             qo’shish
@@ -224,7 +226,8 @@ const Kategoriyalar = () => {
             alignContent: "center",
             fontWeight: "bolder",
             boxShadow: "5px 5px 5px rgba(124, 124, 124, 0.3)",
-          }}>
+          }}
+        >
           <div className="flex gap-10 items-center">
             <p>Kategoriya (UZ)</p>
           </div>
@@ -245,28 +248,32 @@ const Kategoriyalar = () => {
           <Col
             span={24}
             style={{ padding: "13px", marginTop: -14 }}
-            key={item.id}>
+            key={item.id}
+          >
             <Card
               className="card-col"
               style={{
                 borderRadius: "8px",
                 boxShadow: "1px 1px 10px rgba(124, 124, 124, 0.3)",
                 height: "80px",
-              }}>
+              }}
+            >
               <div
                 style={{
                   display: "flex",
                   justifyContent: "space-around",
                   alignItems: "center",
                   textAlign: "start",
-                }}>
+                }}
+              >
                 <div
                   style={{
                     display: "flex",
                     gap: "30px",
                     alignItems: "center",
                     width: `calc(100% / 5)`,
-                  }}>
+                  }}
+                >
                   <p>{item.nameUz}</p>
                 </div>
                 <div style={{ width: `calc(100% / 5)` }}>
@@ -277,7 +284,8 @@ const Kategoriyalar = () => {
                 </div>
                 <div
                   className="flex space-x-2 mt-2"
-                  style={{ width: `calc(100% / 5)` }}>
+                  style={{ width: `calc(100% / 5)` }}
+                >
                   <Button
                     style={{
                       borderRadius: "50%",
@@ -318,7 +326,8 @@ const Kategoriyalar = () => {
         placement="right"
         onClose={closeDrawer}
         open={drawer}
-        width={400}>
+        width={400}
+      >
         <Form form={form} onFinish={onFinish} layout="vertical">
           <Form.Item
             name="nameUz"
@@ -328,7 +337,8 @@ const Kategoriyalar = () => {
                 required: true,
                 message: "Iltimos, kategoriya nomini kiriting",
               },
-            ]}>
+            ]}
+          >
             <Input />
           </Form.Item>
           <Form.Item
@@ -339,7 +349,8 @@ const Kategoriyalar = () => {
                 required: true,
                 message: "Iltimos, kategoriya nomini kiriting",
               },
-            ]}>
+            ]}
+          >
             <Input />
           </Form.Item>
           <Form.Item
@@ -347,7 +358,8 @@ const Kategoriyalar = () => {
             label="Bosh kategoriya"
             rules={[
               { required: true, message: "Iltimos, bosh kategoriyani tanlang" },
-            ]}>
+            ]}
+          >
             <Input />
           </Form.Item>
           <Form.Item>
