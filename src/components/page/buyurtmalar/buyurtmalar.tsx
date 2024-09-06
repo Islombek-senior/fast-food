@@ -2,24 +2,13 @@ import React, { useEffect, useState } from "react";
 import { Button, Card, Col, Row, Segmented, Select, Typography } from "antd";
 import { FiPlus } from "react-icons/fi";
 import axios from "axios";
-import {
-  Box,
-  CardContent,
-  Drawer,
-  InputAdornment,
-  TextField,
-} from "@mui/material"; // MUI import
+import { Box, Drawer } from "@mui/material"; // MUI import
 import { GoClock } from "react-icons/go";
 import { CiBookmark, CiDeliveryTruck } from "react-icons/ci";
 import { FiUser, FiPhone } from "react-icons/fi";
 import { IoMdCheckmark } from "react-icons/io";
 import { HiMenuAlt4, HiOutlineMenuAlt3 } from "react-icons/hi";
 import "./css.css";
-import Tabs from "@mui/joy/Tabs";
-import TabList from "@mui/joy/TabList";
-import Tab, { tabClasses } from "@mui/joy/Tab";
-import { Person } from "@mui/icons-material";
-import { GoogleMap, LoadScript } from "@react-google-maps/api";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import defaultMarkerIcon from "leaflet/dist/images/marker-icon.png"; // Rename import
@@ -175,6 +164,18 @@ function Buyurtmalar() {
   const mapContainerStyle = {
     width: "100%",
     height: "400px",
+  };
+
+  const handleAddProduct = (product: Product) => {
+    axios
+      .post("https://e2ead815ad4a2894.mokky.dev/xisobot", product)
+      .then((res) => {
+        setData((prevData) => [...prevData, product]); // Correct way to update the state
+        setOpen(false);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   // const addProductToSelection = (product: Product) => {
@@ -1335,6 +1336,7 @@ function Buyurtmalar() {
               </div>
               <div>
                 <Button
+                  onClick={() => handleAddProduct}
                   style={{
                     padding: "20px",
                     borderRadius: "5px",
