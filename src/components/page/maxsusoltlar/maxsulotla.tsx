@@ -390,7 +390,7 @@ const Kategoriyalar = () => {
                 </div>
                 <div style={{ width: `calc(100% / 5)` }}>{item.category}</div>
                 <div style={{ width: `calc(100% / 5)` }}>
-                  {item.price},000 UZS
+                  {item.price.toLocaleString("en-US")} UZS
                 </div>
                 <div style={{ width: `calc(100% / 5)` }}>{item.qoshimcha}</div>
                 <div className="flex gap-4">

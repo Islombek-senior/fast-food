@@ -30,7 +30,7 @@ interface Xisobot {
   id: number;
   filial: string;
   opName: string;
-  orderSum: string;
+  orderSum: number;
   orderType: string;
   mijoz: string;
   customNum: string;
@@ -434,7 +434,7 @@ function Xisobot() {
                         marginBottom: "8px",
                       }}
                     >
-                      {it.orderSum},000
+                      {it.orderSum.toLocaleString("en-Us")},000
                     </p>
                     <div
                       style={{

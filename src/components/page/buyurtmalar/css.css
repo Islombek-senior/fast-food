@@ -124,6 +124,15 @@
 }
 
 /* Har bir segmentdagi matn uchun stil */
-.ant-segmented-label {
-  font-weight: bold;
+.ant-select-dropdown {
+  z-index: 1000;
+}
+
+.leaflet-container {
+  z-index: 0; /* Xarita eng past z-indexda bo'lsin */
+}
+
+.card-container {
+  position: relative;
+  z-index: 1; /* Xarita va boshqa elementlardan ustun qo'yish */
 }

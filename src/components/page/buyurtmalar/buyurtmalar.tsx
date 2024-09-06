@@ -91,15 +91,18 @@ interface Products {
   category: string;
   filters: number;
   price: number;
+  quantity: number;
   qoshimcha: string;
 }
 
 function Buyurtmalar() {
   const [activeButton, setActiveButton] = useState("Yangi");
   const [data, setData] = useState<Product[]>([]);
-  const [maxsulot, setMaxsulot] = useState<Products[]>([]);
+  const [maxsulotlar, setMaxsulotlar] = useState<Products[]>([]);
   const [open, setOpen] = useState(false);
   const [selectedSegment, setSelectedSegment] = React.useState(0);
+  const [selectedProducts, setSelectedProducts] = useState<Products[]>([]);
+  console.log(selectedProducts);
 
   const handleSegmentChange = (index: any) => {
     setSelectedSegment(index);
@@ -119,7 +122,7 @@ function Buyurtmalar() {
     axios
       .get("https://e2ead815ad4a2894.mokky.dev/maxsulotlar")
       .then((res) => {
-        setMaxsulot(res.data);
+        setMaxsulotlar(res.data);
       })
       .catch((e) => {
         console.log(e);
@@ -136,6 +139,7 @@ function Buyurtmalar() {
 
   const onClose = () => {
     setOpen(false);
+    console.log("ffd");
   };
 
   const handleChange = (value: string) => {
@@ -157,24 +161,65 @@ function Buyurtmalar() {
   const handleCategoryChange = (category: any) => {
     setSelectedCategory(category);
   };
-  const burgerF = () => {
-    axios
-      .get("https://e2ead815ad4a2894.mokky.dev/maxsulotlar")
-      .then((res) => {
-        const fillBurger = res.data.filter(
-          (item: Products) => item.category === "Lavash"
-        );
-        setMaxsulot(fillBurger);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+
+  const fetchProducts = async () => {
+    try {
+      const response = await axios.get(
+        "https://e2ead815ad4a2894.mokky.dev/maxsulotlar"
+      );
+      const productsWithQuantity = response.data.map((product: Products) => ({
+        ...product,
+        quantity: 0, // Har bir mahsulot uchun miqdorni 0 qilib qo'yamiz
+      }));
+      setMaxsulotlar(productsWithQuantity);
+    } catch (error) {
+      console.error("Mahsulotlarni yuklashda xatolik:", error);
+    }
   };
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  // Miqdorni oshirish funksiyasi
+  const handleIncrement = (productId: number) => {
+    setMaxsulotlar(
+      maxsulotlar.map((product) =>
+        product.id === productId
+          ? { ...product, quantity: product.quantity + 1 }
+          : product
+      )
+    );
+  };
+
+  // Miqdorni kamaytirish funksiyasi
+  const handleDecrement = (productId: number) => {
+    setMaxsulotlar(
+      maxsulotlar.map((product) =>
+        product.id === productId && product.quantity > 0
+          ? { ...product, quantity: product.quantity - 1 }
+          : product
+      )
+    );
+  };
+
+  // Tanlangan mahsulotlarni yangilash
+  const updateSelectedProducts = () => {
+    const selected = maxsulotlar.filter((product) => product.quantity > 0);
+    setSelectedProducts(selected);
+  };
+
+  // Har bir o'zgarishdan keyin tanlangan mahsulotlar ro'yxatini yangilash
+  useEffect(() => {
+    updateSelectedProducts();
+  }, [maxsulotlar]);
+
+  //////////
 
   const renderProducts = () => {
     switch (selectedCategory) {
       case "Burger":
-        return maxsulot
+        return maxsulotlar
           .filter((product) => product.category === "Burger")
           .map((it) => (
             <div
@@ -219,11 +264,17 @@ function Buyurtmalar() {
                       cursor: "pointer",
                     }}
                   >
-                    <Button style={{ border: "none", background: "white" }}>
+                    <Button
+                      onClick={() => handleDecrement(it.id)}
+                      style={{ border: "none", background: "white" }}
+                    >
                       -
                     </Button>
-                    <span>w</span>
-                    <Button style={{ border: "none", background: "white" }}>
+                    <span>{it.quantity}</span>
+                    <Button
+                      onClick={() => handleIncrement(it.id)}
+                      style={{ border: "none", background: "white" }}
+                    >
                       +
                     </Button>
                   </div>
@@ -233,7 +284,7 @@ function Buyurtmalar() {
           ));
 
       case "Lavash":
-        return maxsulot
+        return maxsulotlar
           .filter((product) => product.category === "Lavash")
           .map((it) => (
             <div
@@ -278,11 +329,17 @@ function Buyurtmalar() {
                       cursor: "pointer",
                     }}
                   >
-                    <Button style={{ border: "none", background: "white" }}>
+                    <Button
+                      onClick={() => handleDecrement(it.id)}
+                      style={{ border: "none", background: "white" }}
+                    >
                       -
                     </Button>
-                    <span>w</span>
-                    <Button style={{ border: "none", background: "white" }}>
+                    <span>{it.quantity}</span>
+                    <Button
+                      onClick={() => handleIncrement(it.id)}
+                      style={{ border: "none", background: "white" }}
+                    >
                       +
                     </Button>
                   </div>
@@ -292,7 +349,7 @@ function Buyurtmalar() {
           ));
 
       case "Garnish":
-        return maxsulot
+        return maxsulotlar
           .filter((product) => product.category === "Garnish")
           .map((it) => (
             <div
@@ -337,11 +394,17 @@ function Buyurtmalar() {
                       cursor: "pointer",
                     }}
                   >
-                    <Button style={{ border: "none", background: "white" }}>
+                    <Button
+                      onClick={() => handleDecrement(it.id)}
+                      style={{ border: "none", background: "white" }}
+                    >
                       -
                     </Button>
-                    <span>w</span>
-                    <Button style={{ border: "none", background: "white" }}>
+                    <span>{it.quantity}</span>
+                    <Button
+                      onClick={() => handleIncrement(it.id)}
+                      style={{ border: "none", background: "white" }}
+                    >
                       +
                     </Button>
                   </div>
@@ -351,7 +414,7 @@ function Buyurtmalar() {
           ));
 
       case "Salad":
-        return maxsulot
+        return maxsulotlar
           .filter((product) => product.category === "Salad")
           .map((it) => (
             <div
@@ -396,11 +459,17 @@ function Buyurtmalar() {
                       cursor: "pointer",
                     }}
                   >
-                    <Button style={{ border: "none", background: "white" }}>
+                    <Button
+                      onClick={() => handleDecrement(it.id)}
+                      style={{ border: "none", background: "white" }}
+                    >
                       -
                     </Button>
-                    <span>w</span>
-                    <Button style={{ border: "none", background: "white" }}>
+                    <span>{it.quantity}</span>
+                    <Button
+                      onClick={() => handleIncrement(it.id)}
+                      style={{ border: "none", background: "white" }}
+                    >
                       +
                     </Button>
                   </div>
@@ -410,7 +479,7 @@ function Buyurtmalar() {
           ));
 
       case "Drink":
-        return maxsulot
+        return maxsulotlar
           .filter((product) => product.category === "Drink")
           .map((it) => (
             <div
@@ -455,11 +524,17 @@ function Buyurtmalar() {
                       cursor: "pointer",
                     }}
                   >
-                    <Button style={{ border: "none", background: "white" }}>
+                    <Button
+                      onClick={() => handleDecrement(it.id)}
+                      style={{ border: "none", background: "white" }}
+                    >
                       -
                     </Button>
-                    <span>w</span>
-                    <Button style={{ border: "none", background: "white" }}>
+                    <span>{it.quantity}</span>
+                    <Button
+                      onClick={() => handleIncrement(it.id)}
+                      style={{ border: "none", background: "white" }}
+                    >
                       +
                     </Button>
                   </div>
@@ -469,7 +544,7 @@ function Buyurtmalar() {
           ));
 
       case "Sauce":
-        return maxsulot
+        return maxsulotlar
           .filter((product) => product.category === "Sauce")
           .map((it) => (
             <div
@@ -514,11 +589,17 @@ function Buyurtmalar() {
                       cursor: "pointer",
                     }}
                   >
-                    <Button style={{ border: "none", background: "white" }}>
+                    <Button
+                      onClick={() => handleDecrement(it.id)}
+                      style={{ border: "none", background: "white" }}
+                    >
                       -
                     </Button>
-                    <span>w</span>
-                    <Button style={{ border: "none", background: "white" }}>
+                    <span>{it.quantity}</span>
+                    <Button
+                      onClick={() => handleIncrement(it.id)}
+                      style={{ border: "none", background: "white" }}
+                    >
                       +
                     </Button>
                   </div>
@@ -943,7 +1024,7 @@ function Buyurtmalar() {
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <Button
               onClick={onClose}
-              style={{ minWidth: "auto", marginRight: "450px", zIndex: -1 }}
+              style={{ minWidth: "auto", marginRight: "450px" }}
             >
               X
             </Button>
@@ -1081,64 +1162,59 @@ function Buyurtmalar() {
             </div>
             <div style={{ width: "37%" }}>
               <Card>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                  }}
-                >
-                  <p>Shaurma o’rtacha</p>
-                  <p>4*15,000 UZS</p>
-                </div>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    marginTop: "10px",
-                  }}
-                >
-                  <p>Shaurma o’rtacha</p>
-                  <p>4*15,000 UZS</p>
-                </div>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    marginTop: "10px",
-                  }}
-                >
-                  <p>Shaurma o’rtacha</p>
-                  <p>4*15,000 UZS</p>
-                </div>
-                <div>
-                  <div
-                    style={{
-                      background: "#EDEFF3",
-                      width: "215px",
-                      padding: "10px",
-                      borderRadius: "10px",
-                      marginTop: "50px",
-                    }}
-                  >
-                    <p>Umumiy summa</p>
-                    <p>120,000 UZS</p>
+                {selectedProducts.map((item) => (
+                  <div>
+                    <h1 style={{ marginBottom: "20px" }}>
+                      Tanlagan maxsulotlar
+                    </h1>
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        marginBottom: "10px",
+                      }}
+                    >
+                      <p style={{ fontSize: "15px" }}>{item.name}</p>
+                      <p style={{ fontSize: "15px" }}>
+                        {item.quantity}*{item.price.toLocaleString("en-Us")}
+                      </p>
+                    </div>
+                    <div>
+                      <div
+                        style={{
+                          background: "#EDEFF3",
+                          width: "215px",
+                          padding: "10px",
+                          borderRadius: "10px",
+                          marginTop: "50px",
+                        }}
+                      >
+                        <p style={{ color: "#8D9BA8" }}>Umumiy summa</p>
+                        <p style={{ fontSize: "20px", fontWeight: "bold" }}>
+                          {(item.price * item.quantity).toLocaleString("en-US")}{" "}
+                          UZS
+                        </p>
+                      </div>
+                    </div>
                   </div>
-                </div>
+                ))}
               </Card>
-              <div>
+
+              <div style={{ paddingBottom: "30px" }} className="index">
                 <p style={{ marginTop: "20px" }}>Mijoz ismi</p>
+
                 <Select
-                  mode="multiple"
-                  placeholder="Inserted are removed"
-                  value={selectedItems}
-                  onChange={setSelectedItems}
-                  style={{ width: "100%" }}
+                  showSearch
+                  placeholder="Mijozni tanlang"
+                  filterOption={(input, option) =>
+                    (option?.label ?? "")
+                      .toLowerCase()
+                      .includes(input.toLowerCase())
+                  }
                   options={data.map((item) => ({
-                    value: item.mijoz,
-                    label: item.mijoz,
+                    value: item.mijoz, // Mijoz ismi qiymati sifatida saqlanadi
+                    label: item.mijoz, // Mijoz ismi label sifatida ko'rsatiladi
                   }))}
                 />
               </div>
@@ -1190,5 +1266,4 @@ function Buyurtmalar() {
     </div>
   );
 }
-
 export default Buyurtmalar;
