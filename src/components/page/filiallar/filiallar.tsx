@@ -6,8 +6,10 @@ import {
   DrawerProps,
   Form,
   Input,
+  Modal,
   Row,
   Space,
+  message,
 } from "antd";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
@@ -23,30 +25,39 @@ import { FaRegTrashCan } from "react-icons/fa6";
 
 interface Product {
   id: number;
-  nameuz: string;
-  nameru: string;
-  locate: string;
-  hour: string;
+  nameUz: string;
+  nameRu: string;
+  target: string;
+  workingTime: string;
 }
 
 const Filiallar: React.FC = () => {
   const [data, setData] = useState<Product[]>([]);
+  const [filteredData, setFilteredData] = useState<Product[]>([]); // State for filtered data
   const [open, setOpen] = useState(false);
-  const [size, setSize] = useState<DrawerProps["size"]>();
+  const [size, setSize] = useState<DrawerProps["size"]>("default");
   const [location, setLocation] = useState("");
   const [mapPosition, setMapPosition] = useState<[number, number]>([
     51.505, -0.09,
   ]);
+  const [editingItem, setEditingItem] = useState<Product | null>(null); // State for editing
+  const [searchQuery, setSearchQuery] = useState(""); // State for search query
 
   const [form] = Form.useForm();
 
-  const showDefaultDrawer = () => {
-    setSize("default");
-    setOpen(true);
-  };
-
-  const showLargeDrawer = () => {
-    setSize("large");
+  const showDrawer = (item?: Product) => {
+    if (item) {
+      // If editing, set the form with the selected item data
+      setEditingItem(item);
+      setLocation(item.target);
+      setMapPosition([51.505, -0.09]); // Adjust this to item’s real location
+      form.setFieldsValue(item); // Pre-fill the form with the item’s data
+    } else {
+      setEditingItem(null);
+      form.resetFields(); // Clear the form when adding a new item
+      setLocation("");
+      setMapPosition([51.505, -0.09]);
+    }
     setOpen(true);
   };
 
@@ -54,24 +65,60 @@ const Filiallar: React.FC = () => {
     setOpen(false);
   };
 
+  const handleDelete = (id: number) => {
+    Modal.confirm({
+      title: "Haqiqatan ham o'chirmoqchimisiz?",
+      okText: "Ha",
+      okType: "danger",
+      cancelText: "Yo'q",
+      onOk() {
+        axios
+          .delete(`https://392e0f5b09d05ee3.mokky.dev/filiallar/${id}`)
+          .then(() => {
+            setData(data.filter((item) => item.id !== id));
+            setFilteredData(filteredData.filter((item) => item.id !== id));
+            message.success("Maʼlumot muvaffaqiyatli o'chirildi!");
+          })
+          .catch((error) => {
+            console.log(error);
+            message.error("Maʼlumotlarni o'chirishda xatolik yuz berdi");
+          });
+      },
+    });
+  };
+
   useEffect(() => {
     axios
-      .get("https://4a39859802af3eec.mokky.dev/filiallar")
+      .get("https://392e0f5b09d05ee3.mokky.dev/filiallar")
       .then((res) => {
         setData(res.data);
+        setFilteredData(res.data); // Initialize filtered data
       })
       .catch((e) => {
         console.log(e);
       });
   }, []);
 
+  useEffect(() => {
+    // Filter data based on search query
+    if (searchQuery) {
+      setFilteredData(
+        data.filter(
+          (product) =>
+            product.nameUz.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            product.nameRu.toLowerCase().includes(searchQuery.toLowerCase())
+        )
+      );
+    } else {
+      setFilteredData(data);
+    }
+  }, [searchQuery, data]);
+
   const LocationMap = () => {
     useMapEvents({
       click(event) {
         const { lat, lng } = event.latlng;
         setMapPosition([lat, lng]);
-
-        // Convert latitude and longitude to an address using reverse geocoding
         axios
           .get(
             `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`
@@ -89,30 +136,54 @@ const Filiallar: React.FC = () => {
   };
 
   const handleSave = () => {
-    form
-      .validateFields()
-      .then((values) => {
-        const newData = {
-          nameuz: values.nameuz,
-          nameru: values.nameru,
-          locate: location,
-          hour: values.hour,
-        };
-
+    form.validateFields().then((values) => {
+      const newData = {
+        ...values,
+        target: location,
+      };
+      if (editingItem) {
+        // If editing, send PUT request
         axios
-          .post("https://4a39859802af3eec.mokky.dev/filiallar", newData)
+          .patch(
+            `https://392e0f5b09d05ee3.mokky.dev/filiallar/${editingItem.id}`,
+            newData
+          )
           .then((res) => {
-            console.log("Data saved successfully:", res.data);
-            setData([...data, res.data]); // Add the new entry to the existing data
-            onClose(); // Close the drawer
+            setData(
+              data.map((item) =>
+                item.id === editingItem.id ? { ...item, ...res.data } : item
+              )
+            );
+            setFilteredData(
+              filteredData.map((item) =>
+                item.id === editingItem.id ? { ...item, ...res.data } : item
+              )
+            );
+            message.success("Maʼlumot muvaffaqiyatli yangilandi!");
+            setOpen(false); // Close drawer after editing
+            form.resetFields(); // Clear the form after saving
           })
-          .catch((err) => {
-            console.error("Error saving data:", err);
+          .catch((error) => {
+            console.error("Error updating data:", error);
+            message.error("Xatolik yuz berdi, ma'lumot yangilanmadi.");
           });
-      })
-      .catch((info) => {
-        console.log("Validate Failed:", info);
-      });
+      } else {
+        // If adding a new item, send POST request
+        axios
+          .post("https://392e0f5b09d05ee3.mokky.dev/filiallar", newData)
+          .then((res) => {
+            setData([...data, res.data]);
+            setFilteredData([...filteredData, res.data]); // Update filtered data
+            message.success("Maʼlumot muvaffaqiyatli qoʻshildi!");
+            setOpen(false); // Close drawer after adding
+            form.resetFields(); // Clear the form after saving
+          })
+          .catch((error) => {
+            console.error("Error saving data:", error);
+            message.error("Xatolik yuz berdi, ma'lumot saqlanmadi.");
+          });
+      }
+    });
   };
 
   return (
@@ -126,10 +197,9 @@ const Filiallar: React.FC = () => {
             paddingLeft: "50px",
             width: "270px",
           }}
-          className="flex items-center gap-5"
-        >
+          className="flex items-center gap-5">
           <Button
-            onClick={showDefaultDrawer}
+            onClick={() => showDrawer()} // No item means adding a new one
             style={{
               borderRadius: "50%",
               backgroundColor: "#20D472",
@@ -143,8 +213,7 @@ const Filiallar: React.FC = () => {
           <h2
             style={{
               fontWeight: "bold",
-            }}
-          >
+            }}>
             Yangi filial <br />
             qo’shish
           </h2>
@@ -164,6 +233,8 @@ const Filiallar: React.FC = () => {
               outline: "none",
             }}
             placeholder="Qidirish"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)} // Update search query on input change
           />
           <IoSearchOutline
             style={{
@@ -189,20 +260,19 @@ const Filiallar: React.FC = () => {
             padding: "23px",
             background: "white",
             display: "flex",
-            justifyContent: "center",
+            justifyContent: "space-evenly",
             textAlign: "end",
             gap: "90px",
             alignContent: "center",
             fontWeight: "bolder",
             boxShadow: "5px 5px 5px rgba(124, 124, 124, 0.3)",
-          }}
-        >
+          }}>
           <div className="flex gap-10 items-center">
             <p>Filial nomi (UZ)</p>
           </div>
           <div style={{ borderRight: "1px solid grey" }}></div>
           <div className="flex gap-10 items-center">
-            <p>Filial nomi (Ru)</p>
+            <p>Filial nomi (RU)</p>
           </div>
           <div style={{ borderRight: "1px solid grey" }}></div>
           <div className="flex gap-10 items-center">
@@ -217,136 +287,137 @@ const Filiallar: React.FC = () => {
             <p>ACTION</p>
           </div>
         </div>
-        {data.map((f) => (
-          <Col span={24} style={{ padding: "13px", marginTop: -14 }} key={f.id}>
-            <Card
-              className="card-col" // Apply hover effect class
-              style={{
-                borderRadius: "8px",
-                boxShadow: "1px 1px 10px rgba(124, 124, 124, 0.3)",
-                height: "80px",
-              }}
-              hoverable
-            >
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-around",
-                  alignItems: "center",
-                  textAlign: "start",
-                }}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    gap: "30px",
-                    alignItems: "center",
-                    width: `calc(100% / 5)`,
-                  }}
-                >
-                  <p>{f.nameuz}</p>
-                </div>
-                <div style={{ width: `calc(100% / 5)` }}>
-                  <p>{f.nameru}</p>
-                </div>
-                <div style={{ width: `calc(100% / 5)` }}>
-                  <p>{f.locate}</p>
-                </div>
-                <div style={{ width: `calc(100% / 5)` }}>
-                  <p>{f.hour}</p>
-                </div>
-
-                <div className="flex space-x-2 mt-2">
-                  <Button
-                    style={{
-                      borderRadius: "50%",
-                      width: "40px",
-                      height: "40px",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                    icon={<LuPen />}
-                  />
-                  <Button
-                    style={{
-                      borderRadius: "50%",
-                      width: "40px",
-                      height: "40px",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      color: "red",
-                    }}
-                    icon={<FaRegTrashCan />}
-                  />
-                </div>
-              </div>
+        {filteredData.map((product) => (
+          <Col key={product.id} style={{ width: "100%" }}>
+            <Card className="mb-3">
+              <Row>
+                <Col span={6}>
+                  <p>{product.nameUz}</p>
+                </Col>
+                <Col span={6}>
+                  <p>{product.nameRu}</p>
+                </Col>
+                <Col span={6}>
+                  <p>{product.target}</p>
+                </Col>
+                <Col span={3}>
+                  <p>{product.workingTime}</p>
+                </Col>
+                <Col span={3}>
+                  <div className="flex space-x-2 mt-2 justify-end">
+                    <Button
+                      style={{
+                        borderRadius: "50%",
+                        width: "40px",
+                        height: "40px",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                      icon={<LuPen />}
+                      onClick={() => showDrawer(product)}
+                    />
+                    <Button
+                      style={{
+                        borderRadius: "50%",
+                        width: "40px",
+                        height: "40px",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        color: "red",
+                      }}
+                      icon={<FaRegTrashCan />}
+                      onClick={() => handleDelete(product.id)}
+                    />
+                  </div>
+                </Col>
+              </Row>
             </Card>
           </Col>
         ))}
       </Row>
 
       <Drawer
-        title="Yangi filial qo’shish"
-        size={size}
-        placement="right"
+        title={editingItem ? "Filialni tahrirlash" : "Yangi filial qo'shish"}
+        width={720}
         onClose={onClose}
         open={open}
-        extra={
-          <Space>
-            <Button onClick={onClose}>Bekor qilish</Button>
-            <Button onClick={handleSave} type="primary">
-              Saqlash
-            </Button>
-          </Space>
-        }
-      >
-        <Form layout="vertical" form={form}>
-          <Form.Item
-            name="nameuz"
-            label="Filial nomi (UZ)"
-            rules={[
-              { required: true, message: "Iltimos, filial nomini kiriting!" },
-            ]}
-          >
-            <Input />
-          </Form.Item>
+        bodyStyle={{ paddingBottom: 80 }}>
+        <Form form={form} layout="vertical" onFinish={handleSave}>
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item
+                name="nameUz"
+                label="Filial nomi (UZ)"
+                rules={[
+                  {
+                    required: true,
+                    message: "Iltimos, filial nomini kiriting",
+                  },
+                ]}>
+                <Input placeholder="Masalan: Tashkent" />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                name="nameRu"
+                label="Filial nomi (RU)"
+                rules={[
+                  {
+                    required: true,
+                    message: "Iltimos, filial nomini kiriting",
+                  },
+                ]}>
+                <Input placeholder="Например: Ташкент" />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item
+                name="target"
+                label="Mo'ljal"
+                rules={[
+                  { required: true, message: "Iltimos, mo'ljalni kiriting" },
+                ]}>
+                <TextArea value={location} placeholder="Mo'ljal" />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                name="workingTime"
+                label="Ish vaqti"
+                rules={[
+                  { required: true, message: "Iltimos, ish vaqtini kiriting" },
+                ]}>
+                <Input placeholder="09:00-18:00" />
+              </Form.Item>
+            </Col>
+          </Row>
 
-          <Form.Item
-            name="nameru"
-            label="Filial nomi (RU)"
-            rules={[
-              { required: true, message: "Iltimos, filial nomini kiriting!" },
-            ]}
-          >
-            <Input />
-          </Form.Item>
-
-          <Form.Item name="hour" label="Ish vaqti">
-            <Input />
-          </Form.Item>
-
-          <Form.Item label="Joylashuv">
-            <MapContainer
-              center={mapPosition}
-              zoom={13}
-              scrollWheelZoom={false}
-              style={{ height: "300px", width: "100%" }}
-            >
-              <TileLayer
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-              />
-              <Marker position={mapPosition} />
-              <LocationMap />
-            </MapContainer>
-            <TextArea
-              value={location}
-              onChange={(e) => setLocation(e.target.value)}
-              rows={4}
+          <MapContainer
+            center={mapPosition}
+            zoom={13}
+            style={{ height: "300px", width: "100%" }}>
+            <TileLayer
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             />
-          </Form.Item>
+            <Marker position={mapPosition} />
+            <LocationMap />
+          </MapContainer>
+
+          <Row>
+            <Col span={24} style={{ textAlign: "right", marginTop: "10px" }}>
+              <Button onClick={onClose} style={{ marginRight: 8 }}>
+                Bekor qilish
+              </Button>
+              <Button type="primary" htmlType="submit">
+                {"Saqlash"}
+              </Button>
+            </Col>
+          </Row>
         </Form>
       </Drawer>
     </div>

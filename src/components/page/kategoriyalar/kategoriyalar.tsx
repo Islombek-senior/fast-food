@@ -35,6 +35,7 @@ const Kategoriyalar = () => {
   const [editingCategory, setEditingCategory] = useState<DataType | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [selected, setSelected] = useState<DataType | null>(null);
+
   const showDrawer = (r?: DataType) => {
     setEditingCategory(r || null);
     form.setFieldsValue(r || { nameUz: "", nameRu: "", category: "" });
@@ -72,35 +73,54 @@ const Kategoriyalar = () => {
   };
 
   const editCategory = (values: DataType) => {
-    if (selected) {
-      const url = `https://392e0f5b09d05ee3.mokky.dev/fas-food/${selected.id}`;
+    if (editingCategory) {
+      const url = `https://392e0f5b09d05ee3.mokky.dev/fas-food/${editingCategory.id}`;
       axios
         .patch(url, values)
         .then((res) => {
-          setSelected((prevFoods: any) =>
-            prevFoods.map((item: any) =>
-              item.id === selected.id ? { ...item, ...values } : item
+          const updatedCategory = { ...editingCategory, ...values };
+          setData((prevData) =>
+            prevData.map((item) =>
+              item.id === editingCategory.id ? updatedCategory : item
             )
           );
-          setDrawer(false);
+          setFilteredData((prevData) =>
+            prevData.map((item) =>
+              item.id === editingCategory.id ? updatedCategory : item
+            )
+          );
+          closeDrawer();
+          message.success("Successfully updated");
         })
         .catch((err) => {
           console.error(err);
-          message.error("Kategoriya o'zgartirishda xatolik yuz berdi");
+          message.error("Failed to update category");
         });
     }
   };
 
   const handleDelete = (id: number) => {
-    axios
-      .delete(`https://392e0f5b09d05ee3.mokky.dev/fas-food/${id}`)
-      .then((response) => {
-        setData(data.filter((item) => item.id !== id));
-      })
-      .catch((error) => {
-        console.error(error);
-        message.error("Kategoriya o'chirishda xatolik yuz berdi");
-      });
+    confirm({
+      title: "Are you sure you want to delete this category?",
+      okText: "Yes",
+      okType: "danger",
+      cancelText: "No",
+      onOk() {
+        axios
+          .delete(`https://392e0f5b09d05ee3.mokky.dev/fas-food/${id}`)
+          .then(() => {
+            setData((prevData) => prevData.filter((item) => item.id !== id));
+            setFilteredData((prevData) =>
+              prevData.filter((item) => item.id !== id)
+            );
+            message.success("Category deleted successfully");
+          })
+          .catch((error) => {
+            console.error(error);
+            message.error("Failed to delete category");
+          });
+      },
+    });
   };
 
   useEffect(() => {
@@ -108,12 +128,20 @@ const Kategoriyalar = () => {
       .get("https://392e0f5b09d05ee3.mokky.dev/fas-food")
       .then((res) => {
         setData(res.data);
+        setFilteredData(res.data);
       })
       .catch((err) => {
         console.error(err);
-        message.error("Kategoriya qo'shishda xatolik yuz berdi");
+        message.error("Failed to fetch categories");
       });
-  });
+  }, []);
+
+  useEffect(() => {
+    const filtered = data.filter((item) =>
+      item.nameUz.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setFilteredData(filtered);
+  }, [searchTerm, data]);
 
   return (
     <div>
@@ -126,8 +154,7 @@ const Kategoriyalar = () => {
             paddingLeft: "50px",
             width: "270px",
           }}
-          className="flex items-center gap-5"
-        >
+          className="flex items-center gap-5">
           <Button
             style={{
               borderRadius: "50%",
@@ -143,8 +170,7 @@ const Kategoriyalar = () => {
           <h2
             style={{
               fontWeight: "bold",
-            }}
-          >
+            }}>
             Yangi kategoriya
             <br />
             qo’shish
@@ -198,8 +224,7 @@ const Kategoriyalar = () => {
             alignContent: "center",
             fontWeight: "bolder",
             boxShadow: "5px 5px 5px rgba(124, 124, 124, 0.3)",
-          }}
-        >
+          }}>
           <div className="flex gap-10 items-center">
             <p>Kategoriya (UZ)</p>
           </div>
@@ -216,36 +241,32 @@ const Kategoriyalar = () => {
             <p>ACTION</p>
           </div>
         </div>
-        {data.map((item) => (
+        {filteredData.map((item) => (
           <Col
             span={24}
             style={{ padding: "13px", marginTop: -14 }}
-            key={item.id}
-          >
+            key={item.id}>
             <Card
               className="card-col"
               style={{
                 borderRadius: "8px",
                 boxShadow: "1px 1px 10px rgba(124, 124, 124, 0.3)",
                 height: "80px",
-              }}
-            >
+              }}>
               <div
                 style={{
                   display: "flex",
                   justifyContent: "space-around",
                   alignItems: "center",
                   textAlign: "start",
-                }}
-              >
+                }}>
                 <div
                   style={{
                     display: "flex",
                     gap: "30px",
                     alignItems: "center",
                     width: `calc(100% / 5)`,
-                  }}
-                >
+                  }}>
                   <p>{item.nameUz}</p>
                 </div>
                 <div style={{ width: `calc(100% / 5)` }}>
@@ -256,8 +277,7 @@ const Kategoriyalar = () => {
                 </div>
                 <div
                   className="flex space-x-2 mt-2"
-                  style={{ width: `calc(100% / 5)` }}
-                >
+                  style={{ width: `calc(100% / 5)` }}>
                   <Button
                     style={{
                       borderRadius: "50%",
@@ -297,9 +317,8 @@ const Kategoriyalar = () => {
         }
         placement="right"
         onClose={closeDrawer}
-        visible={drawer}
-        width={400}
-      >
+        open={drawer}
+        width={400}>
         <Form form={form} onFinish={onFinish} layout="vertical">
           <Form.Item
             name="nameUz"
@@ -309,8 +328,7 @@ const Kategoriyalar = () => {
                 required: true,
                 message: "Iltimos, kategoriya nomini kiriting",
               },
-            ]}
-          >
+            ]}>
             <Input />
           </Form.Item>
           <Form.Item
@@ -321,8 +339,7 @@ const Kategoriyalar = () => {
                 required: true,
                 message: "Iltimos, kategoriya nomini kiriting",
               },
-            ]}
-          >
+            ]}>
             <Input />
           </Form.Item>
           <Form.Item
@@ -330,8 +347,7 @@ const Kategoriyalar = () => {
             label="Bosh kategoriya"
             rules={[
               { required: true, message: "Iltimos, bosh kategoriyani tanlang" },
-            ]}
-          >
+            ]}>
             <Input />
           </Form.Item>
           <Form.Item>
