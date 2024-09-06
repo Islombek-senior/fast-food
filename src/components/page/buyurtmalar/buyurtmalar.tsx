@@ -101,8 +101,26 @@ function Buyurtmalar() {
   const [maxsulotlar, setMaxsulotlar] = useState<Products[]>([]);
   const [open, setOpen] = useState(false);
   const [selectedSegment, setSelectedSegment] = React.useState(0);
+
+  ////////////////////////////////////////////////////
   const [selectedProducts, setSelectedProducts] = useState<Products[]>([]);
   console.log(selectedProducts);
+
+  const [selectedCustomer, setSelectedCustomer] = useState<Product | null>(
+    null
+  );
+  const [customerNumbers, setCustomerNumbers] = useState<string[]>([]); // Agar customNum faqat bitta string bo'lsa
+
+  // Select o'zgarishi bo'yicha mijozni yangilash
+
+  const handleSelectChange = (value: string) => {
+    const selected = data.find((item) => item.mijoz === value);
+    if (selected) {
+      setSelectedCustomer(selected);
+    } else {
+      setSelectedCustomer(null);
+    }
+  };
 
   const handleSegmentChange = (index: any) => {
     setSelectedSegment(index);
@@ -133,6 +151,14 @@ function Buyurtmalar() {
     setActiveButton(buttonName);
   };
 
+  const totalSum = selectedProducts.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0
+  );
+
+  const [totalSum1, setTotalSum1] = useState<number>(0);
+  const productNames = selectedProducts.map((item) => item.name).join(""); // Mahsulot nomlarini vergul bilan ajratish
+
   const showLargeDrawer = () => {
     setOpen(true);
   };
@@ -151,12 +177,42 @@ function Buyurtmalar() {
     height: "400px",
   };
 
+  // const addProductToSelection = (product: Product) => {
+  //   setSelectedProducts((prevSelectedProducts) => {
+  //     // Mahsulot mavjudmi tekshirish
+  //     const existingProduct = prevSelectedProducts.find(
+  //       (p) => p.id === product.id
+  //     );
+  //     if (existingProduct) {
+  //       // Agar mavjud bo'lsa, miqdorini oshirish
+  //       return prevSelectedProducts.map((p) =>
+  //         p.id === product.id ? { ...p, quantity: p.quantity + 1 } : p
+  //       );
+  //     } else {
+  //       // Agar mavjud bo'lmasa, yangi mahsulot qo'shish
+  //       return [...prevSelectedProducts, { ...product, quantity: 1 }];
+  //     }
+  //   });
+  // };
+
+  React.useEffect(() => {
+    const newTotalSum = selectedProducts.reduce(
+      (sum, product) => sum + product.price * product.quantity,
+      0
+    );
+    setTotalSum1(newTotalSum);
+  }, [selectedProducts]);
+
+  // const handleAddProduct = (product: Product) => {
+  //   addProductToSelection(product);
+  // };
+
   const center = {
     lat: 37.7749,
     lng: -122.4194,
   };
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("Burger");
 
   const handleCategoryChange = (category: any) => {
     setSelectedCategory(category);
@@ -251,7 +307,7 @@ function Buyurtmalar() {
                     cursor: "pointer",
                   }}
                 >
-                  <p>{it.price} UZS</p>
+                  <p>{it.price.toLocaleString("en-Us")} UZS</p>
                   <div
                     style={{
                       border: "1px solid #EDEFF3",
@@ -316,7 +372,7 @@ function Buyurtmalar() {
                     cursor: "pointer",
                   }}
                 >
-                  <p>{it.price} UZS</p>
+                  <p>{it.price.toLocaleString("en-Us")} UZS</p>
                   <div
                     style={{
                       border: "1px solid #EDEFF3",
@@ -381,7 +437,7 @@ function Buyurtmalar() {
                     cursor: "pointer",
                   }}
                 >
-                  <p>{it.price} UZS</p>
+                  <p>{it.price.toLocaleString("en-Us")} UZS</p>
                   <div
                     style={{
                       border: "1px solid #EDEFF3",
@@ -446,7 +502,7 @@ function Buyurtmalar() {
                     cursor: "pointer",
                   }}
                 >
-                  <p>{it.price} UZS</p>
+                  <p>{it.price.toLocaleString("en-Us")} UZS</p>
                   <div
                     style={{
                       border: "1px solid #EDEFF3",
@@ -511,7 +567,7 @@ function Buyurtmalar() {
                     cursor: "pointer",
                   }}
                 >
-                  <p>{it.price} UZS</p>
+                  <p>{it.price.toLocaleString("en-Us")} UZS</p>
                   <div
                     style={{
                       border: "1px solid #EDEFF3",
@@ -576,7 +632,7 @@ function Buyurtmalar() {
                     cursor: "pointer",
                   }}
                 >
-                  <p>{it.price} UZS</p>
+                  <p>{it.price.toLocaleString("en-Us")} UZS</p>
                   <div
                     style={{
                       border: "1px solid #EDEFF3",
@@ -643,7 +699,7 @@ function Buyurtmalar() {
               fontWeight: "bold",
             }}
           >
-            Yangi filial
+            Yangi buyurtma
             <br />
             qo’shish
           </h2>
@@ -1051,7 +1107,7 @@ function Buyurtmalar() {
                 sx={{
                   bgcolor: "transparent",
                   p: "3px",
-                  gap: "10px",
+                  gap: "5px",
                   borderRadius: "40px",
                   backgroundColor: "#EDEFF3",
                   whiteSpace: "nowrap", // Elementlarni bir qatorda saqlash
@@ -1162,66 +1218,84 @@ function Buyurtmalar() {
             </div>
             <div style={{ width: "37%" }}>
               <Card>
-                {selectedProducts.map((item) => (
-                  <div>
-                    <h1 style={{ marginBottom: "20px" }}>
-                      Tanlagan maxsulotlar
-                    </h1>
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                        marginBottom: "10px",
-                      }}
-                    >
-                      <p style={{ fontSize: "15px" }}>{item.name}</p>
-                      <p style={{ fontSize: "15px" }}>
-                        {item.quantity}*{item.price.toLocaleString("en-Us")}
-                      </p>
-                    </div>
-                    <div>
+                <div>
+                  <h1 style={{ marginBottom: "20px" }}>Tanlagan maxsulotlar</h1>
+                  <div
+                    style={{
+                      marginBottom: "10px",
+                    }}
+                  >
+                    {selectedProducts.map((item, index) => (
                       <div
                         style={{
-                          background: "#EDEFF3",
-                          width: "215px",
-                          padding: "10px",
-                          borderRadius: "10px",
-                          marginTop: "50px",
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                          textAlign: "start",
+                          marginBottom: "5px",
                         }}
                       >
-                        <p style={{ color: "#8D9BA8" }}>Umumiy summa</p>
-                        <p style={{ fontSize: "20px", fontWeight: "bold" }}>
-                          {(item.price * item.quantity).toLocaleString("en-US")}{" "}
-                          UZS
+                        <p key={index} style={{ fontSize: "15px" }}>
+                          {item.name}
+                        </p>
+                        <p>
+                          {item.quantity} * {item.price.toLocaleString("en-Us")}
                         </p>
                       </div>
-                    </div>
+                    ))}
                   </div>
-                ))}
+                  <div
+                    style={{
+                      background: "#EDEFF3",
+                      width: "215px",
+                      padding: "10px",
+                      borderRadius: "10px",
+                      marginTop: "20px",
+                    }}
+                  >
+                    <p style={{ color: "#8D9BA8" }}>Umumiy summa</p>
+                    <p style={{ fontSize: "20px", fontWeight: "bold" }}>
+                      {totalSum.toLocaleString("en-US")} UZS
+                    </p>
+                  </div>
+                </div>
               </Card>
 
-              <div style={{ paddingBottom: "30px" }} className="index">
-                <p style={{ marginTop: "20px" }}>Mijoz ismi</p>
+              <div style={{ paddingBottom: "15px" }} className="index">
+                <p style={{ marginTop: "20px", marginBottom: "10px" }}>
+                  Mijoz ismi
+                </p>
 
                 <Select
                   showSearch
                   placeholder="Mijozni tanlang"
+                  onChange={handleSelectChange}
                   filterOption={(input, option) =>
                     (option?.label ?? "")
                       .toLowerCase()
                       .includes(input.toLowerCase())
                   }
+                  dropdownStyle={{ zIndex: 10000 }} // z-index qiymati yuqori qilib qo'yildi
                   options={data.map((item) => ({
-                    value: item.mijoz, // Mijoz ismi qiymati sifatida saqlanadi
-                    label: item.mijoz, // Mijoz ismi label sifatida ko'rsatiladi
+                    value: item.mijoz,
+                    label: item.mijoz,
                   }))}
                 />
               </div>
-              <div style={{ marginTop: "20px" }}>
-                <p style={{ marginBottom: "10px" }}>Telefon raqam</p>
+              <div style={{ marginTop: "10px" }}>
+                <h1 style={{ marginBottom: "10px" }}>Telefon raqam</h1>
                 <Card>
-                  <p>(+99 893) 461-41-88</p>
+                  {selectedCustomer && (
+                    <>
+                      <h3>{selectedCustomer.customNum}</h3>
+
+                      {customerNumbers.map((numbers: any, index: any) => (
+                        <Card style={{ padding: "20px" }}>
+                          <p key={index}>{numbers}</p>
+                        </Card>
+                      ))}
+                    </>
+                  )}
                 </Card>
               </div>
               <div style={{ marginTop: "20px" }}>
@@ -1258,6 +1332,21 @@ function Buyurtmalar() {
                     ))}
                   </MapContainer>
                 </Card>
+              </div>
+              <div>
+                <Button
+                  style={{
+                    padding: "20px",
+                    borderRadius: "5px",
+                    background: "#20D472",
+                    marginTop: "20px",
+                    color: "white",
+                    width: "40%",
+                    border: "none",
+                  }}
+                >
+                  Saqlash
+                </Button>
               </div>
             </div>
           </div>
