@@ -18,6 +18,8 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import Buyurtma from "../bars/bars";
 
+
+
 const markerIcon = "path/to/marker-icon.png"; // Adjust the path as needed
 const markerShadow = "path/to/marker-shadow.png"; // Adjust the path as needed
 
@@ -737,46 +739,8 @@ function Buyurtmalar() {
           </h2>
         </div>
 
-        {/* activpage */}
-        {/* <div
-          className="flex items-center justify-between"
-          style={{
-            width: "591px",
-            height: "48px",
-            background: "#EDEFF3",
-            borderRadius: "30px",
-            padding: "5px",
-            marginLeft: "50px",
-          }}
-        >
-          <button
-            className={activeButton === "Yangi" ? "activ" : "inActiv"}
-            onClick={() => handleButtonClick("Yangi")}
-          >
-            Yangi
-          </button>
-          <button
-            className={activeButton === "Qabul qilingan" ? "activ" : "inActiv"}
-            onClick={() => handleButtonClick("Qabul qilingan")}
-          >
-            Qabul qilingan
-          </button>
-          <button
-            className={activeButton === "Jo’natilgan" ? "activ" : "inActiv"}
-            onClick={() => handleButtonClick("Jo’natilgan")}
-          >
-            Jo’natilgan
-          </button>
-          <button
-            className={activeButton === "Yopilgan" ? "activ" : "inActiv"}
-            onClick={() => handleButtonClick("Yopilgan")}
-          >
-            Yopilgan
-          </button>
-        </div> */}
 
-        {/* table,card */}
-        <Buyurtma />
+<Buyurtma/>
 
         <div
           style={{
