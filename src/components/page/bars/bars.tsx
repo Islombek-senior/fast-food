@@ -24,8 +24,6 @@ const initialOrders: Order[] = [
   { id: 8534, name: "Deveeprasad Acharya", time: "00:34", phone: "(+99 893) 461-41-88", total: 40400, payment: "Payme", status: "yangi", operator: "Komilova M", branch: "Fast Food Maksim Gorkiy" },
   { id: 8522, name: "Thoma Fulloway", time: "00:50", phone: "(+99 893) 461-41-88", total: 40400, payment: "Payme", status: "yangi", operator: "Komilova M", branch: "Fast Food Chilonzor" },
   { id: 8512, name: "Jacquelin Likoki", time: "04:14", phone: "(+99 893) 461-41-88", total: 40400, payment: "Payme", status: "yangi", operator: "Komilova M", branch: "Fast Food Chilonzor" },
-  { id: 8522, name: "Thoma Fulloway", time: "00:50", phone: "(+99 893) 461-41-88", total: 40400, payment: "Payme", status: "yangi", operator: "Komilova M", branch: "Fast Food Chilonzor" },
-  { id: 8512, name: "Jacquelin Likoki", time: "04:14", phone: "(+99 893) 461-41-88", total: 40400, payment: "Payme", status: "yangi", operator: "Komilova M", branch: "Fast Food Chilonzor" },
 ];
 
 const Buyurtmalar = () => {
