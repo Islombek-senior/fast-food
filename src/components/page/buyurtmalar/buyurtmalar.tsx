@@ -16,6 +16,7 @@ import defaultMarkerShadow from "leaflet/dist/images/marker-shadow.png";
 import L from "leaflet";
 // Standart marker ikonkasini to'g'ri sozlash
 import "leaflet/dist/leaflet.css";
+import Buyurtma from "../bars/bars";
 
 const markerIcon = "path/to/marker-icon.png"; // Adjust the path as needed
 const markerShadow = "path/to/marker-shadow.png"; // Adjust the path as needed
@@ -176,6 +177,36 @@ function Buyurtmalar() {
       .catch((err) => {
         console.log(err);
       });
+  };
+
+  // Define the type for orders
+  type OrderType = {
+    id: number;
+    status: "yangi" | "qabul qilingan" | "jo'natilgan" | "yopilgan";
+    // other fields
+  };
+
+  // Initialize state with useState
+  const [orders, setOrders] = useState<OrderType[]>([]);
+
+  // Function to handle status change
+  const handleStatusChange = (orderId: number) => {
+    setOrders((prevOrders: OrderType[]) =>
+      prevOrders.map((order: OrderType) => {
+        if (order.id === orderId) {
+          let newStatus = order.status;
+          if (order.status === "yangi") {
+            newStatus = "qabul qilingan";
+          } else if (order.status === "qabul qilingan") {
+            newStatus = "jo'natilgan";
+          } else if (order.status === "jo'natilgan") {
+            newStatus = "yopilgan";
+          }
+          return { ...order, status: newStatus };
+        }
+        return order;
+      })
+    );
   };
 
   // const addProductToSelection = (product: Product) => {
@@ -707,7 +738,7 @@ function Buyurtmalar() {
         </div>
 
         {/* activpage */}
-        <div
+        {/* <div
           className="flex items-center justify-between"
           style={{
             width: "591px",
@@ -742,9 +773,10 @@ function Buyurtmalar() {
           >
             Yopilgan
           </button>
-        </div>
+        </div> */}
 
         {/* table,card */}
+        <Buyurtma />
 
         <div
           style={{
@@ -1051,6 +1083,7 @@ function Buyurtmalar() {
                         width: "45px",
                         height: "45px",
                       }}
+                      onClick={() => handleStatusChange(item.id)}
                     >
                       <IoMdCheckmark />
                     </Button>
