@@ -1,12 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, Row, Col, Segmented } from "antd";
 import { CiBookmark, CiDeliveryTruck } from "react-icons/ci";
 import { GoClock } from "react-icons/go";
 import { FiUser, FiPhone } from "react-icons/fi";
 import { IoMdCheckmark } from "react-icons/io";
 import { Box } from "@mui/material";
+import axios from "axios"; // axiosni o'rnatish kerak: `npm install axios`
+import { BedTwoTone } from "@mui/icons-material";
 
-// Buyurtma interfeysi
 interface Order {
   id: number;
   name: string;
@@ -19,81 +20,93 @@ interface Order {
   branch: string;
 }
 
-// Boshlang'ich buyurtmalar ro'yxati
-const initialOrders: Order[] = [
-  {
-    id: 8549,
-    name: "Muhammad Jumayev",
-    time: "00:24",
-    phone: "(+99 893) 461-41-88",
-    total: 40400,
-    payment: "Payme",
-    status: "yangi",
-    operator: "Komilova M",
-    branch: "Fast Food Maksim Gorkiy",
-  },
-  {
-    id: 8534,
-    name: "Deveeprasad Acharya",
-    time: "00:34",
-    phone: "(+99 893) 461-41-88",
-    total: 40400,
-    payment: "Payme",
-    status: "yangi",
-    operator: "Komilova M",
-    branch: "Fast Food Maksim Gorkiy",
-  },
-  {
-    id: 8522,
-    name: "Thoma Fulloway",
-    time: "00:50",
-    phone: "(+99 893) 461-41-88",
-    total: 40400,
-    payment: "Payme",
-    status: "yangi",
-    operator: "Komilova M",
-    branch: "Fast Food Chilonzor",
-  },
-  {
-    id: 8512,
-    name: "Jacquelin Likoki",
-    time: "04:14",
-    phone: "(+99 893) 461-41-88",
-    total: 40400,
-    payment: "Payme",
-    status: "yangi",
-    operator: "Komilova M",
-    branch: "Fast Food Chilonzor",
-  },
-];
+interface Product {
+  id: number;
+  mijoz: string;
+  customNum: string;
+  orderSum: number;
+  opName: string;
+  filial: string;
+  hours: string;
+  statuss: string;
+}
 
 const Buyurtmalar = () => {
-  const [orders, setOrders] = useState<Order[]>(initialOrders);
+  const [orders, setOrders] = useState<Product[]>([]);
   const [selectedStatus, setSelectedStatus] = useState<string>("yangi");
 
-  // Statusni yangilash funksiyasi
-  const handleStatusChange = (orderId: number) => {
-    setOrders((prevOrders) =>
-      prevOrders.map((order) => {
-        if (order.id === orderId) {
-          let newStatus = order.status;
-          if (order.status === "yangi") {
-            newStatus = "qabul qilingan";
-          } else if (order.status === "qabul qilingan") {
-            newStatus = "jo'natilgan";
-          } else if (order.status === "jo'natilgan") {
-            newStatus = "yopilgan";
-          }
-          return { ...order, status: newStatus };
-        }
-        return order;
-      })
-    );
+  // API orqali buyurtmalarni olish
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        const response = await axios.get(
+          "https://e2ead815ad4a2894.mokky.dev/xisobot"
+        ); // API URL manzilini yozing
+        setOrders(response.data); // Foydalanuvchi buyurtmalarni API'dan oladi
+      } catch (error) {
+        console.error("Buyurtmalarni yuklashda xato:", error);
+      }
+    };
+    fetchOrders();
+  }, []);
+
+  const fetchOrders = async () => {
+    try {
+      const response = await axios.get(
+        "https://e2ead815ad4a2894.mokky.dev/xisobot"
+      );
+      setOrders(response.data); // Foydalanuvchi buyurtmalarni API'dan oladi
+    } catch (error) {
+      console.error("Buyurtmalarni yuklashda xato:", error);
+    }
   };
 
-  // Status bo'yicha buyurtmalarni filtrlash
+  // Statusni yangilash funksiyasi
+  const handleStatusChange = async (orderId: number) => {
+    console.log(orderId);
+    try {
+      const newOrder = orders.find((order) => orderId === order.id);
+      if (newOrder?.statuss === "yangi") {
+        newOrder.statuss = "qabul qilingan";
+      } else if (newOrder?.statuss === "qabul qilingan") {
+        newOrder.statuss = "jo'natilgan";
+      } else if (newOrder?.statuss === "jo'natilgan") {
+        newOrder.statuss = "yopilgan";
+      }
+      console.log(newOrder);
+
+      await axios.patch(
+        `https://e2ead815ad4a2894.mokky.dev/xisobot/${orderId}`,
+        newOrder
+      );
+      fetchOrders();
+    } catch (error) {
+      console.error("Statusni yangilashda xato:", error);
+    }
+  };
+
+  const handleStatusBack = async (orderId: number) => {
+    try {
+      const backOrder = orders.find((order) => orderId === order.id);
+      if (backOrder?.statuss === "yopilgan") {
+        backOrder.statuss = "jo'natilgan";
+      } else if (backOrder?.statuss === "jo'natilgan") {
+        backOrder.statuss = "qabul qilingan";
+      } else if (backOrder?.statuss === "qabul qilingan") {
+        backOrder.statuss = "yangi";
+      }
+      await axios.patch(
+        `https://e2ead815ad4a2894.mokky.dev/xisobot/${orderId}`,
+        backOrder
+      );
+      fetchOrders();
+    } catch (err) {
+      console.error("Statusni qayta to'lashda xato:", err);
+    }
+  };
+
   const filteredOrders = orders.filter(
-    (order) => order.status === selectedStatus
+    (order) => order.statuss === selectedStatus
   );
 
   return (
@@ -127,7 +140,6 @@ const Buyurtmalar = () => {
         ]}
         onChange={(value) => setSelectedStatus(value)}
       />
-
       <Row gutter={[16, 16]}>
         {filteredOrders.map((item) => (
           <Col span={24} key={item.id}>
@@ -144,7 +156,6 @@ const Buyurtmalar = () => {
                   padding: "20px",
                   background: "white",
                   height: "200px",
-                  marginTop: "20px",
                   marginLeft: "30px",
                   borderRadius: "10px",
                   borderBottomRightRadius: "0px",
@@ -203,7 +214,7 @@ const Buyurtmalar = () => {
                   }}
                 >
                   <GoClock style={{ fontSize: "20px" }} />
-                  <p style={{ fontSize: "20px" }}>{item.time}</p>
+                  <p style={{ fontSize: "20px" }}>{item.hours}</p>
                 </div>
               </Box>
               <Box
@@ -212,7 +223,6 @@ const Buyurtmalar = () => {
                   padding: "20px",
                   background: "white",
                   height: "200px",
-                  borderRadius: "10px",
                   borderRight: "2px solid #EDEFF3",
                   width: "370px",
                 }}
@@ -227,9 +237,7 @@ const Buyurtmalar = () => {
                     textAlign: "center",
                     paddingBottom: "30px",
                   }}
-                >
-                 
-                </div>
+                ></div>
 
                 <div
                   style={{
@@ -240,7 +248,7 @@ const Buyurtmalar = () => {
                   }}
                 >
                   <FiUser style={{ fontSize: "20px", color: "#8D9BA8" }} />
-                  <p style={{ fontSize: "20px" }}>{item.name}</p>
+                  <p style={{ fontSize: "20px" }}>{item.mijoz}</p>
                 </div>
                 <div
                   style={{
@@ -253,7 +261,7 @@ const Buyurtmalar = () => {
                   }}
                 >
                   <FiPhone style={{ fontSize: "20px", color: "#8D9BA8" }} />
-                  <p style={{ fontSize: "15px" }}>{item.phone}</p>
+                  <p style={{ fontSize: "15px" }}>{item.customNum}</p>
                 </div>
               </Box>
               <Box
@@ -269,27 +277,33 @@ const Buyurtmalar = () => {
                 <div
                   style={{
                     display: "flex",
-                    justifyContent: "center",
-                    alignItems: "flex-start",
+                    justifyContent: "space-between",
+                    alignItems: "start",
                     gap: "30px",
                   }}
                 >
-                  <div>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "flex-start",
+                      flexDirection: "column",
+                    }}
+                  >
                     <div
                       style={{
                         display: "flex",
-                        justifyContent: "center",
+                        justifyContent: "flex-start",
                         alignItems: "center",
                         gap: 10,
                       }}
                     >
                       <CiBookmark style={{ color: "grey", fontSize: "20px" }} />
-                      <p style={{ fontSize: "17px" }}>{item.total} UZS</p>
+                      <p style={{ fontSize: "17px" }}>{item.orderSum} UZS</p>
                     </div>
                     <div
                       style={{
                         display: "flex",
-                        justifyContent: "center",
+                        justifyContent: "flex-start",
                         alignItems: "center",
                         gap: 10,
                       }}
@@ -315,7 +329,7 @@ const Buyurtmalar = () => {
                         padding: "6px",
                       }}
                     ></span>
-                    <p style={{ fontSize: "15px" }}>{item.payment}</p>
+                    <p style={{ fontSize: "15px" }}>Payme</p>
                   </div>
                 </div>
                 <div
@@ -329,7 +343,7 @@ const Buyurtmalar = () => {
                     Umumiy summa
                   </p>
                   <p style={{ fontSize: "23px", color: "black" }}>
-                    {item.total} UZS
+                    {item.orderSum} UZS
                   </p>
                 </div>
               </Box>
@@ -361,12 +375,14 @@ const Buyurtmalar = () => {
                         fontWeight: "bold",
                       }}
                     >
-                      {item.operator}
+                      {item.opName}
                     </p>
                   </div>
                   <div
                     style={{
                       marginRight: "-40px",
+                      display: "flex",
+                      flexDirection: "column",
                     }}
                   >
                     <Button
@@ -374,10 +390,21 @@ const Buyurtmalar = () => {
                         borderRadius: "50%",
                         width: "45px",
                         height: "45px",
+                        marginBottom: "20px",
                       }}
                       onClick={() => handleStatusChange(item.id)}
                     >
                       <IoMdCheckmark />
+                    </Button>
+                    <Button
+                      style={{
+                        borderRadius: "50%",
+                        width: "45px",
+                        height: "45px",
+                      }}
+                      onClick={() => handleStatusBack(item.id)}
+                    >
+                      X
                     </Button>
                   </div>
                 </div>
@@ -387,7 +414,6 @@ const Buyurtmalar = () => {
                     justifyContent: "space-between",
                     alignItems: "center",
                     gap: "55px",
-                    marginTop: "25px",
                   }}
                 >
                   <div>
@@ -398,7 +424,7 @@ const Buyurtmalar = () => {
                         fontWeight: "bold",
                       }}
                     >
-                      {item.branch}
+                      {item.filial}
                     </p>
                   </div>
                 </div>
