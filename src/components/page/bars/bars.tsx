@@ -2,11 +2,13 @@ import React, { useState, useEffect } from "react";
 import { Button, Row, Col, Segmented } from "antd";
 import { CiBookmark, CiDeliveryTruck } from "react-icons/ci";
 import { GoClock } from "react-icons/go";
-import { FiUser, FiPhone } from "react-icons/fi";
+import { FiUser, FiPhone, FiPlus } from "react-icons/fi";
 import { IoMdCheckmark } from "react-icons/io";
 import { Box } from "@mui/material";
 import axios from "axios"; // axiosni o'rnatish kerak: `npm install axios`
 import { BedTwoTone } from "@mui/icons-material";
+import { HiMenuAlt4, HiOutlineMenuAlt3 } from "react-icons/hi";
+import Drawers from "./drawer";
 
 interface Order {
   id: number;
@@ -110,44 +112,116 @@ const Buyurtmalar = () => {
   );
 
   return (
-    <div style={{ padding: "20px" }}>
-      <Segmented<string>
-        size="large"
+    <div style={{ width: "100%" }}>
+      <div
+        className="bg-white"
         style={{
-          padding: "5px 20px",
-          borderRadius: 50,
-          width: "100%",
-          marginBottom: "20px",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
         }}
-        value={selectedStatus}
-        options={[
-          {
-            label: <span style={{ padding: "0 50px" }}>Yangi</span>,
-            value: "yangi",
-          },
-          {
-            label: <span style={{ padding: "0 50px" }}>Qabul qilingan</span>,
-            value: "qabul qilingan",
-          },
-          {
-            label: <span style={{ padding: "0 50px" }}>Jo'natilgan</span>,
-            value: "jo'natilgan",
-          },
-          {
-            label: <span style={{ padding: "0 50px" }}>Yopilgan</span>,
-            value: "yopilgan",
-          },
-        ]}
-        onChange={(value) => setSelectedStatus(value)}
-      />
+      >
+        <div
+          style={{
+            borderRight: "1px solid #EDEFF3",
+            borderLeft: "1px solid #EDEFF3",
+            padding: "20px",
+            paddingLeft: "50px",
+            width: "270px",
+          }}
+          className="flex items-center gap-5"
+        >
+          <Button
+            style={{
+              borderRadius: "50%",
+              backgroundColor: "#20D472",
+              color: "white",
+              width: "40px",
+              height: "40px",
+              paddingLeft: "2px",
+            }}
+            icon={<FiPlus style={{ fontSize: "30px" }} />}
+          />
+          <h2
+            style={{
+              fontWeight: "bold",
+            }}
+          >
+            Yangi buyurtma
+            <br />
+            qo’shish
+          </h2>
+        </div>
+        <div style={{ padding: "10px" }}>
+          <Segmented<string>
+            size="large"
+            style={{
+              padding: "5px 20px",
+              borderRadius: 50,
+              width: "100%",
+              marginBottom: "20px",
+            }}
+            value={selectedStatus}
+            options={[
+              {
+                label: <span style={{ padding: "0 50px" }}>Yangi</span>,
+                value: "yangi",
+              },
+              {
+                label: (
+                  <span style={{ padding: "0 50px" }}>Qabul qilingan</span>
+                ),
+                value: "qabul qilingan",
+              },
+              {
+                label: <span style={{ padding: "0 50px" }}>Jo'natilgan</span>,
+                value: "jo'natilgan",
+              },
+              {
+                label: <span style={{ padding: "0 50px" }}>Yopilgan</span>,
+                value: "yopilgan",
+              },
+            ]}
+            onChange={(value) => setSelectedStatus(value)}
+          />
+        </div>
+        <div
+          style={{
+            borderLeft: "1px solid #EDEFF3",
+            width: "100px",
+            marginRight: "30px",
+          }}
+          className="flex items-center gap-5"
+        >
+          <div
+            className=" flex items-center justify-between gap-3"
+            style={{
+              width: "120px",
+              height: "45px",
+              background: "#EDEFF3",
+              paddingRight: "10px",
+              borderRadius: "30px",
+              padding: "7px",
+            }}
+          >
+            <Button className="iconActiv">
+              <HiMenuAlt4 />
+            </Button>
+            <Button>
+              <HiOutlineMenuAlt3 />
+            </Button>
+          </div>
+        </div>
+      </div>
       <Row gutter={[16, 16]}>
         {filteredOrders.map((item) => (
-          <Col span={24} key={item.id}>
+          <Col span={23} key={item.id} style={{ marginTop: "20px" }}>
             <Box
               sx={{
                 display: "flex",
                 flexDirection: "row",
                 marginBottom: "20px",
+                width: "100%",
               }}
             >
               <Box
@@ -433,6 +507,7 @@ const Buyurtmalar = () => {
           </Col>
         ))}
       </Row>
+      <Drawers />
     </div>
   );
 };
