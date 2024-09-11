@@ -23,6 +23,7 @@ import ShikoyatFikrlar from "../page/shikoyatFikrlar/shikoyatFikrlar";
 import YetkazishNarxi from "../page/yetkazishNarxi/yetkazishNarxi";
 import Map from "../page/map";
 import "./cssLay.css";
+import Buyurtmalar2 from "../page/buyurtmalar/buyurtmalar";
 
 const { Header, Content, Footer, Sider } = Layout;
 

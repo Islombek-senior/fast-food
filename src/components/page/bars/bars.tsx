@@ -4,11 +4,13 @@ import { CiBookmark, CiDeliveryTruck } from "react-icons/ci";
 import { GoClock } from "react-icons/go";
 import { FiUser, FiPhone, FiPlus } from "react-icons/fi";
 import { IoMdCheckmark } from "react-icons/io";
-import { Box } from "@mui/material";
+import { Box, Drawer } from "@mui/material";
 import axios from "axios"; // axiosni o'rnatish kerak: `npm install axios`
 import { BedTwoTone } from "@mui/icons-material";
 import { HiMenuAlt4, HiOutlineMenuAlt3 } from "react-icons/hi";
 import Drawers from "./drawer";
+import Buyurtmalar2 from "../buyurtmalar/buyurtmalar";
+import DrawerManager from "../bars/drawer"; // To'g'ri yo'lni tekshiring
 
 interface Order {
   id: number;
@@ -36,6 +38,20 @@ interface Product {
 const Buyurtmalar = () => {
   const [orders, setOrders] = useState<Product[]>([]);
   const [selectedStatus, setSelectedStatus] = useState<string>("yangi");
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
+  const [drawerSize, setDrawerSize] = useState<"small" | "default" | "large">(
+    "default"
+  );
+  // Drawer ochilish uchun funksiya
+  const handleDrawerOpen = () => {
+    console.log("Drawer opened");
+  };
+
+  // Drawer o'lchamini o'zgartirish uchun funksiyani qo'shish
+  const openDrawer = () => {
+    setDrawerSize("large");
+  };
 
   // API orqali buyurtmalarni olish
   useEffect(() => {
@@ -132,6 +148,7 @@ const Buyurtmalar = () => {
           className="flex items-center gap-5"
         >
           <Button
+            onClick={handleDrawerOpen}
             style={{
               borderRadius: "50%",
               backgroundColor: "#20D472",
@@ -507,7 +524,7 @@ const Buyurtmalar = () => {
           </Col>
         ))}
       </Row>
-      <Drawers />
+      <DrawerManager onDrawerOpen={handleDrawerOpen} drawerSize={"large"} />
     </div>
   );
 };
